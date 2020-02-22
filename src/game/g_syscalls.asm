@@ -75,7 +75,7 @@ equ testPrintFloat                  -114
 equ ex                  			-115
 
 equ vsprintf                  		-116
-equ strcmp                  		-117
+equ atoi           		       		-117
 equ srand                  			-118
 equ rand                  			-119
 equ qsort                  			-120
@@ -93,4 +93,4 @@ equ strcat                  		-131
 equ memmove                  		-132
 equ Q_vsnprintf                  	-133
 equ toupper                  		-134
-equ atoi                  			-135
+equ strcmp                  		-135
