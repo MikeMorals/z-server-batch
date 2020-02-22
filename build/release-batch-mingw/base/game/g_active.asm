@@ -1,0 +1,15115 @@
+export P_DamageFeedback
+code
+proc P_DamageFeedback 40 12
+file "..\..\..\..\src/game/g_active.c"
+line 39
+;1:/*
+;2: ===========================================================================
+;3: Copyright (C) 1999-2005 Id Software, Inc.
+;4: Copyright (C) 2000-2006 Tim Angus
+;5:
+;6: This file is part of Tremulous.
+;7:
+;8: Tremulous is free software; you can redistribute it
+;9: and/or modify it under the terms of the GNU General Public License as
+;10: published by the Free Software Foundation; either version 2 of the License,
+;11: or (at your option) any later version.
+;12:
+;13: Tremulous is distributed in the hope that it will be
+;14: useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+;15: MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;16: GNU General Public License for more details.
+;17:
+;18: You should have received a copy of the GNU General Public License
+;19: along with Tremulous; if not, write to the Free Software
+;20: Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+;21: ===========================================================================
+;22: */
+;23:
+;24:#include "g_local.h"
+;25:#include "tremulous.h"
+;26:#include "acebot.h"
+;27:/*
+;28: ===============
+;29: G_DamageFeedback
+;30:
+;31: Called just before a snapshot is sent to the given player.
+;32: Totals up all damage and generates both the player_state_t
+;33: damage values to that client for pain blends and kicks, and
+;34: global pain sound events for all clients.
+;35: ===============
+;36: */
+;37:void
+;38:P_DamageFeedback(gentity_t *player)
+;39:{
+line 44
+;40:  gclient_t *client;
+;41:  float count;
+;42:  vec3_t angles;
+;43:
+;44:  client = player->client;
+ADDRLP4 0
+ADDRFP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+ASGNP4
+line 45
+;45:  if (client->ps.pm_type == PM_DEAD)
+ADDRLP4 0
+INDIRP4
+CNSTI4 4
+ADDP4
+INDIRI4
+CNSTI4 5
+NEI4 $88
+line 46
+;46:    return;
+ADDRGP4 $87
+JUMPV
+LABELV $88
+line 49
+;47:
+;48:  // total points of damage shot at the player this frame
+;49:  count = client->damage_blood + client->damage_armor;
+ADDRLP4 4
+ADDRLP4 0
+INDIRP4
+CNSTI4 1200
+ADDP4
+INDIRI4
+ADDRLP4 0
+INDIRP4
+CNSTI4 1196
+ADDP4
+INDIRI4
+ADDI4
+CVIF4 4
+ASGNF4
+line 50
+;50:  if (count == 0)
+ADDRLP4 4
+INDIRF4
+CNSTF4 0
+NEF4 $90
+line 51
+;51:    return; // didn't take any damage
+ADDRGP4 $87
+JUMPV
+LABELV $90
+line 53
+;52:
+;53:  if (count > 255)
+ADDRLP4 4
+INDIRF4
+CNSTF4 1132396544
+LEF4 $92
+line 54
+;54:    count = 255;
+ADDRLP4 4
+CNSTF4 1132396544
+ASGNF4
+LABELV $92
+line 60
+;55:
+;56:  // send the information to the client
+;57:
+;58:  // world damage (falling, slime, etc) uses a special code
+;59:  // to make the blend blob centered instead of positional
+;60:  if (client->damage_fromWorld)
+ADDRLP4 0
+INDIRP4
+CNSTI4 1220
+ADDP4
+INDIRI4
+CNSTI4 0
+EQI4 $94
+line 61
+;61:  {
+line 62
+;62:    client->ps.damagePitch = 255;
+ADDRLP4 0
+INDIRP4
+CNSTI4 176
+ADDP4
+CNSTI4 255
+ASGNI4
+line 63
+;63:    client->ps.damageYaw = 255;
+ADDRLP4 0
+INDIRP4
+CNSTI4 172
+ADDP4
+CNSTI4 255
+ASGNI4
+line 65
+;64:
+;65:    client->damage_fromWorld = qfalse;
+ADDRLP4 0
+INDIRP4
+CNSTI4 1220
+ADDP4
+CNSTI4 0
+ASGNI4
+line 66
+;66:  }
+ADDRGP4 $95
+JUMPV
+LABELV $94
+line 68
+;67:  else
+;68:  {
+line 69
+;69:    vectoangles(client->damage_from, angles);
+ADDRLP4 0
+INDIRP4
+CNSTI4 1208
+ADDP4
+ARGP4
+ADDRLP4 8
+ARGP4
+ADDRGP4 vectoangles
+CALLV
+pop
+line 70
+;70:    client->ps.damagePitch = angles[PITCH] / 360.0 * 256;
+ADDRLP4 0
+INDIRP4
+CNSTI4 176
+ADDP4
+CNSTF4 1132462080
+ADDRLP4 8
+INDIRF4
+CNSTF4 1135869952
+DIVF4
+MULF4
+CVFI4 4
+ASGNI4
+line 71
+;71:    client->ps.damageYaw = angles[YAW] / 360.0 * 256;
+ADDRLP4 0
+INDIRP4
+CNSTI4 172
+ADDP4
+CNSTF4 1132462080
+ADDRLP4 8+4
+INDIRF4
+CNSTF4 1135869952
+DIVF4
+MULF4
+CVFI4 4
+ASGNI4
+line 72
+;72:  }
+LABELV $95
+line 75
+;73:
+;74:  // play an apropriate pain sound
+;75:  if ((level.time > player->pain_debounce_time) && !(player->flags & FL_GODMODE))
+ADDRLP4 24
+ADDRFP4 0
+INDIRP4
+ASGNP4
+ADDRGP4 level+28
+INDIRI4
+ADDRLP4 24
+INDIRP4
+CNSTI4 800
+ADDP4
+INDIRI4
+LEI4 $97
+ADDRLP4 24
+INDIRP4
+CNSTI4 536
+ADDP4
+INDIRI4
+CNSTI4 16
+BANDI4
+CNSTI4 0
+NEI4 $97
+line 76
+;76:  {
+line 77
+;77:    player->pain_debounce_time = level.time + 700;
+ADDRFP4 0
+INDIRP4
+CNSTI4 800
+ADDP4
+ADDRGP4 level+28
+INDIRI4
+CNSTI4 700
+ADDI4
+ASGNI4
+line 78
+;78:    G_AddEvent(player, EV_PAIN, player->health > 255 ? 255 : player->health);
+ADDRLP4 32
+ADDRFP4 0
+INDIRP4
+ASGNP4
+ADDRLP4 32
+INDIRP4
+ARGP4
+CNSTI4 47
+ARGI4
+ADDRLP4 32
+INDIRP4
+CNSTI4 812
+ADDP4
+INDIRI4
+CNSTI4 255
+LEI4 $102
+ADDRLP4 28
+CNSTI4 255
+ASGNI4
+ADDRGP4 $103
+JUMPV
+LABELV $102
+ADDRLP4 28
+ADDRFP4 0
+INDIRP4
+CNSTI4 812
+ADDP4
+INDIRI4
+ASGNI4
+LABELV $103
+ADDRLP4 28
+INDIRI4
+ARGI4
+ADDRGP4 G_AddEvent
+CALLV
+pop
+line 79
+;79:    client->ps.damageEvent++;
+ADDRLP4 36
+ADDRLP4 0
+INDIRP4
+CNSTI4 168
+ADDP4
+ASGNP4
+ADDRLP4 36
+INDIRP4
+ADDRLP4 36
+INDIRP4
+INDIRI4
+CNSTI4 1
+ADDI4
+ASGNI4
+line 80
+;80:  }
+LABELV $97
+line 82
+;81:
+;82:  client->ps.damageCount = count;
+ADDRLP4 0
+INDIRP4
+CNSTI4 180
+ADDP4
+ADDRLP4 4
+INDIRF4
+CVFI4 4
+ASGNI4
+line 87
+;83:
+;84:  //
+;85:  // clear totals
+;86:  //
+;87:  client->damage_blood = 0;
+ADDRLP4 0
+INDIRP4
+CNSTI4 1200
+ADDP4
+CNSTI4 0
+ASGNI4
+line 88
+;88:  client->damage_armor = 0;
+ADDRLP4 0
+INDIRP4
+CNSTI4 1196
+ADDP4
+CNSTI4 0
+ASGNI4
+line 89
+;89:  client->damage_knockback = 0;
+ADDRLP4 0
+INDIRP4
+CNSTI4 1204
+ADDP4
+CNSTI4 0
+ASGNI4
+line 90
+;90:}
+LABELV $87
+endproc P_DamageFeedback 40 12
+export P_WorldEffects
+proc P_WorldEffects 44 32
+line 101
+;91:
+;92:/*
+;93: =============
+;94: P_WorldEffects
+;95:
+;96: Check for lava / slime contents and drowning
+;97: =============
+;98: */
+;99:void
+;100:P_WorldEffects(gentity_t *ent)
+;101:{
+line 104
+;102:  int waterlevel;
+;103:
+;104:  if (ent->client->noclip)
+ADDRFP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+CNSTI4 1164
+ADDP4
+INDIRI4
+CNSTI4 0
+EQI4 $105
+line 105
+;105:  {
+line 106
+;106:    ent->client->airOutTime = level.time + 12000; // don't need air
+ADDRFP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+CNSTI4 1252
+ADDP4
+ADDRGP4 level+28
+INDIRI4
+CNSTI4 12000
+ADDI4
+ASGNI4
+line 107
+;107:    return;
+ADDRGP4 $104
+JUMPV
+LABELV $105
+line 110
+;108:  }
+;109:
+;110:  waterlevel = ent->waterlevel;
+ADDRLP4 0
+ADDRFP4 0
+INDIRP4
+CNSTI4 896
+ADDP4
+INDIRI4
+ASGNI4
+line 115
+;111:
+;112:  //
+;113:  // check for drowning
+;114:  //
+;115:  if (waterlevel == 3)
+ADDRLP4 0
+INDIRI4
+CNSTI4 3
+NEI4 $108
+line 116
+;116:  {
+line 118
+;117:    // if out of air, start drowning
+;118:    if (ent->client->airOutTime < level.time)
+ADDRFP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+CNSTI4 1252
+ADDP4
+INDIRI4
+ADDRGP4 level+28
+INDIRI4
+GEI4 $109
+line 119
+;119:    {
+line 121
+;120:      // drown!
+;121:      ent->client->airOutTime += 1000;
+ADDRLP4 4
+ADDRFP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+CNSTI4 1252
+ADDP4
+ASGNP4
+ADDRLP4 4
+INDIRP4
+ADDRLP4 4
+INDIRP4
+INDIRI4
+CNSTI4 1000
+ADDI4
+ASGNI4
+line 122
+;122:      if (ent->health > 0)
+ADDRFP4 0
+INDIRP4
+CNSTI4 812
+ADDP4
+INDIRI4
+CNSTI4 0
+LEI4 $109
+line 123
+;123:      {
+line 125
+;124:        // take more damage the longer underwater
+;125:        ent->damage += 2;
+ADDRLP4 8
+ADDRFP4 0
+INDIRP4
+CNSTI4 844
+ADDP4
+ASGNP4
+ADDRLP4 8
+INDIRP4
+ADDRLP4 8
+INDIRP4
+INDIRI4
+CNSTI4 2
+ADDI4
+ASGNI4
+line 126
+;126:        if (ent->damage > 15)
+ADDRFP4 0
+INDIRP4
+CNSTI4 844
+ADDP4
+INDIRI4
+CNSTI4 15
+LEI4 $115
+line 127
+;127:          ent->damage = 15;
+ADDRFP4 0
+INDIRP4
+CNSTI4 844
+ADDP4
+CNSTI4 15
+ASGNI4
+LABELV $115
+line 130
+;128:
+;129:        // play a gurp sound instead of a normal pain sound
+;130:        if (ent->health <= ent->damage)
+ADDRLP4 12
+ADDRFP4 0
+INDIRP4
+ASGNP4
+ADDRLP4 12
+INDIRP4
+CNSTI4 812
+ADDP4
+INDIRI4
+ADDRLP4 12
+INDIRP4
+CNSTI4 844
+ADDP4
+INDIRI4
+GTI4 $117
+line 131
+;131:          G_Sound(ent, CHAN_VOICE, G_SoundIndex("*drown.wav"));
+ADDRGP4 $119
+ARGP4
+ADDRLP4 16
+ADDRGP4 G_SoundIndex
+CALLI4
+ASGNI4
+ADDRFP4 0
+INDIRP4
+ARGP4
+CNSTI4 3
+ARGI4
+ADDRLP4 16
+INDIRI4
+ARGI4
+ADDRGP4 G_Sound
+CALLV
+pop
+ADDRGP4 $118
+JUMPV
+LABELV $117
+line 132
+;132:        else if (rand() & 1)
+ADDRLP4 20
+ADDRGP4 rand
+CALLI4
+ASGNI4
+ADDRLP4 20
+INDIRI4
+CNSTI4 1
+BANDI4
+CNSTI4 0
+EQI4 $120
+line 133
+;133:          G_Sound(ent, CHAN_VOICE, G_SoundIndex("sound/player/gurp1.wav"));
+ADDRGP4 $122
+ARGP4
+ADDRLP4 24
+ADDRGP4 G_SoundIndex
+CALLI4
+ASGNI4
+ADDRFP4 0
+INDIRP4
+ARGP4
+CNSTI4 3
+ARGI4
+ADDRLP4 24
+INDIRI4
+ARGI4
+ADDRGP4 G_Sound
+CALLV
+pop
+ADDRGP4 $121
+JUMPV
+LABELV $120
+line 135
+;134:        else
+;135:          G_Sound(ent, CHAN_VOICE, G_SoundIndex("sound/player/gurp2.wav"));
+ADDRGP4 $123
+ARGP4
+ADDRLP4 28
+ADDRGP4 G_SoundIndex
+CALLI4
+ASGNI4
+ADDRFP4 0
+INDIRP4
+ARGP4
+CNSTI4 3
+ARGI4
+ADDRLP4 28
+INDIRI4
+ARGI4
+ADDRGP4 G_Sound
+CALLV
+pop
+LABELV $121
+LABELV $118
+line 138
+;136:
+;137:        // don't play a normal pain sound
+;138:        ent->pain_debounce_time = level.time + 200;
+ADDRFP4 0
+INDIRP4
+CNSTI4 800
+ADDP4
+ADDRGP4 level+28
+INDIRI4
+CNSTI4 200
+ADDI4
+ASGNI4
+line 140
+;139:
+;140:        G_Damage(ent, NULL, NULL, NULL, NULL, ent->damage, DAMAGE_NO_ARMOR, MOD_WATER);
+ADDRLP4 32
+ADDRFP4 0
+INDIRP4
+ASGNP4
+ADDRLP4 32
+INDIRP4
+ARGP4
+ADDRLP4 36
+CNSTP4 0
+ASGNP4
+ADDRLP4 36
+INDIRP4
+ARGP4
+ADDRLP4 36
+INDIRP4
+ARGP4
+ADDRLP4 40
+CNSTP4 0
+ASGNP4
+ADDRLP4 40
+INDIRP4
+ARGP4
+ADDRLP4 40
+INDIRP4
+ARGP4
+ADDRLP4 32
+INDIRP4
+CNSTI4 844
+ADDP4
+INDIRI4
+ARGI4
+CNSTI4 2
+ARGI4
+CNSTI4 14
+ARGI4
+ADDRGP4 G_Damage
+CALLV
+pop
+line 141
+;141:      }
+line 142
+;142:    }
+line 143
+;143:  }
+ADDRGP4 $109
+JUMPV
+LABELV $108
+line 145
+;144:  else
+;145:  {
+line 146
+;146:    ent->client->airOutTime = level.time + 12000;
+ADDRFP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+CNSTI4 1252
+ADDP4
+ADDRGP4 level+28
+INDIRI4
+CNSTI4 12000
+ADDI4
+ASGNI4
+line 147
+;147:    ent->damage = 2;
+ADDRFP4 0
+INDIRP4
+CNSTI4 844
+ADDP4
+CNSTI4 2
+ASGNI4
+line 148
+;148:  }
+LABELV $109
+line 153
+;149:
+;150:  //
+;151:  // check for sizzle damage (move to pmove?)
+;152:  //
+;153:  if (waterlevel && (ent->watertype & (CONTENTS_LAVA | CONTENTS_SLIME)))
+ADDRLP4 4
+CNSTI4 0
+ASGNI4
+ADDRLP4 0
+INDIRI4
+ADDRLP4 4
+INDIRI4
+EQI4 $126
+ADDRFP4 0
+INDIRP4
+CNSTI4 892
+ADDP4
+INDIRI4
+CNSTI4 24
+BANDI4
+ADDRLP4 4
+INDIRI4
+EQI4 $126
+line 154
+;154:  {
+line 155
+;155:    if (ent->health > 0 && ent->pain_debounce_time <= level.time)
+ADDRLP4 8
+ADDRFP4 0
+INDIRP4
+ASGNP4
+ADDRLP4 8
+INDIRP4
+CNSTI4 812
+ADDP4
+INDIRI4
+CNSTI4 0
+LEI4 $128
+ADDRLP4 8
+INDIRP4
+CNSTI4 800
+ADDP4
+INDIRI4
+ADDRGP4 level+28
+INDIRI4
+GTI4 $128
+line 156
+;156:    {
+line 157
+;157:      if (ent->watertype & CONTENTS_LAVA)
+ADDRFP4 0
+INDIRP4
+CNSTI4 892
+ADDP4
+INDIRI4
+CNSTI4 8
+BANDI4
+CNSTI4 0
+EQI4 $131
+line 158
+;158:      {
+line 159
+;159:        G_Damage(ent, NULL, NULL, NULL, NULL, 30 * waterlevel, 0, MOD_LAVA);
+ADDRFP4 0
+INDIRP4
+ARGP4
+ADDRLP4 12
+CNSTP4 0
+ASGNP4
+ADDRLP4 12
+INDIRP4
+ARGP4
+ADDRLP4 12
+INDIRP4
+ARGP4
+ADDRLP4 16
+CNSTP4 0
+ASGNP4
+ADDRLP4 16
+INDIRP4
+ARGP4
+ADDRLP4 16
+INDIRP4
+ARGP4
+CNSTI4 30
+ADDRLP4 0
+INDIRI4
+MULI4
+ARGI4
+CNSTI4 0
+ARGI4
+CNSTI4 16
+ARGI4
+ADDRGP4 G_Damage
+CALLV
+pop
+line 160
+;160:      }
+LABELV $131
+line 162
+;161:
+;162:      if (ent->watertype & CONTENTS_SLIME)
+ADDRFP4 0
+INDIRP4
+CNSTI4 892
+ADDP4
+INDIRI4
+CNSTI4 16
+BANDI4
+CNSTI4 0
+EQI4 $133
+line 163
+;163:      {
+line 164
+;164:        G_Damage(ent, NULL, NULL, NULL, NULL, 10 * waterlevel, 0, MOD_SLIME);
+ADDRFP4 0
+INDIRP4
+ARGP4
+ADDRLP4 12
+CNSTP4 0
+ASGNP4
+ADDRLP4 12
+INDIRP4
+ARGP4
+ADDRLP4 12
+INDIRP4
+ARGP4
+ADDRLP4 16
+CNSTP4 0
+ASGNP4
+ADDRLP4 16
+INDIRP4
+ARGP4
+ADDRLP4 16
+INDIRP4
+ARGP4
+CNSTI4 10
+ADDRLP4 0
+INDIRI4
+MULI4
+ARGI4
+CNSTI4 0
+ARGI4
+CNSTI4 15
+ARGI4
+ADDRGP4 G_Damage
+CALLV
+pop
+line 165
+;165:      }
+LABELV $133
+line 166
+;166:    }
+LABELV $128
+line 167
+;167:  }
+LABELV $126
+line 168
+;168:}
+LABELV $104
+endproc P_WorldEffects 44 32
+export G_SetClientSound
+proc G_SetClientSound 8 0
+line 177
+;169:
+;170:/*
+;171: ===============
+;172: G_SetClientSound
+;173: ===============
+;174: */
+;175:void
+;176:G_SetClientSound(gentity_t *ent)
+;177:{
+line 178
+;178:  if (ent->waterlevel && (ent->watertype & (CONTENTS_LAVA | CONTENTS_SLIME)))
+ADDRLP4 0
+ADDRFP4 0
+INDIRP4
+ASGNP4
+ADDRLP4 4
+CNSTI4 0
+ASGNI4
+ADDRLP4 0
+INDIRP4
+CNSTI4 896
+ADDP4
+INDIRI4
+ADDRLP4 4
+INDIRI4
+EQI4 $136
+ADDRLP4 0
+INDIRP4
+CNSTI4 892
+ADDP4
+INDIRI4
+CNSTI4 24
+BANDI4
+ADDRLP4 4
+INDIRI4
+EQI4 $136
+line 179
+;179:    ent->client->ps.loopSound = level.snd_fry;
+ADDRFP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+CNSTI4 444
+ADDP4
+ADDRGP4 level+174212
+INDIRI4
+ASGNI4
+ADDRGP4 $137
+JUMPV
+LABELV $136
+line 181
+;180:  else
+;181:    ent->client->ps.loopSound = 0;
+ADDRFP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+CNSTI4 444
+ADDP4
+CNSTI4 0
+ASGNI4
+LABELV $137
+line 182
+;182:}
+LABELV $135
+endproc G_SetClientSound 8 0
+proc G_ClientShove 100 8
+line 188
+;183:
+;184://==============================================================
+;185:
+;186:static void
+;187:G_ClientShove(gentity_t *ent, gentity_t *victim)
+;188:{
+line 190
+;189:  vec3_t dir, push;
+;190:  int entMass = 200, vicMass = 200;
+ADDRLP4 24
+CNSTI4 200
+ASGNI4
+ADDRLP4 28
+CNSTI4 200
+ASGNI4
+line 193
+;191:
+;192:  // shoving enemies changes gameplay too much
+;193:  if (!OnSameTeam(ent, victim))
+ADDRFP4 0
+INDIRP4
+ARGP4
+ADDRFP4 4
+INDIRP4
+ARGP4
+ADDRLP4 32
+ADDRGP4 OnSameTeam
+CALLI4
+ASGNI4
+ADDRLP4 32
+INDIRI4
+CNSTI4 0
+NEI4 $140
+line 194
+;194:    return;
+ADDRGP4 $139
+JUMPV
+LABELV $140
+line 196
+;195:
+;196:  if ((victim->client->ps.weapon >= WP_ABUILD) && (victim->client->ps.weapon <= WP_HBUILD)
+ADDRLP4 36
+ADDRFP4 4
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+ASGNP4
+ADDRLP4 40
+ADDRLP4 36
+INDIRP4
+CNSTI4 144
+ADDP4
+INDIRI4
+ASGNI4
+ADDRLP4 40
+INDIRI4
+CNSTI4 18
+LTI4 $142
+ADDRLP4 40
+INDIRI4
+CNSTI4 21
+GTI4 $142
+ADDRLP4 36
+INDIRP4
+CNSTI4 232
+ADDP4
+INDIRI4
+CNSTI4 0
+EQI4 $142
+line 198
+;197:      && (victim->client->ps.stats[STAT_BUILDABLE] != BA_NONE))
+;198:    return;
+ADDRGP4 $139
+JUMPV
+LABELV $142
+line 202
+;199:
+;200:  // alien mass is directly related to their health points
+;201:  // human mass is 200, double for bsuit  
+;202:  if (ent->client->pers.teamSelection == PTE_ALIENS)
+ADDRFP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+CNSTI4 628
+ADDP4
+INDIRI4
+CNSTI4 1
+NEI4 $144
+line 203
+;203:  {
+line 205
+;204:    //entMass = BG_FindHealthForClass( ent->client->pers.classSelection );
+;205:  }
+ADDRGP4 $145
+JUMPV
+LABELV $144
+line 206
+;206:  else if (ent->client->pers.teamSelection == PTE_HUMANS)
+ADDRFP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+CNSTI4 628
+ADDP4
+INDIRI4
+CNSTI4 2
+NEI4 $139
+line 207
+;207:  {
+line 210
+;208:    /*if (BG_InventoryContainsUpgrade(UP_BATTLESUIT, ent->client->ps.stats))
+;209:     entMass *= 2;*/
+;210:  }
+line 212
+;211:  else
+;212:    return;
+LABELV $147
+LABELV $145
+line 214
+;213:
+;214:  if (victim->client->ps.stats[STAT_PTEAM] == PTE_ALIENS)
+ADDRFP4 4
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+CNSTI4 216
+ADDP4
+INDIRI4
+CNSTI4 1
+NEI4 $148
+line 215
+;215:  {
+line 217
+;216:    //vicMass = BG_FindHealthForClass( victim->client->pers.classSelection );
+;217:  }
+LABELV $148
+line 223
+;218:  /*else if (BG_InventoryContainsUpgrade(UP_BATTLESUIT, victim->client->ps.stats))
+;219:   {
+;220:   vicMass *= 2;
+;221:   }*/
+;222:
+;223:  if (vicMass <= 0 || entMass <= 0)
+ADDRLP4 44
+CNSTI4 0
+ASGNI4
+ADDRLP4 28
+INDIRI4
+ADDRLP4 44
+INDIRI4
+LEI4 $152
+ADDRLP4 24
+INDIRI4
+ADDRLP4 44
+INDIRI4
+GTI4 $150
+LABELV $152
+line 224
+;224:    return;
+ADDRGP4 $139
+JUMPV
+LABELV $150
+line 226
+;225:
+;226:  VectorSubtract(victim->r.currentOrigin, ent->r.currentOrigin, dir);
+ADDRLP4 48
+ADDRFP4 4
+INDIRP4
+ASGNP4
+ADDRLP4 52
+CNSTI4 488
+ASGNI4
+ADDRLP4 56
+ADDRFP4 0
+INDIRP4
+ASGNP4
+ADDRLP4 0
+ADDRLP4 48
+INDIRP4
+ADDRLP4 52
+INDIRI4
+ADDP4
+INDIRF4
+ADDRLP4 56
+INDIRP4
+ADDRLP4 52
+INDIRI4
+ADDP4
+INDIRF4
+SUBF4
+ASGNF4
+ADDRLP4 60
+CNSTI4 492
+ASGNI4
+ADDRLP4 0+4
+ADDRLP4 48
+INDIRP4
+ADDRLP4 60
+INDIRI4
+ADDP4
+INDIRF4
+ADDRLP4 56
+INDIRP4
+ADDRLP4 60
+INDIRI4
+ADDP4
+INDIRF4
+SUBF4
+ASGNF4
+ADDRLP4 64
+CNSTI4 496
+ASGNI4
+ADDRLP4 0+8
+ADDRFP4 4
+INDIRP4
+ADDRLP4 64
+INDIRI4
+ADDP4
+INDIRF4
+ADDRFP4 0
+INDIRP4
+ADDRLP4 64
+INDIRI4
+ADDP4
+INDIRF4
+SUBF4
+ASGNF4
+line 227
+;227:  VectorNormalizeFast(dir);
+ADDRLP4 0
+ARGP4
+ADDRGP4 VectorNormalizeFast
+CALLV
+pop
+line 230
+;228:
+;229:  // don't break the dretch elevator
+;230:  if (abs(dir[2]) > abs(dir[0]) && abs(dir[2]) > abs(dir[1]))
+ADDRLP4 0+8
+INDIRF4
+CVFI4 4
+ARGI4
+ADDRLP4 68
+ADDRGP4 abs
+CALLI4
+ASGNI4
+ADDRLP4 0
+INDIRF4
+CVFI4 4
+ARGI4
+ADDRLP4 72
+ADDRGP4 abs
+CALLI4
+ASGNI4
+ADDRLP4 68
+INDIRI4
+ADDRLP4 72
+INDIRI4
+LEI4 $155
+ADDRLP4 0+8
+INDIRF4
+CVFI4 4
+ARGI4
+ADDRLP4 76
+ADDRGP4 abs
+CALLI4
+ASGNI4
+ADDRLP4 0+4
+INDIRF4
+CVFI4 4
+ARGI4
+ADDRLP4 80
+ADDRGP4 abs
+CALLI4
+ASGNI4
+ADDRLP4 76
+INDIRI4
+ADDRLP4 80
+INDIRI4
+LEI4 $155
+line 231
+;231:    return;
+ADDRGP4 $139
+JUMPV
+LABELV $155
+line 233
+;232:
+;233:  VectorScale(dir,
+ADDRLP4 84
+ADDRLP4 24
+INDIRI4
+CVIF4 4
+ADDRLP4 28
+INDIRI4
+CVIF4 4
+DIVF4
+ASGNF4
+ADDRLP4 12
+ADDRLP4 0
+INDIRF4
+ADDRGP4 g_shove+8
+INDIRF4
+ADDRLP4 84
+INDIRF4
+MULF4
+MULF4
+ASGNF4
+ADDRLP4 12+4
+ADDRLP4 0+4
+INDIRF4
+ADDRGP4 g_shove+8
+INDIRF4
+ADDRLP4 84
+INDIRF4
+MULF4
+MULF4
+ASGNF4
+ADDRLP4 12+8
+ADDRLP4 0+8
+INDIRF4
+ADDRGP4 g_shove+8
+INDIRF4
+ADDRLP4 24
+INDIRI4
+CVIF4 4
+ADDRLP4 28
+INDIRI4
+CVIF4 4
+DIVF4
+MULF4
+MULF4
+ASGNF4
+line 235
+;234:      (g_shove.value * ((float) entMass / (float) vicMass)), push);
+;235:  VectorAdd(victim->client->ps.velocity, push,
+ADDRLP4 88
+ADDRFP4 4
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+CNSTI4 32
+ADDP4
+ASGNP4
+ADDRLP4 88
+INDIRP4
+ADDRLP4 88
+INDIRP4
+INDIRF4
+ADDRLP4 12
+INDIRF4
+ADDF4
+ASGNF4
+ADDRLP4 92
+ADDRFP4 4
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+CNSTI4 36
+ADDP4
+ASGNP4
+ADDRLP4 92
+INDIRP4
+ADDRLP4 92
+INDIRP4
+INDIRF4
+ADDRLP4 12+4
+INDIRF4
+ADDF4
+ASGNF4
+ADDRLP4 96
+ADDRFP4 4
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+CNSTI4 40
+ADDP4
+ASGNP4
+ADDRLP4 96
+INDIRP4
+ADDRLP4 96
+INDIRP4
+INDIRF4
+ADDRLP4 12+8
+INDIRF4
+ADDF4
+ASGNF4
+line 238
+;236:      victim->client->ps.velocity);
+;237:
+;238:}
+LABELV $139
+endproc G_ClientShove 100 8
+export ClientImpacts
+proc ClientImpacts 96 12
+line 247
+;239:
+;240:/*
+;241: ==============
+;242: ClientImpacts
+;243: ==============
+;244: */
+;245:void
+;246:ClientImpacts(gentity_t *ent, pmove_t *pm)
+;247:{
+line 252
+;248:  int i, j;
+;249:  trace_t trace;
+;250:  gentity_t *other;
+;251:
+;252:  memset(&trace, 0, sizeof(trace));
+ADDRLP4 12
+ARGP4
+CNSTI4 0
+ARGI4
+CNSTI4 60
+ARGI4
+ADDRGP4 memset
+CALLP4
+pop
+line 254
+;253:
+;254:  for(i = 0;i < pm->numtouch;i++)
+ADDRLP4 4
+CNSTI4 0
+ASGNI4
+ADDRGP4 $173
+JUMPV
+LABELV $170
+line 255
+;255:  {
+line 256
+;256:    for(j = 0;j < i;j++)
+ADDRLP4 0
+CNSTI4 0
+ASGNI4
+ADDRGP4 $177
+JUMPV
+LABELV $174
+line 257
+;257:    {
+line 258
+;258:      if (pm->touchents[j] == pm->touchents[i])
+ADDRLP4 72
+CNSTI4 2
+ASGNI4
+ADDRLP4 76
+ADDRFP4 4
+INDIRP4
+CNSTI4 180
+ADDP4
+ASGNP4
+ADDRLP4 0
+INDIRI4
+ADDRLP4 72
+INDIRI4
+LSHI4
+ADDRLP4 76
+INDIRP4
+ADDP4
+INDIRI4
+ADDRLP4 4
+INDIRI4
+ADDRLP4 72
+INDIRI4
+LSHI4
+ADDRLP4 76
+INDIRP4
+ADDP4
+INDIRI4
+NEI4 $178
+line 259
+;259:        break;
+ADDRGP4 $176
+JUMPV
+LABELV $178
+line 260
+;260:    }
+LABELV $175
+line 256
+ADDRLP4 0
+ADDRLP4 0
+INDIRI4
+CNSTI4 1
+ADDI4
+ASGNI4
+LABELV $177
+ADDRLP4 0
+INDIRI4
+ADDRLP4 4
+INDIRI4
+LTI4 $174
+LABELV $176
+line 262
+;261:
+;262:    if (j != i)
+ADDRLP4 0
+INDIRI4
+ADDRLP4 4
+INDIRI4
+EQI4 $180
+line 263
+;263:      continue; // duplicated
+ADDRGP4 $171
+JUMPV
+LABELV $180
+line 265
+;264:
+;265:    other = &g_entities[pm->touchents[i]];
+ADDRLP4 8
+CNSTI4 2476
+ADDRLP4 4
+INDIRI4
+CNSTI4 2
+LSHI4
+ADDRFP4 4
+INDIRP4
+CNSTI4 180
+ADDP4
+ADDP4
+INDIRI4
+MULI4
+ADDRGP4 g_entities
+ADDP4
+ASGNP4
+line 271
+;266:
+;267:    // see G_UnlaggedDetectCollisions(), this is the inverse of that.
+;268:    // if our movement is blocked by another player's real position,
+;269:    // don't use the unlagged position for them because they are 
+;270:    // blocking or server-side Pmove() from reaching it
+;271:    if (other->client && other->client->unlaggedCalc.used)
+ADDRLP4 72
+ADDRLP4 8
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+ASGNP4
+ADDRLP4 72
+INDIRP4
+CVPU4 4
+CNSTU4 0
+EQU4 $182
+ADDRLP4 72
+INDIRP4
+CNSTI4 1884
+ADDP4
+INDIRI4
+CNSTI4 0
+EQI4 $182
+line 272
+;272:      other->client->unlaggedCalc.used = qfalse;
+ADDRLP4 8
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+CNSTI4 1884
+ADDP4
+CNSTI4 0
+ASGNI4
+LABELV $182
+line 275
+;273:
+;274:    //charge attack
+;275:    if (ent->client->ps.weapon == WP_ALEVEL4 && ent->client->ps.stats[STAT_MISC] > 0
+ADDRLP4 76
+ADDRFP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+ASGNP4
+ADDRLP4 76
+INDIRP4
+CNSTI4 144
+ADDP4
+INDIRI4
+CNSTI4 29
+NEI4 $184
+ADDRLP4 80
+CNSTI4 0
+ASGNI4
+ADDRLP4 76
+INDIRP4
+CNSTI4 228
+ADDP4
+INDIRI4
+ADDRLP4 80
+INDIRI4
+LEI4 $184
+ADDRLP4 76
+INDIRP4
+CNSTI4 1384
+ADDP4
+INDIRI4
+ADDRLP4 80
+INDIRI4
+EQI4 $184
+line 277
+;276:        && ent->client->charging)
+;277:      ChargeAttack(ent, other);
+ADDRFP4 0
+INDIRP4
+ARGP4
+ADDRLP4 8
+INDIRP4
+ARGP4
+ADDRGP4 ChargeAttack
+CALLV
+pop
+LABELV $184
+line 279
+;278:
+;279:    if (ent->client && other->client)
+ADDRLP4 84
+CNSTI4 516
+ASGNI4
+ADDRLP4 88
+CNSTU4 0
+ASGNU4
+ADDRFP4 0
+INDIRP4
+ADDRLP4 84
+INDIRI4
+ADDP4
+INDIRP4
+CVPU4 4
+ADDRLP4 88
+INDIRU4
+EQU4 $186
+ADDRLP4 8
+INDIRP4
+ADDRLP4 84
+INDIRI4
+ADDP4
+INDIRP4
+CVPU4 4
+ADDRLP4 88
+INDIRU4
+EQU4 $186
+line 280
+;280:      G_ClientShove(ent, other);
+ADDRFP4 0
+INDIRP4
+ARGP4
+ADDRLP4 8
+INDIRP4
+ARGP4
+ADDRGP4 G_ClientShove
+CALLV
+pop
+LABELV $186
+line 282
+;281:
+;282:    if (!other->touch)
+ADDRLP4 8
+INDIRP4
+CNSTI4 784
+ADDP4
+INDIRP4
+CVPU4 4
+CNSTU4 0
+NEU4 $188
+line 283
+;283:      continue;
+ADDRGP4 $171
+JUMPV
+LABELV $188
+line 285
+;284:
+;285:    other->touch(other, ent, &trace);
+ADDRLP4 8
+INDIRP4
+ARGP4
+ADDRFP4 0
+INDIRP4
+ARGP4
+ADDRLP4 12
+ARGP4
+ADDRLP4 8
+INDIRP4
+CNSTI4 784
+ADDP4
+INDIRP4
+CALLV
+pop
+line 286
+;286:  }
+LABELV $171
+line 254
+ADDRLP4 4
+ADDRLP4 4
+INDIRI4
+CNSTI4 1
+ADDI4
+ASGNI4
+LABELV $173
+ADDRLP4 4
+INDIRI4
+ADDRFP4 4
+INDIRP4
+CNSTI4 176
+ADDP4
+INDIRI4
+LTI4 $170
+line 287
+;287:}
+LABELV $169
+endproc ClientImpacts 96 12
+data
+align 4
+LABELV $191
+byte 4 1092616192
+byte 4 1092616192
+byte 4 1092616192
+export G_TouchTriggers
+code
+proc G_TouchTriggers 4284 24
+line 299
+;288:
+;289:/*
+;290: ============
+;291: G_TouchTriggers
+;292:
+;293: Find all trigger entities that ent's current position touches.
+;294: Spectators will only interact with teleporters.
+;295: ============
+;296: */
+;297:void
+;298:G_TouchTriggers(gentity_t *ent)
+;299:{
+line 309
+;300:  int i, num;
+;301:  int touch[MAX_GENTITIES];
+;302:  gentity_t *hit;
+;303:  trace_t trace;
+;304:  vec3_t mins, maxs;
+;305:  vec3_t pmins, pmaxs;
+;306:  static vec3_t range =
+;307:  { 10, 10, 10 };
+;308:
+;309:  if (!ent->client)
+ADDRFP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+CVPU4 4
+CNSTU4 0
+NEU4 $192
+line 310
+;310:    return;
+ADDRGP4 $190
+JUMPV
+LABELV $192
+line 313
+;311:
+;312:  // dead clients don't activate triggers!
+;313:  if (ent->client->ps.stats[STAT_HEALTH] <= 0)
+ADDRFP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+CNSTI4 184
+ADDP4
+INDIRI4
+CNSTI4 0
+GTI4 $194
+line 314
+;314:    return;
+ADDRGP4 $190
+JUMPV
+LABELV $194
+line 316
+;315:
+;316:  BG_FindBBoxForClass(ent->client->ps.stats[STAT_PCLASS], pmins, pmaxs, NULL, NULL, NULL);
+ADDRFP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+CNSTI4 212
+ADDP4
+INDIRI4
+ARGI4
+ADDRLP4 4192
+ARGP4
+ADDRLP4 4204
+ARGP4
+ADDRLP4 4216
+CNSTP4 0
+ASGNP4
+ADDRLP4 4216
+INDIRP4
+ARGP4
+ADDRLP4 4216
+INDIRP4
+ARGP4
+ADDRLP4 4216
+INDIRP4
+ARGP4
+ADDRGP4 BG_FindBBoxForClass
+CALLV
+pop
+line 318
+;317:
+;318:  VectorAdd(ent->client->ps.origin, pmins, mins);
+ADDRLP4 4220
+ADDRFP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+ASGNP4
+ADDRLP4 68
+ADDRLP4 4220
+INDIRP4
+INDIRP4
+CNSTI4 20
+ADDP4
+INDIRF4
+ADDRLP4 4192
+INDIRF4
+ADDF4
+ASGNF4
+ADDRLP4 68+4
+ADDRLP4 4220
+INDIRP4
+INDIRP4
+CNSTI4 24
+ADDP4
+INDIRF4
+ADDRLP4 4192+4
+INDIRF4
+ADDF4
+ASGNF4
+ADDRLP4 68+8
+ADDRFP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+CNSTI4 28
+ADDP4
+INDIRF4
+ADDRLP4 4192+8
+INDIRF4
+ADDF4
+ASGNF4
+line 319
+;319:  VectorAdd(ent->client->ps.origin, pmaxs, maxs);
+ADDRLP4 4224
+ADDRFP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+ASGNP4
+ADDRLP4 80
+ADDRLP4 4224
+INDIRP4
+INDIRP4
+CNSTI4 20
+ADDP4
+INDIRF4
+ADDRLP4 4204
+INDIRF4
+ADDF4
+ASGNF4
+ADDRLP4 80+4
+ADDRLP4 4224
+INDIRP4
+INDIRP4
+CNSTI4 24
+ADDP4
+INDIRF4
+ADDRLP4 4204+4
+INDIRF4
+ADDF4
+ASGNF4
+ADDRLP4 80+8
+ADDRFP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+CNSTI4 28
+ADDP4
+INDIRF4
+ADDRLP4 4204+8
+INDIRF4
+ADDF4
+ASGNF4
+line 321
+;320:
+;321:  VectorSubtract(mins, range, mins);
+ADDRLP4 68
+ADDRLP4 68
+INDIRF4
+ADDRGP4 $191
+INDIRF4
+SUBF4
+ASGNF4
+ADDRLP4 68+4
+ADDRLP4 68+4
+INDIRF4
+ADDRGP4 $191+4
+INDIRF4
+SUBF4
+ASGNF4
+ADDRLP4 68+8
+ADDRLP4 68+8
+INDIRF4
+ADDRGP4 $191+8
+INDIRF4
+SUBF4
+ASGNF4
+line 322
+;322:  VectorAdd(maxs, range, maxs);
+ADDRLP4 80
+ADDRLP4 80
+INDIRF4
+ADDRGP4 $191
+INDIRF4
+ADDF4
+ASGNF4
+ADDRLP4 80+4
+ADDRLP4 80+4
+INDIRF4
+ADDRGP4 $191+4
+INDIRF4
+ADDF4
+ASGNF4
+ADDRLP4 80+8
+ADDRLP4 80+8
+INDIRF4
+ADDRGP4 $191+8
+INDIRF4
+ADDF4
+ASGNF4
+line 324
+;323:
+;324:  num = trap_EntitiesInBox(mins, maxs, touch, MAX_GENTITIES);
+ADDRLP4 68
+ARGP4
+ADDRLP4 80
+ARGP4
+ADDRLP4 96
+ARGP4
+CNSTI4 1024
+ARGI4
+ADDRLP4 4228
+ADDRGP4 trap_EntitiesInBox
+CALLI4
+ASGNI4
+ADDRLP4 92
+ADDRLP4 4228
+INDIRI4
+ASGNI4
+line 327
+;325:
+;326:  // can't use ent->absmin, because that has a one unit pad
+;327:  VectorAdd(ent->client->ps.origin, ent->r.mins, mins);
+ADDRLP4 4232
+ADDRFP4 0
+INDIRP4
+ASGNP4
+ADDRLP4 4236
+ADDRLP4 4232
+INDIRP4
+CNSTI4 516
+ADDP4
+ASGNP4
+ADDRLP4 68
+ADDRLP4 4236
+INDIRP4
+INDIRP4
+CNSTI4 20
+ADDP4
+INDIRF4
+ADDRLP4 4232
+INDIRP4
+CNSTI4 436
+ADDP4
+INDIRF4
+ADDF4
+ASGNF4
+ADDRLP4 68+4
+ADDRLP4 4236
+INDIRP4
+INDIRP4
+CNSTI4 24
+ADDP4
+INDIRF4
+ADDRLP4 4232
+INDIRP4
+CNSTI4 440
+ADDP4
+INDIRF4
+ADDF4
+ASGNF4
+ADDRLP4 4240
+ADDRFP4 0
+INDIRP4
+ASGNP4
+ADDRLP4 68+8
+ADDRLP4 4240
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+CNSTI4 28
+ADDP4
+INDIRF4
+ADDRLP4 4240
+INDIRP4
+CNSTI4 444
+ADDP4
+INDIRF4
+ADDF4
+ASGNF4
+line 328
+;328:  VectorAdd(ent->client->ps.origin, ent->r.maxs, maxs);
+ADDRLP4 4244
+ADDRFP4 0
+INDIRP4
+ASGNP4
+ADDRLP4 4248
+ADDRLP4 4244
+INDIRP4
+CNSTI4 516
+ADDP4
+ASGNP4
+ADDRLP4 80
+ADDRLP4 4248
+INDIRP4
+INDIRP4
+CNSTI4 20
+ADDP4
+INDIRF4
+ADDRLP4 4244
+INDIRP4
+CNSTI4 448
+ADDP4
+INDIRF4
+ADDF4
+ASGNF4
+ADDRLP4 80+4
+ADDRLP4 4248
+INDIRP4
+INDIRP4
+CNSTI4 24
+ADDP4
+INDIRF4
+ADDRLP4 4244
+INDIRP4
+CNSTI4 452
+ADDP4
+INDIRF4
+ADDF4
+ASGNF4
+ADDRLP4 4252
+ADDRFP4 0
+INDIRP4
+ASGNP4
+ADDRLP4 80+8
+ADDRLP4 4252
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+CNSTI4 28
+ADDP4
+INDIRF4
+ADDRLP4 4252
+INDIRP4
+CNSTI4 456
+ADDP4
+INDIRF4
+ADDF4
+ASGNF4
+line 330
+;329:
+;330:  for(i = 0;i < num;i++)
+ADDRLP4 4
+CNSTI4 0
+ASGNI4
+ADDRGP4 $223
+JUMPV
+LABELV $220
+line 331
+;331:  {
+line 332
+;332:    hit = &g_entities[touch[i]];
+ADDRLP4 0
+CNSTI4 2476
+ADDRLP4 4
+INDIRI4
+CNSTI4 2
+LSHI4
+ADDRLP4 96
+ADDP4
+INDIRI4
+MULI4
+ADDRGP4 g_entities
+ADDP4
+ASGNP4
+line 334
+;333:
+;334:    if (!hit->touch && !ent->touch)
+ADDRLP4 4256
+CNSTI4 784
+ASGNI4
+ADDRLP4 4260
+CNSTU4 0
+ASGNU4
+ADDRLP4 0
+INDIRP4
+ADDRLP4 4256
+INDIRI4
+ADDP4
+INDIRP4
+CVPU4 4
+ADDRLP4 4260
+INDIRU4
+NEU4 $224
+ADDRFP4 0
+INDIRP4
+ADDRLP4 4256
+INDIRI4
+ADDP4
+INDIRP4
+CVPU4 4
+ADDRLP4 4260
+INDIRU4
+NEU4 $224
+line 335
+;335:      continue;
+ADDRGP4 $221
+JUMPV
+LABELV $224
+line 337
+;336:
+;337:    if (!(hit->r.contents & CONTENTS_TRIGGER))
+ADDRLP4 0
+INDIRP4
+CNSTI4 460
+ADDP4
+INDIRI4
+CNSTI4 1073741824
+BANDI4
+CNSTI4 0
+NEI4 $226
+line 338
+;338:      continue;
+ADDRGP4 $221
+JUMPV
+LABELV $226
+line 341
+;339:
+;340:    // ignore most entities if a spectator
+;341:    if ((ent->client->sess.sessionTeam == TEAM_SPECTATOR) || (ent->client->ps.stats[STAT_STATE]
+ADDRLP4 4264
+ADDRFP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+ASGNP4
+ADDRLP4 4264
+INDIRP4
+CNSTI4 1120
+ADDP4
+INDIRI4
+CNSTI4 1
+EQI4 $231
+ADDRLP4 4268
+ADDRLP4 4264
+INDIRP4
+CNSTI4 224
+ADDP4
+INDIRI4
+ASGNI4
+ADDRLP4 4272
+CNSTI4 0
+ASGNI4
+ADDRLP4 4268
+INDIRI4
+CNSTI4 16
+BANDI4
+ADDRLP4 4272
+INDIRI4
+NEI4 $231
+ADDRLP4 4268
+INDIRI4
+CNSTI4 256
+BANDI4
+ADDRLP4 4272
+INDIRI4
+EQI4 $228
+LABELV $231
+line 343
+;342:        & SS_INFESTING) || (ent->client->ps.stats[STAT_STATE] & SS_HOVELING))
+;343:    {
+line 344
+;344:      if (hit->s.eType != ET_TELEPORT_TRIGGER &&
+ADDRLP4 0
+INDIRP4
+CNSTI4 4
+ADDP4
+INDIRI4
+CNSTI4 10
+EQI4 $232
+ADDRLP4 0
+INDIRP4
+CNSTI4 784
+ADDP4
+INDIRP4
+CVPU4 4
+ADDRGP4 Touch_DoorTrigger
+CVPU4 4
+EQU4 $232
+line 348
+;345:      // this is ugly but adding a new ET_? type will
+;346:          // most likely cause network incompatibilities
+;347:          hit->touch != Touch_DoorTrigger)
+;348:      {
+line 350
+;349:        //check for manually triggered doors
+;350:        manualTriggerSpectator(hit, ent);
+ADDRLP4 0
+INDIRP4
+ARGP4
+ADDRFP4 0
+INDIRP4
+ARGP4
+ADDRGP4 manualTriggerSpectator
+CALLV
+pop
+line 351
+;351:        continue;
+ADDRGP4 $221
+JUMPV
+LABELV $232
+line 353
+;352:      }
+;353:    }
+LABELV $228
+line 355
+;354:
+;355:    if (!trap_EntityContact(mins, maxs, hit))
+ADDRLP4 68
+ARGP4
+ADDRLP4 80
+ARGP4
+ADDRLP4 0
+INDIRP4
+ARGP4
+ADDRLP4 4276
+ADDRGP4 trap_EntityContact
+CALLI4
+ASGNI4
+ADDRLP4 4276
+INDIRI4
+CNSTI4 0
+NEI4 $234
+line 356
+;356:      continue;
+ADDRGP4 $221
+JUMPV
+LABELV $234
+line 358
+;357:
+;358:    memset(&trace, 0, sizeof(trace));
+ADDRLP4 8
+ARGP4
+CNSTI4 0
+ARGI4
+CNSTI4 60
+ARGI4
+ADDRGP4 memset
+CALLP4
+pop
+line 360
+;359:
+;360:    if (hit->touch)
+ADDRLP4 0
+INDIRP4
+CNSTI4 784
+ADDP4
+INDIRP4
+CVPU4 4
+CNSTU4 0
+EQU4 $236
+line 361
+;361:      hit->touch(hit, ent, &trace);
+ADDRLP4 0
+INDIRP4
+ARGP4
+ADDRFP4 0
+INDIRP4
+ARGP4
+ADDRLP4 8
+ARGP4
+ADDRLP4 0
+INDIRP4
+CNSTI4 784
+ADDP4
+INDIRP4
+CALLV
+pop
+LABELV $236
+line 362
+;362:  }
+LABELV $221
+line 330
+ADDRLP4 4
+ADDRLP4 4
+INDIRI4
+CNSTI4 1
+ADDI4
+ASGNI4
+LABELV $223
+ADDRLP4 4
+INDIRI4
+ADDRLP4 92
+INDIRI4
+LTI4 $220
+line 363
+;363:}
+LABELV $190
+endproc G_TouchTriggers 4284 24
+export SpectatorThink
+proc SpectatorThink 448 12
+line 372
+;364:
+;365:/*
+;366: =================
+;367: SpectatorThink
+;368: =================
+;369: */
+;370:void
+;371:SpectatorThink(gentity_t *ent, usercmd_t *ucmd)
+;372:{
+line 376
+;373:  pmove_t pm;
+;374:  gclient_t *client;
+;375:  qboolean attack1, attack3;
+;376:  qboolean doPmove = qtrue;
+ADDRLP4 368
+CNSTI4 1
+ASGNI4
+line 378
+;377:
+;378:  client = ent->client;
+ADDRLP4 0
+ADDRFP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+ASGNP4
+line 380
+;379:
+;380:  client->oldbuttons = client->buttons;
+ADDRLP4 0
+INDIRP4
+CNSTI4 1176
+ADDP4
+ADDRLP4 0
+INDIRP4
+CNSTI4 1172
+ADDP4
+INDIRI4
+ASGNI4
+line 381
+;381:  client->buttons = ucmd->buttons;
+ADDRLP4 0
+INDIRP4
+CNSTI4 1172
+ADDP4
+ADDRFP4 4
+INDIRP4
+CNSTI4 16
+ADDP4
+INDIRI4
+ASGNI4
+line 383
+;382:
+;383:  if (ent->r.svFlags & SVF_BOT)
+ADDRFP4 0
+INDIRP4
+CNSTI4 424
+ADDP4
+INDIRI4
+CNSTI4 8
+BANDI4
+CNSTI4 0
+EQI4 $239
+line 384
+;384:  {
+line 385
+;385:    G_BotSpectatorThink(ent);
+ADDRFP4 0
+INDIRP4
+ARGP4
+ADDRGP4 G_BotSpectatorThink
+CALLV
+pop
+line 386
+;386:    return;
+ADDRGP4 $238
+JUMPV
+LABELV $239
+line 389
+;387:  }
+;388:
+;389:  attack1 = ((client->buttons & BUTTON_ATTACK) && !(client->oldbuttons & BUTTON_ATTACK));
+ADDRLP4 388
+CNSTI4 1
+ASGNI4
+ADDRLP4 392
+CNSTI4 0
+ASGNI4
+ADDRLP4 0
+INDIRP4
+CNSTI4 1172
+ADDP4
+INDIRI4
+ADDRLP4 388
+INDIRI4
+BANDI4
+ADDRLP4 392
+INDIRI4
+EQI4 $242
+ADDRLP4 0
+INDIRP4
+CNSTI4 1176
+ADDP4
+INDIRI4
+ADDRLP4 388
+INDIRI4
+BANDI4
+ADDRLP4 392
+INDIRI4
+NEI4 $242
+ADDRLP4 380
+CNSTI4 1
+ASGNI4
+ADDRGP4 $243
+JUMPV
+LABELV $242
+ADDRLP4 380
+CNSTI4 0
+ASGNI4
+LABELV $243
+ADDRLP4 364
+ADDRLP4 380
+INDIRI4
+ASGNI4
+line 390
+;390:  attack3
+ADDRLP4 404
+CNSTI4 4
+ASGNI4
+ADDRLP4 408
+CNSTI4 0
+ASGNI4
+ADDRLP4 0
+INDIRP4
+CNSTI4 1172
+ADDP4
+INDIRI4
+ADDRLP4 404
+INDIRI4
+BANDI4
+ADDRLP4 408
+INDIRI4
+EQI4 $245
+ADDRLP4 0
+INDIRP4
+CNSTI4 1176
+ADDP4
+INDIRI4
+ADDRLP4 404
+INDIRI4
+BANDI4
+ADDRLP4 408
+INDIRI4
+NEI4 $245
+ADDRLP4 396
+CNSTI4 1
+ASGNI4
+ADDRGP4 $246
+JUMPV
+LABELV $245
+ADDRLP4 396
+CNSTI4 0
+ASGNI4
+LABELV $246
+ADDRLP4 372
+ADDRLP4 396
+INDIRI4
+ASGNI4
+line 393
+;391:      = ((client->buttons & BUTTON_USE_HOLDABLE) && !(client->oldbuttons & BUTTON_USE_HOLDABLE));
+;392:
+;393:  if (client->sess.spectatorState == SPECTATOR_LOCKED || client->sess.spectatorState
+ADDRLP4 412
+ADDRLP4 0
+INDIRP4
+CNSTI4 1132
+ADDP4
+INDIRI4
+ASGNI4
+ADDRLP4 412
+INDIRI4
+CNSTI4 2
+EQI4 $249
+ADDRLP4 412
+INDIRI4
+CNSTI4 3
+NEI4 $247
+LABELV $249
+line 395
+;394:      == SPECTATOR_FOLLOW)
+;395:    client->ps.pm_type = PM_FREEZE;
+ADDRLP4 0
+INDIRP4
+CNSTI4 4
+ADDP4
+CNSTI4 6
+ASGNI4
+ADDRGP4 $248
+JUMPV
+LABELV $247
+line 397
+;396:  else
+;397:    client->ps.pm_type = PM_SPECTATOR;
+ADDRLP4 0
+INDIRP4
+CNSTI4 4
+ADDP4
+CNSTI4 2
+ASGNI4
+LABELV $248
+line 399
+;398:
+;399:  if (client->sess.spectatorState == SPECTATOR_FOLLOW)
+ADDRLP4 0
+INDIRP4
+CNSTI4 1132
+ADDP4
+INDIRI4
+CNSTI4 3
+NEI4 $250
+line 400
+;400:  {
+line 402
+;401:    gclient_t *cl;
+;402:    if (client->sess.spectatorClient >= 0)
+ADDRLP4 0
+INDIRP4
+CNSTI4 1136
+ADDP4
+INDIRI4
+CNSTI4 0
+LTI4 $252
+line 403
+;403:    {
+line 404
+;404:      cl = &level.clients[client->sess.spectatorClient];
+ADDRLP4 416
+CNSTI4 2148
+ADDRLP4 0
+INDIRP4
+CNSTI4 1136
+ADDP4
+INDIRI4
+MULI4
+ADDRGP4 level
+INDIRP4
+ADDP4
+ASGNP4
+line 405
+;405:      if (cl->sess.sessionTeam != TEAM_SPECTATOR)
+ADDRLP4 416
+INDIRP4
+CNSTI4 1120
+ADDP4
+INDIRI4
+CNSTI4 1
+EQI4 $254
+line 406
+;406:        doPmove = qfalse;
+ADDRLP4 368
+CNSTI4 0
+ASGNI4
+LABELV $254
+line 407
+;407:    }
+LABELV $252
+line 408
+;408:  }
+LABELV $250
+line 410
+;409:
+;410:  if (doPmove)
+ADDRLP4 368
+INDIRI4
+CNSTI4 0
+EQI4 $256
+line 411
+;411:  {
+line 412
+;412:    client->ps.speed = BG_FindSpeedForClass(client->ps.stats[STAT_PCLASS]);
+ADDRLP4 0
+INDIRP4
+CNSTI4 212
+ADDP4
+INDIRI4
+ARGI4
+ADDRLP4 420
+ADDRGP4 BG_FindSpeedForClass
+CALLF4
+ASGNF4
+ADDRLP4 0
+INDIRP4
+CNSTI4 52
+ADDP4
+ADDRLP4 420
+INDIRF4
+CVFI4 4
+ASGNI4
+line 415
+;413:
+;414:    // in case the client entered the queue while following a teammate
+;415:    if ((client->pers.teamSelection == PTE_ALIENS && G_SearchSpawnQueue(&level.alienSpawnQueue, ent
+ADDRLP4 0
+INDIRP4
+CNSTI4 628
+ADDP4
+INDIRI4
+CNSTI4 1
+NEI4 $263
+ADDRGP4 level+189292
+ARGP4
+ADDRFP4 0
+INDIRP4
+CVPU4 4
+ADDRGP4 g_entities
+CVPU4 4
+SUBU4
+CVUI4 4
+CNSTI4 2476
+DIVI4
+ARGI4
+ADDRLP4 424
+ADDRGP4 G_SearchSpawnQueue
+CALLI4
+ASGNI4
+ADDRLP4 424
+INDIRI4
+CNSTI4 0
+NEI4 $262
+LABELV $263
+ADDRLP4 0
+INDIRP4
+CNSTI4 628
+ADDP4
+INDIRI4
+CNSTI4 2
+NEI4 $258
+ADDRGP4 level+189292
+ARGP4
+ADDRFP4 0
+INDIRP4
+CVPU4 4
+ADDRGP4 g_entities
+CVPU4 4
+SUBU4
+CVUI4 4
+CNSTI4 2476
+DIVI4
+ARGI4
+ADDRLP4 428
+ADDRGP4 G_SearchSpawnQueue
+CALLI4
+ASGNI4
+ADDRLP4 428
+INDIRI4
+CNSTI4 0
+EQI4 $258
+LABELV $262
+line 418
+;416:        - g_entities)) || (client->pers.teamSelection == PTE_HUMANS && G_SearchSpawnQueue(
+;417:      &level.alienSpawnQueue, ent - g_entities)))
+;418:    {
+line 419
+;419:      client->ps.pm_flags |= PMF_QUEUED;
+ADDRLP4 432
+ADDRLP4 0
+INDIRP4
+CNSTI4 12
+ADDP4
+ASGNP4
+ADDRLP4 432
+INDIRP4
+ADDRLP4 432
+INDIRP4
+INDIRI4
+CNSTI4 8192
+BORI4
+ASGNI4
+line 420
+;420:    }
+LABELV $258
+line 422
+;421:
+;422:    client->ps.stats[STAT_STAMINA] = 0;
+ADDRLP4 0
+INDIRP4
+CNSTI4 220
+ADDP4
+CNSTI4 0
+ASGNI4
+line 423
+;423:    client->ps.stats[STAT_MISC] = 0;
+ADDRLP4 0
+INDIRP4
+CNSTI4 228
+ADDP4
+CNSTI4 0
+ASGNI4
+line 424
+;424:    client->ps.stats[STAT_BUILDABLE] = 0;
+ADDRLP4 0
+INDIRP4
+CNSTI4 232
+ADDP4
+CNSTI4 0
+ASGNI4
+line 425
+;425:    client->ps.stats[STAT_PCLASS] = PCL_NONE;
+ADDRLP4 0
+INDIRP4
+CNSTI4 212
+ADDP4
+CNSTI4 0
+ASGNI4
+line 426
+;426:    client->ps.weapon = WP_NONE;
+ADDRLP4 0
+INDIRP4
+CNSTI4 144
+ADDP4
+CNSTI4 0
+ASGNI4
+line 429
+;427:
+;428:    // set up for pmove
+;429:    memset(&pm, 0, sizeof(pm));
+ADDRLP4 4
+ARGP4
+CNSTI4 0
+ARGI4
+CNSTI4 360
+ARGI4
+ADDRGP4 memset
+CALLP4
+pop
+line 430
+;430:    pm.ps = &client->ps;
+ADDRLP4 4
+ADDRLP4 0
+INDIRP4
+ASGNP4
+line 431
+;431:    pm.cmd = *ucmd;
+ADDRLP4 4+8
+ADDRFP4 4
+INDIRP4
+INDIRB
+ASGNB 24
+line 432
+;432:    pm.tracemask = MASK_PLAYERSOLID & ~CONTENTS_BODY; // spectators can fly through bodies
+ADDRLP4 4+32
+CNSTI4 65537
+ASGNI4
+line 433
+;433:    pm.trace = trap_Trace;
+ADDRLP4 4+352
+ADDRGP4 trap_Trace
+ASGNP4
+line 434
+;434:    pm.pointcontents = trap_PointContents;
+ADDRLP4 4+356
+ADDRGP4 trap_PointContents
+ASGNP4
+line 437
+;435:
+;436:    // perform a pmove
+;437:    Pmove(&pm);
+ADDRLP4 4
+ARGP4
+ADDRGP4 Pmove
+CALLV
+pop
+line 440
+;438:
+;439:    // save results of pmove
+;440:    VectorCopy(client->ps.origin, ent->s.origin);
+ADDRFP4 0
+INDIRP4
+CNSTI4 92
+ADDP4
+ADDRLP4 0
+INDIRP4
+CNSTI4 20
+ADDP4
+INDIRB
+ASGNB 12
+line 442
+;441:
+;442:    G_TouchTriggers(ent);
+ADDRFP4 0
+INDIRP4
+ARGP4
+ADDRGP4 G_TouchTriggers
+CALLV
+pop
+line 443
+;443:    trap_UnlinkEntity(ent);
+ADDRFP4 0
+INDIRP4
+ARGP4
+ADDRGP4 trap_UnlinkEntity
+CALLV
+pop
+line 445
+;444:
+;445:    if ((attack1) && (client->ps.pm_flags & PMF_QUEUED))
+ADDRLP4 432
+CNSTI4 0
+ASGNI4
+ADDRLP4 364
+INDIRI4
+ADDRLP4 432
+INDIRI4
+EQI4 $268
+ADDRLP4 0
+INDIRP4
+CNSTI4 12
+ADDP4
+INDIRI4
+CNSTI4 8192
+BANDI4
+ADDRLP4 432
+INDIRI4
+EQI4 $268
+line 446
+;446:    {
+line 447
+;447:      if (client->ps.stats[STAT_PTEAM] == PTE_ALIENS)
+ADDRLP4 0
+INDIRP4
+CNSTI4 216
+ADDP4
+INDIRI4
+CNSTI4 1
+NEI4 $270
+line 448
+;448:        G_RemoveFromSpawnQueue(&level.alienSpawnQueue, client->ps.clientNum);
+ADDRGP4 level+189292
+ARGP4
+ADDRLP4 0
+INDIRP4
+CNSTI4 140
+ADDP4
+INDIRI4
+ARGI4
+ADDRGP4 G_RemoveFromSpawnQueue
+CALLI4
+pop
+ADDRGP4 $271
+JUMPV
+LABELV $270
+line 449
+;449:      else if (client->ps.stats[STAT_PTEAM] == PTE_HUMANS)
+ADDRLP4 0
+INDIRP4
+CNSTI4 216
+ADDP4
+INDIRI4
+CNSTI4 2
+NEI4 $273
+line 450
+;450:        G_RemoveFromSpawnQueue(&level.humanSpawnQueue, client->ps.clientNum);
+ADDRGP4 level+189556
+ARGP4
+ADDRLP4 0
+INDIRP4
+CNSTI4 140
+ADDP4
+INDIRI4
+ARGI4
+ADDRGP4 G_RemoveFromSpawnQueue
+CALLI4
+pop
+LABELV $273
+LABELV $271
+line 452
+;451:
+;452:      client->pers.classSelection = PCL_NONE;
+ADDRLP4 0
+INDIRP4
+CNSTI4 616
+ADDP4
+CNSTI4 0
+ASGNI4
+line 453
+;453:      client->ps.stats[STAT_PCLASS] = PCL_NONE;
+ADDRLP4 0
+INDIRP4
+CNSTI4 212
+ADDP4
+CNSTI4 0
+ASGNI4
+line 454
+;454:    }
+LABELV $268
+line 456
+;455:
+;456:    if (attack1 && client->pers.classSelection == PCL_NONE)
+ADDRLP4 436
+CNSTI4 0
+ASGNI4
+ADDRLP4 364
+INDIRI4
+ADDRLP4 436
+INDIRI4
+EQI4 $276
+ADDRLP4 0
+INDIRP4
+CNSTI4 616
+ADDP4
+INDIRI4
+ADDRLP4 436
+INDIRI4
+NEI4 $276
+line 457
+;457:    {
+line 458
+;458:      if (client->pers.teamSelection == PTE_NONE)
+ADDRLP4 0
+INDIRP4
+CNSTI4 628
+ADDP4
+INDIRI4
+CNSTI4 0
+NEI4 $278
+line 459
+;459:        G_TriggerMenu(client->ps.clientNum, MN_TEAM);
+ADDRLP4 0
+INDIRP4
+CNSTI4 140
+ADDP4
+INDIRI4
+ARGI4
+CNSTI4 0
+ARGI4
+ADDRGP4 G_TriggerMenu
+CALLV
+pop
+ADDRGP4 $279
+JUMPV
+LABELV $278
+line 460
+;460:      else if (client->pers.teamSelection == PTE_ALIENS)
+ADDRLP4 0
+INDIRP4
+CNSTI4 628
+ADDP4
+INDIRI4
+CNSTI4 1
+NEI4 $280
+line 461
+;461:        G_TriggerMenu(client->ps.clientNum, MN_A_CLASS);
+ADDRLP4 0
+INDIRP4
+CNSTI4 140
+ADDP4
+INDIRI4
+ARGI4
+CNSTI4 3
+ARGI4
+ADDRGP4 G_TriggerMenu
+CALLV
+pop
+ADDRGP4 $281
+JUMPV
+LABELV $280
+line 462
+;462:      else if (client->pers.teamSelection == PTE_HUMANS)
+ADDRLP4 0
+INDIRP4
+CNSTI4 628
+ADDP4
+INDIRI4
+CNSTI4 2
+NEI4 $282
+line 463
+;463:        G_TriggerMenu(client->ps.clientNum, MN_H_SPAWN);
+ADDRLP4 0
+INDIRP4
+CNSTI4 140
+ADDP4
+INDIRI4
+ARGI4
+CNSTI4 20
+ARGI4
+ADDRGP4 G_TriggerMenu
+CALLV
+pop
+LABELV $282
+LABELV $281
+LABELV $279
+line 464
+;464:    }
+LABELV $276
+line 467
+;465:
+;466:    //set the queue position for the client side
+;467:    if (client->ps.pm_flags & PMF_QUEUED)
+ADDRLP4 0
+INDIRP4
+CNSTI4 12
+ADDP4
+INDIRI4
+CNSTI4 8192
+BANDI4
+CNSTI4 0
+EQI4 $257
+line 468
+;468:    {
+line 469
+;469:      if (client->ps.stats[STAT_PTEAM] == PTE_ALIENS)
+ADDRLP4 0
+INDIRP4
+CNSTI4 216
+ADDP4
+INDIRI4
+CNSTI4 1
+NEI4 $286
+line 470
+;470:      {
+line 471
+;471:        client->ps.persistant[PERS_QUEUEPOS] = G_GetPosInSpawnQueue(
+ADDRGP4 level+189292
+ARGP4
+ADDRLP4 0
+INDIRP4
+CNSTI4 140
+ADDP4
+INDIRI4
+ARGI4
+ADDRLP4 444
+ADDRGP4 G_GetPosInSpawnQueue
+CALLI4
+ASGNI4
+ADDRLP4 0
+INDIRP4
+CNSTI4 288
+ADDP4
+ADDRLP4 444
+INDIRI4
+ASGNI4
+line 473
+;472:          &level.alienSpawnQueue, client->ps.clientNum);
+;473:      }
+ADDRGP4 $257
+JUMPV
+LABELV $286
+line 474
+;474:      else if (client->ps.stats[STAT_PTEAM] == PTE_HUMANS)
+ADDRLP4 0
+INDIRP4
+CNSTI4 216
+ADDP4
+INDIRI4
+CNSTI4 2
+NEI4 $257
+line 475
+;475:      {
+line 476
+;476:        client->ps.persistant[PERS_QUEUEPOS] = G_GetPosInSpawnQueue(
+ADDRGP4 level+189556
+ARGP4
+ADDRLP4 0
+INDIRP4
+CNSTI4 140
+ADDP4
+INDIRI4
+ARGI4
+ADDRLP4 444
+ADDRGP4 G_GetPosInSpawnQueue
+CALLI4
+ASGNI4
+ADDRLP4 0
+INDIRP4
+CNSTI4 288
+ADDP4
+ADDRLP4 444
+INDIRI4
+ASGNI4
+line 478
+;477:          &level.humanSpawnQueue, client->ps.clientNum);
+;478:      }
+line 479
+;479:    }
+line 480
+;480:  }
+ADDRGP4 $257
+JUMPV
+LABELV $256
+line 481
+;481:  else if (attack1 && ent->client->sess.spectatorState == SPECTATOR_FOLLOW)
+ADDRLP4 364
+INDIRI4
+CNSTI4 0
+EQI4 $292
+ADDRFP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+CNSTI4 1132
+ADDP4
+INDIRI4
+CNSTI4 3
+NEI4 $292
+line 482
+;482:  {
+line 483
+;483:    G_StopFollowing(ent);
+ADDRFP4 0
+INDIRP4
+ARGP4
+ADDRGP4 G_StopFollowing
+CALLV
+pop
+line 484
+;484:    client->pers.classSelection = PCL_NONE;
+ADDRLP4 0
+INDIRP4
+CNSTI4 616
+ADDP4
+CNSTI4 0
+ASGNI4
+line 485
+;485:    if (client->pers.teamSelection == PTE_NONE)
+ADDRLP4 0
+INDIRP4
+CNSTI4 628
+ADDP4
+INDIRI4
+CNSTI4 0
+NEI4 $294
+line 486
+;486:      G_TriggerMenu(ent - g_entities, MN_TEAM);
+ADDRFP4 0
+INDIRP4
+CVPU4 4
+ADDRGP4 g_entities
+CVPU4 4
+SUBU4
+CVUI4 4
+CNSTI4 2476
+DIVI4
+ARGI4
+CNSTI4 0
+ARGI4
+ADDRGP4 G_TriggerMenu
+CALLV
+pop
+ADDRGP4 $295
+JUMPV
+LABELV $294
+line 487
+;487:    else if (client->pers.teamSelection == PTE_ALIENS)
+ADDRLP4 0
+INDIRP4
+CNSTI4 628
+ADDP4
+INDIRI4
+CNSTI4 1
+NEI4 $296
+line 488
+;488:      G_TriggerMenu(ent - g_entities, MN_A_CLASS);
+ADDRFP4 0
+INDIRP4
+CVPU4 4
+ADDRGP4 g_entities
+CVPU4 4
+SUBU4
+CVUI4 4
+CNSTI4 2476
+DIVI4
+ARGI4
+CNSTI4 3
+ARGI4
+ADDRGP4 G_TriggerMenu
+CALLV
+pop
+ADDRGP4 $297
+JUMPV
+LABELV $296
+line 489
+;489:    else if (client->pers.teamSelection == PTE_HUMANS)
+ADDRLP4 0
+INDIRP4
+CNSTI4 628
+ADDP4
+INDIRI4
+CNSTI4 2
+NEI4 $298
+line 490
+;490:      G_TriggerMenu(ent - g_entities, MN_H_SPAWN);
+ADDRFP4 0
+INDIRP4
+CVPU4 4
+ADDRGP4 g_entities
+CVPU4 4
+SUBU4
+CVUI4 4
+CNSTI4 2476
+DIVI4
+ARGI4
+CNSTI4 20
+ARGI4
+ADDRGP4 G_TriggerMenu
+CALLV
+pop
+LABELV $298
+LABELV $297
+LABELV $295
+line 491
+;491:  }
+LABELV $292
+LABELV $257
+line 493
+;492:
+;493:  if (attack3)
+ADDRLP4 372
+INDIRI4
+CNSTI4 0
+EQI4 $300
+line 494
+;494:  {
+line 495
+;495:    G_ToggleFollow(ent);
+ADDRFP4 0
+INDIRP4
+ARGP4
+ADDRGP4 G_ToggleFollow
+CALLV
+pop
+line 496
+;496:  }
+LABELV $300
+line 497
+;497:}
+LABELV $238
+endproc SpectatorThink 448 12
+export ClientInactivityTimer
+proc ClientInactivityTimer 12 8
+line 508
+;498:
+;499:/*
+;500: =================
+;501: ClientInactivityTimer
+;502:
+;503: Returns qfalse if the client is dropped
+;504: =================
+;505: */
+;506:qboolean
+;507:ClientInactivityTimer(gclient_t *client)
+;508:{
+line 509
+;509:  if (!g_inactivity.integer)
+ADDRGP4 g_inactivity+12
+INDIRI4
+CNSTI4 0
+NEI4 $303
+line 510
+;510:  {
+line 513
+;511:    // give everyone some time, so if the operator sets g_inactivity during
+;512:    // gameplay, everyone isn't kicked
+;513:    client->inactivityTime = level.time + 60 * 1000;
+ADDRFP4 0
+INDIRP4
+CNSTI4 1240
+ADDP4
+ADDRGP4 level+28
+INDIRI4
+CNSTI4 60000
+ADDI4
+ASGNI4
+line 514
+;514:    client->inactivityWarning = qfalse;
+ADDRFP4 0
+INDIRP4
+CNSTI4 1244
+ADDP4
+CNSTI4 0
+ASGNI4
+line 515
+;515:  }
+ADDRGP4 $304
+JUMPV
+LABELV $303
+line 516
+;516:  else if (client->pers.cmd.forwardmove || client->pers.cmd.rightmove || client->pers.cmd.upmove
+ADDRLP4 0
+ADDRFP4 0
+INDIRP4
+ASGNP4
+ADDRLP4 4
+CNSTI4 0
+ASGNI4
+ADDRLP4 0
+INDIRP4
+CNSTI4 497
+ADDP4
+INDIRI1
+CVII4 1
+ADDRLP4 4
+INDIRI4
+NEI4 $311
+ADDRLP4 0
+INDIRP4
+CNSTI4 498
+ADDP4
+INDIRI1
+CVII4 1
+ADDRLP4 4
+INDIRI4
+NEI4 $311
+ADDRLP4 0
+INDIRP4
+CNSTI4 499
+ADDP4
+INDIRI1
+CVII4 1
+ADDRLP4 4
+INDIRI4
+NEI4 $311
+ADDRLP4 0
+INDIRP4
+CNSTI4 492
+ADDP4
+INDIRI4
+CNSTI4 1
+BANDI4
+ADDRLP4 4
+INDIRI4
+EQI4 $307
+LABELV $311
+line 518
+;517:      || (client->pers.cmd.buttons & BUTTON_ATTACK))
+;518:  {
+line 519
+;519:    client->inactivityTime = level.time + g_inactivity.integer * 1000;
+ADDRFP4 0
+INDIRP4
+CNSTI4 1240
+ADDP4
+ADDRGP4 level+28
+INDIRI4
+CNSTI4 1000
+ADDRGP4 g_inactivity+12
+INDIRI4
+MULI4
+ADDI4
+ASGNI4
+line 520
+;520:    client->inactivityWarning = qfalse;
+ADDRFP4 0
+INDIRP4
+CNSTI4 1244
+ADDP4
+CNSTI4 0
+ASGNI4
+line 521
+;521:  }
+ADDRGP4 $308
+JUMPV
+LABELV $307
+line 522
+;522:  else if (!client->pers.localClient)
+ADDRFP4 0
+INDIRP4
+CNSTI4 500
+ADDP4
+INDIRI4
+CNSTI4 0
+NEI4 $314
+line 523
+;523:  {
+line 524
+;524:    if (level.time > client->inactivityTime)
+ADDRGP4 level+28
+INDIRI4
+ADDRFP4 0
+INDIRP4
+CNSTI4 1240
+ADDP4
+INDIRI4
+LEI4 $316
+line 525
+;525:    {
+line 526
+;526:      trap_DropClient(client - level.clients, "Dropped due to inactivity");
+ADDRFP4 0
+INDIRP4
+CVPU4 4
+ADDRGP4 level
+INDIRP4
+CVPU4 4
+SUBU4
+CVUI4 4
+CNSTI4 2148
+DIVI4
+ARGI4
+ADDRGP4 $319
+ARGP4
+ADDRGP4 trap_DropClient
+CALLV
+pop
+line 527
+;527:      return qfalse;
+CNSTI4 0
+RETI4
+ADDRGP4 $302
+JUMPV
+LABELV $316
+line 530
+;528:    }
+;529:
+;530:    if (level.time > client->inactivityTime - 10000 && !client->inactivityWarning)
+ADDRLP4 8
+ADDRFP4 0
+INDIRP4
+ASGNP4
+ADDRGP4 level+28
+INDIRI4
+ADDRLP4 8
+INDIRP4
+CNSTI4 1240
+ADDP4
+INDIRI4
+CNSTI4 10000
+SUBI4
+LEI4 $320
+ADDRLP4 8
+INDIRP4
+CNSTI4 1244
+ADDP4
+INDIRI4
+CNSTI4 0
+NEI4 $320
+line 531
+;531:    {
+line 532
+;532:      client->inactivityWarning = qtrue;
+ADDRFP4 0
+INDIRP4
+CNSTI4 1244
+ADDP4
+CNSTI4 1
+ASGNI4
+line 533
+;533:      trap_SendServerCommand(client - level.clients, "cp \"Ten seconds until inactivity drop!\n\"");
+ADDRFP4 0
+INDIRP4
+CVPU4 4
+ADDRGP4 level
+INDIRP4
+CVPU4 4
+SUBU4
+CVUI4 4
+CNSTI4 2148
+DIVI4
+ARGI4
+ADDRGP4 $323
+ARGP4
+ADDRGP4 trap_SendServerCommand
+CALLV
+pop
+line 534
+;534:    }
+LABELV $320
+line 535
+;535:  }
+LABELV $314
+LABELV $308
+LABELV $304
+line 537
+;536:
+;537:  return qtrue;
+CNSTI4 1
+RETI4
+LABELV $302
+endproc ClientInactivityTimer 12 8
+lit
+align 4
+LABELV $441
+byte 4 1128792064
+byte 4 1128792064
+byte 4 1128792064
+export ClientTimerActions
+code
+proc ClientTimerActions 4248 32
+line 549
+;538:}
+;539:
+;540:/*
+;541: ==================
+;542: ClientTimerActions
+;543:
+;544: Actions that happen once a second
+;545: ==================
+;546: */
+;547:void
+;548:ClientTimerActions(gentity_t *ent, int msec)
+;549:{
+line 554
+;550:  gclient_t *client;
+;551:  usercmd_t *ucmd;
+;552:  int aForward, aRight;
+;553:
+;554:  ucmd = &ent->client->pers.cmd;
+ADDRLP4 4
+ADDRFP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+CNSTI4 476
+ADDP4
+ASGNP4
+line 556
+;555:
+;556:  aForward = abs(ucmd->forwardmove);
+ADDRLP4 4
+INDIRP4
+CNSTI4 21
+ADDP4
+INDIRI1
+CVII4 1
+ARGI4
+ADDRLP4 16
+ADDRGP4 abs
+CALLI4
+ASGNI4
+ADDRLP4 8
+ADDRLP4 16
+INDIRI4
+ASGNI4
+line 557
+;557:  aRight = abs(ucmd->rightmove);
+ADDRLP4 4
+INDIRP4
+CNSTI4 22
+ADDP4
+INDIRI1
+CVII4 1
+ARGI4
+ADDRLP4 20
+ADDRGP4 abs
+CALLI4
+ASGNI4
+ADDRLP4 12
+ADDRLP4 20
+INDIRI4
+ASGNI4
+line 559
+;558:
+;559:  client = ent->client;
+ADDRLP4 0
+ADDRFP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+ASGNP4
+line 560
+;560:  client->time100 += msec;
+ADDRLP4 24
+ADDRLP4 0
+INDIRP4
+CNSTI4 1280
+ADDP4
+ASGNP4
+ADDRLP4 24
+INDIRP4
+ADDRLP4 24
+INDIRP4
+INDIRI4
+ADDRFP4 4
+INDIRI4
+ADDI4
+ASGNI4
+line 561
+;561:  client->time1000 += msec;
+ADDRLP4 28
+ADDRLP4 0
+INDIRP4
+CNSTI4 1288
+ADDP4
+ASGNP4
+ADDRLP4 28
+INDIRP4
+ADDRLP4 28
+INDIRP4
+INDIRI4
+ADDRFP4 4
+INDIRI4
+ADDI4
+ASGNI4
+line 562
+;562:  client->time2000 += msec;
+ADDRLP4 32
+ADDRLP4 0
+INDIRP4
+CNSTI4 1292
+ADDP4
+ASGNP4
+ADDRLP4 32
+INDIRP4
+ADDRLP4 32
+INDIRP4
+INDIRI4
+ADDRFP4 4
+INDIRI4
+ADDI4
+ASGNI4
+line 563
+;563:  client->time3000 += msec;
+ADDRLP4 36
+ADDRLP4 0
+INDIRP4
+CNSTI4 1296
+ADDP4
+ASGNP4
+ADDRLP4 36
+INDIRP4
+ADDRLP4 36
+INDIRP4
+INDIRI4
+ADDRFP4 4
+INDIRI4
+ADDI4
+ASGNI4
+line 564
+;564:  client->time10000 += msec;
+ADDRLP4 40
+ADDRLP4 0
+INDIRP4
+CNSTI4 1308
+ADDP4
+ASGNP4
+ADDRLP4 40
+INDIRP4
+ADDRLP4 40
+INDIRP4
+INDIRI4
+ADDRFP4 4
+INDIRI4
+ADDI4
+ASGNI4
+line 565
+;565:  client->time350 += msec;
+ADDRLP4 44
+ADDRLP4 0
+INDIRP4
+CNSTI4 1284
+ADDP4
+ASGNP4
+ADDRLP4 44
+INDIRP4
+ADDRLP4 44
+INDIRP4
+INDIRI4
+ADDRFP4 4
+INDIRI4
+ADDI4
+ASGNI4
+ADDRGP4 $326
+JUMPV
+LABELV $325
+line 568
+;566:
+;567:  while(client->time350 >= 100)
+;568:  {
+line 569
+;569:    client->time350 -= 100;
+ADDRLP4 48
+ADDRLP4 0
+INDIRP4
+CNSTI4 1284
+ADDP4
+ASGNP4
+ADDRLP4 48
+INDIRP4
+ADDRLP4 48
+INDIRP4
+INDIRI4
+CNSTI4 100
+SUBI4
+ASGNI4
+line 570
+;570:    if (ent->r.svFlags & SVF_BOT)
+ADDRFP4 0
+INDIRP4
+CNSTI4 424
+ADDP4
+INDIRI4
+CNSTI4 8
+BANDI4
+CNSTI4 0
+EQI4 $328
+line 571
+;571:    {
+line 572
+;572:      G_BotThink(ent);
+ADDRFP4 0
+INDIRP4
+ARGP4
+ADDRGP4 G_BotThink
+CALLV
+pop
+line 573
+;573:    }
+LABELV $328
+line 574
+;574:  }
+LABELV $326
+line 567
+ADDRLP4 0
+INDIRP4
+CNSTI4 1284
+ADDP4
+INDIRI4
+CNSTI4 100
+GEI4 $325
+ADDRGP4 $331
+JUMPV
+LABELV $330
+line 577
+;575:
+;576:  while(client->time100 >= 100)
+;577:  {
+line 578
+;578:    client->time100 -= 100;
+ADDRLP4 48
+ADDRLP4 0
+INDIRP4
+CNSTI4 1280
+ADDP4
+ASGNP4
+ADDRLP4 48
+INDIRP4
+ADDRLP4 48
+INDIRP4
+INDIRI4
+CNSTI4 100
+SUBI4
+ASGNI4
+line 581
+;579:    
+;580:    //if not trying to run then not trying to sprint
+;581:    if (aForward <= 64)
+ADDRLP4 8
+INDIRI4
+CNSTI4 64
+GTI4 $333
+line 582
+;582:      client->ps.stats[STAT_STATE] &= ~SS_SPEEDBOOST;
+ADDRLP4 52
+ADDRLP4 0
+INDIRP4
+CNSTI4 224
+ADDP4
+ASGNP4
+ADDRLP4 52
+INDIRP4
+ADDRLP4 52
+INDIRP4
+INDIRI4
+CNSTI4 -9
+BANDI4
+ASGNI4
+LABELV $333
+line 587
+;583:
+;584:    /*if (BG_InventoryContainsUpgrade(UP_JETPACK, client->ps.stats) && BG_UpgradeIsActive(UP_JETPACK, client->ps.stats))
+;585:     client->ps.stats[STAT_STATE] &= ~SS_SPEEDBOOST;*/
+;586:
+;587:    if ((client->ps.stats[STAT_STATE] & SS_SPEEDBOOST) && ucmd->upmove >= 0)
+ADDRLP4 56
+CNSTI4 0
+ASGNI4
+ADDRLP4 0
+INDIRP4
+CNSTI4 224
+ADDP4
+INDIRI4
+CNSTI4 8
+BANDI4
+ADDRLP4 56
+INDIRI4
+EQI4 $335
+ADDRLP4 4
+INDIRP4
+CNSTI4 23
+ADDP4
+INDIRI1
+CVII4 1
+ADDRLP4 56
+INDIRI4
+LTI4 $335
+line 588
+;588:    {
+line 590
+;589:      //subtract stamina
+;590:      if (BG_InventoryContainsUpgrade(UP_LIGHTARMOUR, client->ps.stats))
+CNSTI4 1
+ARGI4
+ADDRLP4 0
+INDIRP4
+CNSTI4 184
+ADDP4
+ARGP4
+ADDRLP4 60
+ADDRGP4 BG_InventoryContainsUpgrade
+CALLI4
+ASGNI4
+ADDRLP4 60
+INDIRI4
+CNSTI4 0
+EQI4 $337
+line 591
+;591:        client->ps.stats[STAT_STAMINA] -= STAMINA_LARMOUR_TAKE;
+ADDRLP4 64
+ADDRLP4 0
+INDIRP4
+CNSTI4 220
+ADDP4
+ASGNP4
+ADDRLP4 64
+INDIRP4
+ADDRLP4 64
+INDIRP4
+INDIRI4
+CNSTI4 4
+SUBI4
+ASGNI4
+ADDRGP4 $338
+JUMPV
+LABELV $337
+line 593
+;592:      else
+;593:        client->ps.stats[STAT_STAMINA] -= STAMINA_SPRINT_TAKE;
+ADDRLP4 68
+ADDRLP4 0
+INDIRP4
+CNSTI4 220
+ADDP4
+ASGNP4
+ADDRLP4 68
+INDIRP4
+ADDRLP4 68
+INDIRP4
+INDIRI4
+CNSTI4 8
+SUBI4
+ASGNI4
+LABELV $338
+line 595
+;594:
+;595:      if (client->ps.stats[STAT_STAMINA] < -MAX_STAMINA)
+ADDRLP4 0
+INDIRP4
+CNSTI4 220
+ADDP4
+INDIRI4
+CNSTI4 -1000
+GEI4 $339
+line 596
+;596:        client->ps.stats[STAT_STAMINA] = -MAX_STAMINA;
+ADDRLP4 0
+INDIRP4
+CNSTI4 220
+ADDP4
+CNSTI4 -1000
+ASGNI4
+LABELV $339
+line 597
+;597:    }
+LABELV $335
+line 599
+;598:
+;599:    if ((aForward <= 64 && aForward > 5) || (aRight <= 64 && aRight > 5))
+ADDRLP4 8
+INDIRI4
+CNSTI4 64
+GTI4 $344
+ADDRLP4 8
+INDIRI4
+CNSTI4 5
+GTI4 $343
+LABELV $344
+ADDRLP4 12
+INDIRI4
+CNSTI4 64
+GTI4 $341
+ADDRLP4 12
+INDIRI4
+CNSTI4 5
+LEI4 $341
+LABELV $343
+line 600
+;600:    {
+line 602
+;601:      //restore stamina
+;602:      client->ps.stats[STAT_STAMINA] += STAMINA_WALK_RESTORE;
+ADDRLP4 68
+ADDRLP4 0
+INDIRP4
+CNSTI4 220
+ADDP4
+ASGNP4
+ADDRLP4 68
+INDIRP4
+ADDRLP4 68
+INDIRP4
+INDIRI4
+CNSTI4 15
+ADDI4
+ASGNI4
+line 604
+;603:
+;604:      if (client->ps.stats[STAT_STAMINA] > MAX_STAMINA)
+ADDRLP4 0
+INDIRP4
+CNSTI4 220
+ADDP4
+INDIRI4
+CNSTI4 1000
+LEI4 $342
+line 605
+;605:        client->ps.stats[STAT_STAMINA] = MAX_STAMINA;
+ADDRLP4 0
+INDIRP4
+CNSTI4 220
+ADDP4
+CNSTI4 1000
+ASGNI4
+line 606
+;606:    }
+ADDRGP4 $342
+JUMPV
+LABELV $341
+line 607
+;607:    else if (aForward <= 5 && aRight <= 5)
+ADDRLP4 68
+CNSTI4 5
+ASGNI4
+ADDRLP4 8
+INDIRI4
+ADDRLP4 68
+INDIRI4
+GTI4 $347
+ADDRLP4 12
+INDIRI4
+ADDRLP4 68
+INDIRI4
+GTI4 $347
+line 608
+;608:    {
+line 610
+;609:      //restore stamina faster
+;610:      client->ps.stats[STAT_STAMINA] += STAMINA_STOP_RESTORE;
+ADDRLP4 72
+ADDRLP4 0
+INDIRP4
+CNSTI4 220
+ADDP4
+ASGNP4
+ADDRLP4 72
+INDIRP4
+ADDRLP4 72
+INDIRP4
+INDIRI4
+CNSTI4 25
+ADDI4
+ASGNI4
+line 612
+;611:
+;612:      if (client->ps.stats[STAT_STAMINA] > MAX_STAMINA)
+ADDRLP4 0
+INDIRP4
+CNSTI4 220
+ADDP4
+INDIRI4
+CNSTI4 1000
+LEI4 $349
+line 613
+;613:        client->ps.stats[STAT_STAMINA] = MAX_STAMINA;
+ADDRLP4 0
+INDIRP4
+CNSTI4 220
+ADDP4
+CNSTI4 1000
+ASGNI4
+LABELV $349
+line 614
+;614:    }
+LABELV $347
+LABELV $342
+line 617
+;615:
+;616:    //client is charging up for a pounce
+;617:    if (client->ps.weapon == WP_ALEVEL3 || client->ps.weapon == WP_ALEVEL3_UPG)
+ADDRLP4 72
+ADDRLP4 0
+INDIRP4
+CNSTI4 144
+ADDP4
+INDIRI4
+ASGNI4
+ADDRLP4 72
+INDIRI4
+CNSTI4 27
+EQI4 $353
+ADDRLP4 72
+INDIRI4
+CNSTI4 28
+NEI4 $351
+LABELV $353
+line 618
+;618:    {
+line 619
+;619:      int pounceSpeed = 0;
+ADDRLP4 76
+CNSTI4 0
+ASGNI4
+line 621
+;620:
+;621:      if (client->ps.weapon == WP_ALEVEL3)
+ADDRLP4 0
+INDIRP4
+CNSTI4 144
+ADDP4
+INDIRI4
+CNSTI4 27
+NEI4 $354
+line 622
+;622:        pounceSpeed = LEVEL3_POUNCE_SPEED;
+ADDRLP4 76
+CNSTI4 700
+ASGNI4
+ADDRGP4 $355
+JUMPV
+LABELV $354
+line 623
+;623:      else if (client->ps.weapon == WP_ALEVEL3_UPG)
+ADDRLP4 0
+INDIRP4
+CNSTI4 144
+ADDP4
+INDIRI4
+CNSTI4 28
+NEI4 $356
+line 624
+;624:        pounceSpeed = LEVEL3_POUNCE_UPG_SPEED;
+ADDRLP4 76
+CNSTI4 800
+ASGNI4
+LABELV $356
+LABELV $355
+line 626
+;625:
+;626:      if (client->ps.stats[STAT_MISC] < pounceSpeed && ucmd->buttons & BUTTON_ATTACK2)
+ADDRLP4 0
+INDIRP4
+CNSTI4 228
+ADDP4
+INDIRI4
+ADDRLP4 76
+INDIRI4
+GEI4 $358
+ADDRLP4 4
+INDIRP4
+CNSTI4 16
+ADDP4
+INDIRI4
+CNSTI4 32
+BANDI4
+CNSTI4 0
+EQI4 $358
+line 627
+;627:        client->ps.stats[STAT_MISC] += (100.0f / (float) LEVEL3_POUNCE_CHARGE_TIME) * pounceSpeed;
+ADDRLP4 80
+ADDRLP4 0
+INDIRP4
+CNSTI4 228
+ADDP4
+ASGNP4
+ADDRLP4 80
+INDIRP4
+ADDRLP4 80
+INDIRP4
+INDIRI4
+CVIF4 4
+CNSTF4 1041385765
+ADDRLP4 76
+INDIRI4
+CVIF4 4
+MULF4
+ADDF4
+CVFI4 4
+ASGNI4
+LABELV $358
+line 629
+;628:
+;629:      if (!(ucmd->buttons & BUTTON_ATTACK2))
+ADDRLP4 4
+INDIRP4
+CNSTI4 16
+ADDP4
+INDIRI4
+CNSTI4 32
+BANDI4
+CNSTI4 0
+NEI4 $360
+line 630
+;630:      {
+line 631
+;631:        if (client->pmext.pouncePayload > 0)
+ADDRLP4 0
+INDIRP4
+CNSTI4 468
+ADDP4
+INDIRI4
+CNSTI4 0
+LEI4 $362
+line 632
+;632:          client->allowedToPounce = qtrue;
+ADDRLP4 0
+INDIRP4
+CNSTI4 1380
+ADDP4
+CNSTI4 1
+ASGNI4
+LABELV $362
+line 633
+;633:      }
+LABELV $360
+line 635
+;634:
+;635:      if (client->ps.stats[STAT_MISC] > pounceSpeed)
+ADDRLP4 0
+INDIRP4
+CNSTI4 228
+ADDP4
+INDIRI4
+ADDRLP4 76
+INDIRI4
+LEI4 $364
+line 636
+;636:        client->ps.stats[STAT_MISC] = pounceSpeed;
+ADDRLP4 0
+INDIRP4
+CNSTI4 228
+ADDP4
+ADDRLP4 76
+INDIRI4
+ASGNI4
+LABELV $364
+line 637
+;637:    }
+LABELV $351
+line 640
+;638:
+;639:    //client is charging up for a... charge
+;640:    if (client->ps.weapon == WP_ALEVEL4)
+ADDRLP4 0
+INDIRP4
+CNSTI4 144
+ADDP4
+INDIRI4
+CNSTI4 29
+NEI4 $366
+line 641
+;641:    {
+line 642
+;642:      if (client->ps.stats[STAT_MISC] < LEVEL4_CHARGE_TIME && ucmd->buttons & BUTTON_ATTACK2
+ADDRLP4 0
+INDIRP4
+CNSTI4 228
+ADDP4
+INDIRI4
+CNSTI4 3000
+GEI4 $368
+ADDRLP4 80
+CNSTI4 0
+ASGNI4
+ADDRLP4 4
+INDIRP4
+CNSTI4 16
+ADDP4
+INDIRI4
+CNSTI4 32
+BANDI4
+ADDRLP4 80
+INDIRI4
+EQI4 $368
+ADDRLP4 0
+INDIRP4
+CNSTI4 1384
+ADDP4
+INDIRI4
+ADDRLP4 80
+INDIRI4
+NEI4 $368
+line 644
+;643:          && !client->charging)
+;644:      {
+line 645
+;645:        client->charging = qfalse; //should already be off, just making sure
+ADDRLP4 0
+INDIRP4
+CNSTI4 1384
+ADDP4
+CNSTI4 0
+ASGNI4
+line 646
+;646:        client->ps.stats[STAT_STATE] &= ~SS_CHARGING;
+ADDRLP4 84
+ADDRLP4 0
+INDIRP4
+CNSTI4 224
+ADDP4
+ASGNP4
+ADDRLP4 84
+INDIRP4
+ADDRLP4 84
+INDIRP4
+INDIRI4
+CNSTI4 -8193
+BANDI4
+ASGNI4
+line 648
+;647:
+;648:        if (ucmd->forwardmove > 0)
+ADDRLP4 4
+INDIRP4
+CNSTI4 21
+ADDP4
+INDIRI1
+CVII4 1
+CNSTI4 0
+LEI4 $370
+line 649
+;649:        {
+line 654
+;650:          //trigger charge sound...is quite annoying
+;651:          //if( client->ps.stats[ STAT_MISC ] <= 0 )
+;652:          //  G_AddEvent( ent, EV_LEV4_CHARGE_PREPARE, 0 );
+;653:
+;654:          client->ps.stats[STAT_MISC] += (int) (100 * (float) LEVEL4_CHARGE_CHARGE_RATIO);
+ADDRLP4 88
+ADDRLP4 0
+INDIRP4
+CNSTI4 228
+ADDP4
+ASGNP4
+ADDRLP4 88
+INDIRP4
+ADDRLP4 88
+INDIRP4
+INDIRI4
+CNSTI4 200
+ADDI4
+ASGNI4
+line 656
+;655:
+;656:          if (client->ps.stats[STAT_MISC] > LEVEL4_CHARGE_TIME)
+ADDRLP4 0
+INDIRP4
+CNSTI4 228
+ADDP4
+INDIRI4
+CNSTI4 3000
+LEI4 $371
+line 657
+;657:            client->ps.stats[STAT_MISC] = LEVEL4_CHARGE_TIME;
+ADDRLP4 0
+INDIRP4
+CNSTI4 228
+ADDP4
+CNSTI4 3000
+ASGNI4
+line 658
+;658:        }
+ADDRGP4 $371
+JUMPV
+LABELV $370
+line 660
+;659:        else
+;660:          client->ps.stats[STAT_MISC] = 0;
+ADDRLP4 0
+INDIRP4
+CNSTI4 228
+ADDP4
+CNSTI4 0
+ASGNI4
+LABELV $371
+line 661
+;661:      }
+LABELV $368
+line 663
+;662:
+;663:      if (!(ucmd->buttons & BUTTON_ATTACK2) || client->charging || client->ps.stats[STAT_MISC]
+ADDRLP4 84
+CNSTI4 0
+ASGNI4
+ADDRLP4 4
+INDIRP4
+CNSTI4 16
+ADDP4
+INDIRI4
+CNSTI4 32
+BANDI4
+ADDRLP4 84
+INDIRI4
+EQI4 $377
+ADDRLP4 0
+INDIRP4
+CNSTI4 1384
+ADDP4
+INDIRI4
+ADDRLP4 84
+INDIRI4
+NEI4 $377
+ADDRLP4 0
+INDIRP4
+CNSTI4 228
+ADDP4
+INDIRI4
+CNSTI4 3000
+NEI4 $374
+LABELV $377
+line 665
+;664:          == LEVEL4_CHARGE_TIME)
+;665:      {
+line 666
+;666:        if (client->ps.stats[STAT_MISC] > LEVEL4_MIN_CHARGE_TIME)
+ADDRLP4 0
+INDIRP4
+CNSTI4 228
+ADDP4
+INDIRI4
+CNSTI4 750
+LEI4 $378
+line 667
+;667:        {
+line 668
+;668:          client->ps.stats[STAT_MISC] -= 100;
+ADDRLP4 92
+ADDRLP4 0
+INDIRP4
+CNSTI4 228
+ADDP4
+ASGNP4
+ADDRLP4 92
+INDIRP4
+ADDRLP4 92
+INDIRP4
+INDIRI4
+CNSTI4 100
+SUBI4
+ASGNI4
+line 670
+;669:
+;670:          if (client->charging == qfalse)
+ADDRLP4 0
+INDIRP4
+CNSTI4 1384
+ADDP4
+INDIRI4
+CNSTI4 0
+NEI4 $380
+line 671
+;671:            G_AddEvent(ent, EV_LEV4_CHARGE_START, 0);
+ADDRFP4 0
+INDIRP4
+ARGP4
+CNSTI4 46
+ARGI4
+CNSTI4 0
+ARGI4
+ADDRGP4 G_AddEvent
+CALLV
+pop
+LABELV $380
+line 673
+;672:
+;673:          client->charging = qtrue;
+ADDRLP4 0
+INDIRP4
+CNSTI4 1384
+ADDP4
+CNSTI4 1
+ASGNI4
+line 674
+;674:          client->ps.stats[STAT_STATE] |= SS_CHARGING;
+ADDRLP4 96
+ADDRLP4 0
+INDIRP4
+CNSTI4 224
+ADDP4
+ASGNP4
+ADDRLP4 96
+INDIRP4
+ADDRLP4 96
+INDIRP4
+INDIRI4
+CNSTI4 8192
+BORI4
+ASGNI4
+line 677
+;675:
+;676:          //if the charger has stopped moving take a chunk of charge away
+;677:          if (VectorLength(client->ps.velocity) < 64.0f || aRight)
+ADDRLP4 0
+INDIRP4
+CNSTI4 32
+ADDP4
+ARGP4
+ADDRLP4 100
+ADDRGP4 VectorLength
+CALLF4
+ASGNF4
+ADDRLP4 100
+INDIRF4
+CNSTF4 1115684864
+LTF4 $384
+ADDRLP4 12
+INDIRI4
+CNSTI4 0
+EQI4 $382
+LABELV $384
+line 678
+;678:            client->ps.stats[STAT_MISC] = client->ps.stats[STAT_MISC] / 2;
+ADDRLP4 104
+ADDRLP4 0
+INDIRP4
+CNSTI4 228
+ADDP4
+ASGNP4
+ADDRLP4 104
+INDIRP4
+ADDRLP4 104
+INDIRP4
+INDIRI4
+CNSTI4 2
+DIVI4
+ASGNI4
+LABELV $382
+line 681
+;679:
+;680:          //can't charge backwards
+;681:          if (ucmd->forwardmove < 0)
+ADDRLP4 4
+INDIRP4
+CNSTI4 21
+ADDP4
+INDIRI1
+CVII4 1
+CNSTI4 0
+GEI4 $379
+line 682
+;682:            client->ps.stats[STAT_MISC] = 0;
+ADDRLP4 0
+INDIRP4
+CNSTI4 228
+ADDP4
+CNSTI4 0
+ASGNI4
+line 683
+;683:        }
+ADDRGP4 $379
+JUMPV
+LABELV $378
+line 685
+;684:        else
+;685:          client->ps.stats[STAT_MISC] = 0;
+ADDRLP4 0
+INDIRP4
+CNSTI4 228
+ADDP4
+CNSTI4 0
+ASGNI4
+LABELV $379
+line 687
+;686:
+;687:        if (client->ps.stats[STAT_MISC] <= 0)
+ADDRLP4 0
+INDIRP4
+CNSTI4 228
+ADDP4
+INDIRI4
+CNSTI4 0
+GTI4 $387
+line 688
+;688:        {
+line 689
+;689:          client->ps.stats[STAT_MISC] = 0;
+ADDRLP4 0
+INDIRP4
+CNSTI4 228
+ADDP4
+CNSTI4 0
+ASGNI4
+line 690
+;690:          client->charging = qfalse;
+ADDRLP4 0
+INDIRP4
+CNSTI4 1384
+ADDP4
+CNSTI4 0
+ASGNI4
+line 691
+;691:          client->ps.stats[STAT_STATE] &= ~SS_CHARGING;
+ADDRLP4 92
+ADDRLP4 0
+INDIRP4
+CNSTI4 224
+ADDP4
+ASGNP4
+ADDRLP4 92
+INDIRP4
+ADDRLP4 92
+INDIRP4
+INDIRI4
+CNSTI4 -8193
+BANDI4
+ASGNI4
+line 692
+;692:        }
+LABELV $387
+line 693
+;693:      }
+LABELV $374
+line 694
+;694:    }
+LABELV $366
+line 695
+;695:    switch(client->ps.weapon)
+ADDRLP4 76
+ADDRLP4 0
+INDIRP4
+CNSTI4 144
+ADDP4
+INDIRI4
+ASGNI4
+ADDRLP4 84
+CNSTI4 1
+ASGNI4
+ADDRLP4 76
+INDIRI4
+ADDRLP4 84
+INDIRI4
+EQI4 $397
+ADDRLP4 76
+INDIRI4
+ADDRLP4 84
+INDIRI4
+LTI4 $390
+LABELV $402
+ADDRLP4 76
+INDIRI4
+CNSTI4 18
+LTI4 $390
+ADDRLP4 76
+INDIRI4
+CNSTI4 21
+GTI4 $390
+ADDRLP4 76
+INDIRI4
+CNSTI4 2
+LSHI4
+ADDRGP4 $403-72
+ADDP4
+INDIRP4
+JUMPV
+lit
+align 4
+LABELV $403
+address $392
+address $392
+address $392
+address $392
+code
+line 696
+;696:    {
+LABELV $392
+line 702
+;697:      case WP_ABUILD:
+;698:      case WP_ABUILD2:
+;699:      case WP_HBUILD:
+;700:      case WP_HBUILD2:
+;701:        //set validity bit on buildable
+;702:        if ((client->ps.stats[STAT_BUILDABLE] & ~SB_VALID_TOGGLEBIT) > BA_NONE)
+ADDRLP4 0
+INDIRP4
+CNSTI4 232
+ADDP4
+INDIRI4
+CNSTI4 -16385
+BANDI4
+CNSTI4 0
+LEI4 $393
+line 703
+;703:        {
+line 704
+;704:          int dist = BG_FindBuildDistForClass(ent->client->ps.stats[STAT_PCLASS]);
+ADDRFP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+CNSTI4 212
+ADDP4
+INDIRI4
+ARGI4
+ADDRLP4 108
+ADDRGP4 BG_FindBuildDistForClass
+CALLF4
+ASGNF4
+ADDRLP4 92
+ADDRLP4 108
+INDIRF4
+CVFI4 4
+ASGNI4
+line 707
+;705:          vec3_t dummy;
+;706:
+;707:          if (G_CanBuild(ent, client->ps.stats[STAT_BUILDABLE] & ~SB_VALID_TOGGLEBIT, dist, dummy)
+ADDRFP4 0
+INDIRP4
+ARGP4
+ADDRLP4 0
+INDIRP4
+CNSTI4 232
+ADDP4
+INDIRI4
+CNSTI4 -16385
+BANDI4
+ARGI4
+ADDRLP4 92
+INDIRI4
+ARGI4
+ADDRLP4 96
+ARGP4
+ADDRLP4 112
+ADDRGP4 G_CanBuild
+CALLI4
+ASGNI4
+ADDRLP4 112
+INDIRI4
+CNSTI4 0
+NEI4 $395
+line 709
+;708:              == IBE_NONE)
+;709:            client->ps.stats[STAT_BUILDABLE] |= SB_VALID_TOGGLEBIT;
+ADDRLP4 116
+ADDRLP4 0
+INDIRP4
+CNSTI4 232
+ADDP4
+ASGNP4
+ADDRLP4 116
+INDIRP4
+ADDRLP4 116
+INDIRP4
+INDIRI4
+CNSTI4 16384
+BORI4
+ASGNI4
+ADDRGP4 $396
+JUMPV
+LABELV $395
+line 711
+;710:          else
+;711:            client->ps.stats[STAT_BUILDABLE] &= ~SB_VALID_TOGGLEBIT;
+ADDRLP4 120
+ADDRLP4 0
+INDIRP4
+CNSTI4 232
+ADDP4
+ASGNP4
+ADDRLP4 120
+INDIRP4
+ADDRLP4 120
+INDIRP4
+INDIRI4
+CNSTI4 -16385
+BANDI4
+ASGNI4
+LABELV $396
+line 712
+;712:        }
+LABELV $393
+LABELV $397
+line 716
+;713:
+;714:      case WP_PISTOL:
+;715:        //update build timer
+;716:        if (client->ps.stats[STAT_MISC] > 0)
+ADDRLP4 0
+INDIRP4
+CNSTI4 228
+ADDP4
+INDIRI4
+CNSTI4 0
+LEI4 $398
+line 717
+;717:          client->ps.stats[STAT_MISC] -= 100;
+ADDRLP4 92
+ADDRLP4 0
+INDIRP4
+CNSTI4 228
+ADDP4
+ASGNP4
+ADDRLP4 92
+INDIRP4
+ADDRLP4 92
+INDIRP4
+INDIRI4
+CNSTI4 100
+SUBI4
+ASGNI4
+LABELV $398
+line 719
+;718:
+;719:        if (client->ps.stats[STAT_MISC] < 0)
+ADDRLP4 0
+INDIRP4
+CNSTI4 228
+ADDP4
+INDIRI4
+CNSTI4 0
+GEI4 $390
+line 720
+;720:          client->ps.stats[STAT_MISC] = 0;
+ADDRLP4 0
+INDIRP4
+CNSTI4 228
+ADDP4
+CNSTI4 0
+ASGNI4
+line 721
+;721:        break;
+line 724
+;722:
+;723:      default:
+;724:        break;
+LABELV $390
+line 727
+;725:    }
+;726:
+;727:    if (client->ps.stats[STAT_STATE] & SS_MEDKIT_ACTIVE)
+ADDRLP4 0
+INDIRP4
+CNSTI4 224
+ADDP4
+INDIRI4
+CNSTI4 4096
+BANDI4
+CNSTI4 0
+EQI4 $405
+line 728
+;728:    {
+line 729
+;729:      int remainingStartupTime = MEDKIT_STARTUP_TIME - (level.time - client->lastMedKitTime);
+ADDRLP4 92
+CNSTI4 4000
+ADDRGP4 level+28
+INDIRI4
+ADDRLP4 0
+INDIRP4
+CNSTI4 1364
+ADDP4
+INDIRI4
+SUBI4
+SUBI4
+ASGNI4
+line 731
+;730:
+;731:      if (remainingStartupTime < 0)
+ADDRLP4 92
+INDIRI4
+CNSTI4 0
+GEI4 $408
+line 732
+;732:      {
+line 733
+;733:        if (ent->health < ent->client->ps.stats[STAT_MAX_HEALTH]
+ADDRLP4 96
+ADDRFP4 0
+INDIRP4
+ASGNP4
+ADDRLP4 100
+ADDRLP4 96
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+ASGNP4
+ADDRLP4 96
+INDIRP4
+CNSTI4 812
+ADDP4
+INDIRI4
+ADDRLP4 100
+INDIRP4
+CNSTI4 208
+ADDP4
+INDIRI4
+GEI4 $410
+ADDRLP4 100
+INDIRP4
+CNSTI4 1368
+ADDP4
+INDIRI4
+CNSTI4 0
+EQI4 $410
+ADDRLP4 100
+INDIRP4
+CNSTI4 4
+ADDP4
+INDIRI4
+CNSTI4 5
+EQI4 $410
+line 735
+;734:            && ent->client->medKitHealthToRestore && ent->client->ps.pm_type != PM_DEAD)
+;735:        {
+line 736
+;736:          ent->client->medKitHealthToRestore--;
+ADDRLP4 104
+ADDRFP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+CNSTI4 1368
+ADDP4
+ASGNP4
+ADDRLP4 104
+INDIRP4
+ADDRLP4 104
+INDIRP4
+INDIRI4
+CNSTI4 1
+SUBI4
+ASGNI4
+line 737
+;737:          ent->health++;
+ADDRLP4 108
+ADDRFP4 0
+INDIRP4
+CNSTI4 812
+ADDP4
+ASGNP4
+ADDRLP4 108
+INDIRP4
+ADDRLP4 108
+INDIRP4
+INDIRI4
+CNSTI4 1
+ADDI4
+ASGNI4
+line 738
+;738:			if ( (ent->client->pers.badges[ 18 ] != 1) && (ent->health >= 75) && ent->client->pers.onehp && g_survival.integer)
+ADDRLP4 112
+ADDRFP4 0
+INDIRP4
+ASGNP4
+ADDRLP4 116
+ADDRLP4 112
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+ASGNP4
+ADDRLP4 116
+INDIRP4
+CNSTI4 790
+ADDP4
+INDIRI1
+CVII4 1
+CNSTI4 1
+EQI4 $409
+ADDRLP4 112
+INDIRP4
+CNSTI4 812
+ADDP4
+INDIRI4
+CNSTI4 75
+LTI4 $409
+ADDRLP4 120
+CNSTI4 0
+ASGNI4
+ADDRLP4 116
+INDIRP4
+CNSTI4 892
+ADDP4
+INDIRI4
+ADDRLP4 120
+INDIRI4
+EQI4 $409
+ADDRGP4 g_survival+12
+INDIRI4
+ADDRLP4 120
+INDIRI4
+EQI4 $409
+line 739
+;739:			{
+line 740
+;740:				G_WinBadge( ent, 18 );
+ADDRFP4 0
+INDIRP4
+ARGP4
+CNSTI4 18
+ARGI4
+ADDRGP4 G_WinBadge
+CALLV
+pop
+line 741
+;741:				ent->client->pers.badgeupdate[18] = 1;
+ADDRFP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+CNSTI4 840
+ADDP4
+CNSTI1 1
+ASGNI1
+line 742
+;742:				ent->client->pers.badges[18] = 1;
+ADDRFP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+CNSTI4 790
+ADDP4
+CNSTI1 1
+ASGNI1
+line 743
+;743:			}
+line 744
+;744:        }
+ADDRGP4 $409
+JUMPV
+LABELV $410
+line 746
+;745:        else
+;746:          ent->client->ps.stats[STAT_STATE] &= ~SS_MEDKIT_ACTIVE;
+ADDRLP4 104
+ADDRFP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+CNSTI4 224
+ADDP4
+ASGNP4
+ADDRLP4 104
+INDIRP4
+ADDRLP4 104
+INDIRP4
+INDIRI4
+CNSTI4 -4097
+BANDI4
+ASGNI4
+line 747
+;747:      }
+ADDRGP4 $409
+JUMPV
+LABELV $408
+line 749
+;748:      else
+;749:      {
+line 750
+;750:        if (ent->health < ent->client->ps.stats[STAT_MAX_HEALTH]
+ADDRLP4 96
+ADDRFP4 0
+INDIRP4
+ASGNP4
+ADDRLP4 100
+ADDRLP4 96
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+ASGNP4
+ADDRLP4 96
+INDIRP4
+CNSTI4 812
+ADDP4
+INDIRI4
+ADDRLP4 100
+INDIRP4
+CNSTI4 208
+ADDP4
+INDIRI4
+GEI4 $415
+ADDRLP4 100
+INDIRP4
+CNSTI4 1368
+ADDP4
+INDIRI4
+CNSTI4 0
+EQI4 $415
+ADDRLP4 100
+INDIRP4
+CNSTI4 4
+ADDP4
+INDIRI4
+CNSTI4 5
+EQI4 $415
+line 752
+;751:            && ent->client->medKitHealthToRestore && ent->client->ps.pm_type != PM_DEAD)
+;752:        {
+line 754
+;753:          //partial increase
+;754:          if (level.time > client->medKitIncrementTime)
+ADDRGP4 level+28
+INDIRI4
+ADDRLP4 0
+INDIRP4
+CNSTI4 1372
+ADDP4
+INDIRI4
+LEI4 $416
+line 755
+;755:          {
+line 756
+;756:            ent->client->medKitHealthToRestore--;
+ADDRLP4 104
+ADDRFP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+CNSTI4 1368
+ADDP4
+ASGNP4
+ADDRLP4 104
+INDIRP4
+ADDRLP4 104
+INDIRP4
+INDIRI4
+CNSTI4 1
+SUBI4
+ASGNI4
+line 757
+;757:            ent->health++;
+ADDRLP4 108
+ADDRFP4 0
+INDIRP4
+CNSTI4 812
+ADDP4
+ASGNP4
+ADDRLP4 108
+INDIRP4
+ADDRLP4 108
+INDIRP4
+INDIRI4
+CNSTI4 1
+ADDI4
+ASGNI4
+line 758
+;758:			  if ( (ent->client->pers.badges[ 18 ] != 1) && (ent->health >= 75) && ent->client->pers.onehp)
+ADDRLP4 112
+ADDRFP4 0
+INDIRP4
+ASGNP4
+ADDRLP4 116
+ADDRLP4 112
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+ASGNP4
+ADDRLP4 116
+INDIRP4
+CNSTI4 790
+ADDP4
+INDIRI1
+CVII4 1
+CNSTI4 1
+EQI4 $420
+ADDRLP4 112
+INDIRP4
+CNSTI4 812
+ADDP4
+INDIRI4
+CNSTI4 75
+LTI4 $420
+ADDRLP4 116
+INDIRP4
+CNSTI4 892
+ADDP4
+INDIRI4
+CNSTI4 0
+EQI4 $420
+line 759
+;759:			  {
+line 760
+;760:				  G_WinBadge( ent, 18 );
+ADDRFP4 0
+INDIRP4
+ARGP4
+CNSTI4 18
+ARGI4
+ADDRGP4 G_WinBadge
+CALLV
+pop
+line 761
+;761:				  ent->client->pers.badgeupdate[18] = 1;
+ADDRFP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+CNSTI4 840
+ADDP4
+CNSTI1 1
+ASGNI1
+line 762
+;762:				  ent->client->pers.badges[18] = 1;
+ADDRFP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+CNSTI4 790
+ADDP4
+CNSTI1 1
+ASGNI1
+line 763
+;763:			  }
+LABELV $420
+line 764
+;764:            client->medKitIncrementTime = level.time
+ADDRLP4 0
+INDIRP4
+CNSTI4 1372
+ADDP4
+ADDRGP4 level+28
+INDIRI4
+ADDRLP4 92
+INDIRI4
+CNSTI4 5
+DIVI4
+ADDI4
+ASGNI4
+line 766
+;765:                + (remainingStartupTime / MEDKIT_STARTUP_SPEED);
+;766:          }
+line 767
+;767:        }
+ADDRGP4 $416
+JUMPV
+LABELV $415
+line 769
+;768:        else
+;769:          ent->client->ps.stats[STAT_STATE] &= ~SS_MEDKIT_ACTIVE;
+ADDRLP4 104
+ADDRFP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+CNSTI4 224
+ADDP4
+ASGNP4
+ADDRLP4 104
+INDIRP4
+ADDRLP4 104
+INDIRP4
+INDIRI4
+CNSTI4 -4097
+BANDI4
+ASGNI4
+LABELV $416
+line 770
+;770:      }
+LABELV $409
+line 771
+;771:    }
+LABELV $405
+line 772
+;772:  }
+LABELV $331
+line 576
+ADDRLP4 0
+INDIRP4
+CNSTI4 1280
+ADDP4
+INDIRI4
+CNSTI4 100
+GEI4 $330
+ADDRGP4 $424
+JUMPV
+LABELV $423
+line 775
+;773:
+;774:  while(client->time1000 >= 1000)
+;775:  {
+line 776
+;776:    client->time1000 -= 1000;
+ADDRLP4 48
+ADDRLP4 0
+INDIRP4
+CNSTI4 1288
+ADDP4
+ASGNP4
+ADDRLP4 48
+INDIRP4
+ADDRLP4 48
+INDIRP4
+INDIRI4
+CNSTI4 1000
+SUBI4
+ASGNI4
+line 778
+;777:
+;778:    if (ent->botCommand == BOT_FOLLOW_PATH && (ent->botEnemy->health <= 0
+ADDRLP4 52
+ADDRFP4 0
+INDIRP4
+ASGNP4
+ADDRLP4 52
+INDIRP4
+CNSTI4 904
+ADDP4
+INDIRI4
+CNSTI4 11
+NEI4 $426
+ADDRLP4 56
+ADDRLP4 52
+INDIRP4
+CNSTI4 908
+ADDP4
+INDIRP4
+ASGNP4
+ADDRLP4 60
+CNSTI4 0
+ASGNI4
+ADDRLP4 56
+INDIRP4
+CNSTI4 812
+ADDP4
+INDIRI4
+ADDRLP4 60
+INDIRI4
+LEI4 $429
+ADDRLP4 64
+ADDRLP4 56
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+ASGNP4
+ADDRLP4 64
+INDIRP4
+CNSTI4 1120
+ADDP4
+INDIRI4
+CNSTI4 1
+EQI4 $429
+ADDRLP4 64
+INDIRP4
+CNSTI4 184
+ADDP4
+INDIRI4
+ADDRLP4 60
+INDIRI4
+GTI4 $426
+LABELV $429
+line 781
+;779:        || ent->botEnemy->client->sess.sessionTeam == TEAM_SPECTATOR
+;780:        || ent->botEnemy->client->ps.stats[STAT_HEALTH] <= 0))
+;781:    {
+line 782
+;782:      ent->botEnemy = NULL;
+ADDRFP4 0
+INDIRP4
+CNSTI4 908
+ADDP4
+CNSTP4 0
+ASGNP4
+line 783
+;783:      ent->botCommand = BOT_REGULAR;
+ADDRFP4 0
+INDIRP4
+CNSTI4 904
+ADDP4
+CNSTI4 1
+ASGNI4
+line 784
+;784:      memset(&ent->client->pers.cmd, 0, sizeof(ent->client->pers.cmd));
+ADDRFP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+CNSTI4 476
+ADDP4
+ARGP4
+CNSTI4 0
+ARGI4
+CNSTI4 24
+ARGI4
+ADDRGP4 memset
+CALLP4
+pop
+line 785
+;785:      VectorSet(ent->client->ps.delta_angles, 0, 0, 0);
+ADDRFP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+CNSTI4 56
+ADDP4
+CNSTI4 0
+ASGNI4
+ADDRFP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+CNSTI4 60
+ADDP4
+CNSTI4 0
+ASGNI4
+ADDRFP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+CNSTI4 64
+ADDP4
+CNSTI4 0
+ASGNI4
+line 786
+;786:    }
+LABELV $426
+line 804
+;787:
+;788:    //Forget the sob
+;789://    if (ent->r.svFlags & SVF_BOT)
+;790://    {
+;791://      if (!g_survival.integer)
+;792://      {
+;793://        ent->botEnemy = NULL;
+;794://      }
+;795://    }
+;796:
+;797:    //client is poison clouded
+;798://    if (client->ps.stats[STAT_STATE] & SS_POISONCLOUDED)
+;799://      G_Damage(
+;800://        ent, client->lastPoisonCloudedClient, client->lastPoisonCloudedClient, NULL, NULL,
+;801://        LEVEL1_PCLOUD_DMG, 0, MOD_LEVEL1_PCLOUD);
+;802:
+;803:    //client is poisoned
+;804:    if (client->ps.stats[STAT_STATE] & SS_POISONED)
+ADDRLP4 0
+INDIRP4
+CNSTI4 224
+ADDP4
+INDIRI4
+CNSTI4 128
+BANDI4
+CNSTI4 0
+EQI4 $430
+line 805
+;805:    {
+line 806
+;806:      int damage = ALIEN_POISON_DMG;
+ADDRLP4 68
+CNSTI4 5
+ASGNI4
+line 810
+;807:
+;808:      /*if (BG_InventoryContainsUpgrade(UP_BATTLESUIT, client->ps.stats))
+;809:       damage -= BSUIT_POISON_PROTECTION;*/
+;810:      if (BG_InventoryContainsUpgrade(UP_HELMET, client->ps.stats))
+CNSTI4 2
+ARGI4
+ADDRLP4 0
+INDIRP4
+CNSTI4 184
+ADDP4
+ARGP4
+ADDRLP4 72
+ADDRGP4 BG_InventoryContainsUpgrade
+CALLI4
+ASGNI4
+ADDRLP4 72
+INDIRI4
+CNSTI4 0
+EQI4 $432
+line 811
+;811:        damage -= HELMET_POISON_PROTECTION;
+ADDRLP4 68
+ADDRLP4 68
+INDIRI4
+CNSTI4 2
+SUBI4
+ASGNI4
+LABELV $432
+line 812
+;812:      if (BG_InventoryContainsUpgrade(UP_LIGHTARMOUR, client->ps.stats))
+CNSTI4 1
+ARGI4
+ADDRLP4 0
+INDIRP4
+CNSTI4 184
+ADDP4
+ARGP4
+ADDRLP4 76
+ADDRGP4 BG_InventoryContainsUpgrade
+CALLI4
+ASGNI4
+ADDRLP4 76
+INDIRI4
+CNSTI4 0
+EQI4 $434
+line 813
+;813:        damage -= LIGHTARMOUR_POISON_PROTECTION;
+ADDRLP4 68
+ADDRLP4 68
+INDIRI4
+CNSTI4 1
+SUBI4
+ASGNI4
+LABELV $434
+line 815
+;814:
+;815:      G_Damage(
+ADDRFP4 0
+INDIRP4
+ARGP4
+ADDRLP4 80
+ADDRLP4 0
+INDIRP4
+CNSTI4 1332
+ADDP4
+INDIRP4
+ASGNP4
+ADDRLP4 80
+INDIRP4
+ARGP4
+ADDRLP4 80
+INDIRP4
+ARGP4
+ADDRLP4 84
+CNSTP4 0
+ASGNP4
+ADDRLP4 84
+INDIRP4
+ARGP4
+ADDRLP4 84
+INDIRP4
+ARGP4
+ADDRLP4 68
+INDIRI4
+ARGI4
+CNSTI4 0
+ARGI4
+CNSTI4 26
+ARGI4
+ADDRGP4 G_Damage
+CALLV
+pop
+line 817
+;816:              ent, client->lastPoisonClient, client->lastPoisonClient, NULL, 0, damage, 0, MOD_POISON);
+;817:    }
+LABELV $430
+line 820
+;818:
+;819:    //client is on fire
+;820:    if (client->ps.stats[STAT_STATE] & SS_ONFIRE)
+ADDRLP4 0
+INDIRP4
+CNSTI4 224
+ADDP4
+INDIRI4
+CNSTI4 32768
+BANDI4
+CNSTI4 0
+EQI4 $436
+line 821
+;821:    {
+line 822
+;822:      int damage = ONFIRE_DAMAGE;
+ADDRLP4 68
+CNSTI4 15
+ASGNI4
+line 824
+;823:
+;824:      ent->client->ps.eFlags |= EF_ONFIRE;
+ADDRLP4 72
+ADDRFP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+CNSTI4 104
+ADDP4
+ASGNP4
+ADDRLP4 72
+INDIRP4
+ADDRLP4 72
+INDIRP4
+INDIRI4
+CNSTI4 262160
+BORI4
+ASGNI4
+line 825
+;825:      ent->s.eFlags |= EF_ONFIRE;
+ADDRLP4 76
+ADDRFP4 0
+INDIRP4
+CNSTI4 8
+ADDP4
+ASGNP4
+ADDRLP4 76
+INDIRP4
+ADDRLP4 76
+INDIRP4
+INDIRI4
+CNSTI4 262160
+BORI4
+ASGNI4
+line 827
+;826:
+;827:      G_Damage(
+ADDRFP4 0
+INDIRP4
+ARGP4
+ADDRLP4 80
+ADDRLP4 0
+INDIRP4
+CNSTI4 1336
+ADDP4
+INDIRP4
+ASGNP4
+ADDRLP4 80
+INDIRP4
+ARGP4
+ADDRLP4 80
+INDIRP4
+ARGP4
+ADDRLP4 84
+CNSTP4 0
+ASGNP4
+ADDRLP4 84
+INDIRP4
+ARGP4
+ADDRLP4 84
+INDIRP4
+ARGP4
+ADDRLP4 68
+INDIRI4
+ARGI4
+CNSTI4 0
+ARGI4
+CNSTI4 9
+ARGI4
+ADDRGP4 G_Damage
+CALLV
+pop
+line 829
+;828:        ent, client->lastOnFireClient, client->lastOnFireClient, NULL, 0, damage, 0, MOD_GRENADE_LAUNCHER_INCENDIARY);
+;829:    }
+ADDRGP4 $437
+JUMPV
+LABELV $436
+line 831
+;830:    else
+;831:    {
+line 832
+;832:      ent->s.eFlags &= ~EF_ONFIRE;
+ADDRLP4 68
+ADDRFP4 0
+INDIRP4
+CNSTI4 8
+ADDP4
+ASGNP4
+ADDRLP4 68
+INDIRP4
+ADDRLP4 68
+INDIRP4
+INDIRI4
+CNSTI4 -262161
+BANDI4
+ASGNI4
+line 833
+;833:      ent->client->ps.eFlags &= ~EF_ONFIRE;
+ADDRLP4 72
+ADDRFP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+CNSTI4 104
+ADDP4
+ASGNP4
+ADDRLP4 72
+INDIRP4
+ADDRLP4 72
+INDIRP4
+INDIRI4
+CNSTI4 -262161
+BANDI4
+ASGNI4
+line 834
+;834:    }
+LABELV $437
+line 838
+;835:
+;836:
+;837:    //replenish alien health
+;838:    if (client->ps.stats[STAT_PTEAM] == PTE_ALIENS && level.surrenderTeam != PTE_ALIENS)
+ADDRLP4 68
+CNSTI4 1
+ASGNI4
+ADDRLP4 0
+INDIRP4
+CNSTI4 216
+ADDP4
+INDIRI4
+ADDRLP4 68
+INDIRI4
+NEI4 $438
+ADDRGP4 level+189968
+INDIRI4
+ADDRLP4 68
+INDIRI4
+EQI4 $438
+line 839
+;839:    {
+line 842
+;840:      int entityList[MAX_GENTITIES];
+;841:      vec3_t range =
+;842:      { LEVEL4_REGEN_RANGE, LEVEL4_REGEN_RANGE, LEVEL4_REGEN_RANGE };
+ADDRLP4 4184
+ADDRGP4 $441
+INDIRB
+ASGNB 12
+line 846
+;843:      vec3_t mins, maxs;
+;844:      int i, num;
+;845:      gentity_t *boostEntity;
+;846:      float modifier = 1.0f;
+ADDRLP4 4180
+CNSTF4 1065353216
+ASGNF4
+line 848
+;847:
+;848:      VectorAdd(client->ps.origin, range, maxs);
+ADDRLP4 4208
+ADDRLP4 0
+INDIRP4
+CNSTI4 20
+ADDP4
+INDIRF4
+ADDRLP4 4184
+INDIRF4
+ADDF4
+ASGNF4
+ADDRLP4 4208+4
+ADDRLP4 0
+INDIRP4
+CNSTI4 24
+ADDP4
+INDIRF4
+ADDRLP4 4184+4
+INDIRF4
+ADDF4
+ASGNF4
+ADDRLP4 4208+8
+ADDRLP4 0
+INDIRP4
+CNSTI4 28
+ADDP4
+INDIRF4
+ADDRLP4 4184+8
+INDIRF4
+ADDF4
+ASGNF4
+line 849
+;849:      VectorSubtract(client->ps.origin, range, mins);
+ADDRLP4 4196
+ADDRLP4 0
+INDIRP4
+CNSTI4 20
+ADDP4
+INDIRF4
+ADDRLP4 4184
+INDIRF4
+SUBF4
+ASGNF4
+ADDRLP4 4196+4
+ADDRLP4 0
+INDIRP4
+CNSTI4 24
+ADDP4
+INDIRF4
+ADDRLP4 4184+4
+INDIRF4
+SUBF4
+ASGNF4
+ADDRLP4 4196+8
+ADDRLP4 0
+INDIRP4
+CNSTI4 28
+ADDP4
+INDIRF4
+ADDRLP4 4184+8
+INDIRF4
+SUBF4
+ASGNF4
+line 851
+;850:
+;851:      num = trap_EntitiesInBox(mins, maxs, entityList, MAX_GENTITIES);
+ADDRLP4 4196
+ARGP4
+ADDRLP4 4208
+ARGP4
+ADDRLP4 80
+ARGP4
+CNSTI4 1024
+ARGI4
+ADDRLP4 4228
+ADDRGP4 trap_EntitiesInBox
+CALLI4
+ASGNI4
+ADDRLP4 4176
+ADDRLP4 4228
+INDIRI4
+ASGNI4
+line 852
+;852:      for(i = 0;i < num;i++)
+ADDRLP4 76
+CNSTI4 0
+ASGNI4
+ADDRGP4 $453
+JUMPV
+LABELV $450
+line 853
+;853:      {
+line 854
+;854:        boostEntity = &g_entities[entityList[i]];
+ADDRLP4 72
+CNSTI4 2476
+ADDRLP4 76
+INDIRI4
+CNSTI4 2
+LSHI4
+ADDRLP4 80
+ADDP4
+INDIRI4
+MULI4
+ADDRGP4 g_entities
+ADDP4
+ASGNP4
+line 856
+;855:
+;856:        if (boostEntity->client && boostEntity->client->ps.stats[STAT_PTEAM] == PTE_ALIENS
+ADDRLP4 4232
+ADDRLP4 72
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+ASGNP4
+ADDRLP4 4232
+INDIRP4
+CVPU4 4
+CNSTU4 0
+EQU4 $454
+ADDRLP4 4232
+INDIRP4
+CNSTI4 216
+ADDP4
+INDIRI4
+CNSTI4 1
+NEI4 $454
+ADDRLP4 4232
+INDIRP4
+CNSTI4 212
+ADDP4
+INDIRI4
+CNSTI4 10
+NEI4 $454
+line 858
+;857:            && boostEntity->client->ps.stats[STAT_PCLASS] == PCL_ALIEN_LEVEL4)
+;858:        {
+line 859
+;859:          modifier = LEVEL4_REGEN_MOD;
+ADDRLP4 4180
+CNSTF4 1073741824
+ASGNF4
+line 860
+;860:          break;
+ADDRGP4 $452
+JUMPV
+LABELV $454
+line 862
+;861:        }
+;862:        else if (boostEntity->s.eType == ET_BUILDABLE && boostEntity->s.modelindex == BA_A_BOOSTER
+ADDRLP4 72
+INDIRP4
+CNSTI4 4
+ADDP4
+INDIRI4
+CNSTI4 3
+NEI4 $456
+ADDRLP4 72
+INDIRP4
+CNSTI4 160
+ADDP4
+INDIRI4
+CNSTI4 6
+NEI4 $456
+ADDRLP4 4240
+CNSTI4 0
+ASGNI4
+ADDRLP4 72
+INDIRP4
+CNSTI4 992
+ADDP4
+INDIRI4
+ADDRLP4 4240
+INDIRI4
+EQI4 $456
+ADDRLP4 72
+INDIRP4
+CNSTI4 812
+ADDP4
+INDIRI4
+ADDRLP4 4240
+INDIRI4
+LEI4 $456
+line 864
+;863:            && boostEntity->spawned && boostEntity->health > 0)
+;864:        {
+line 865
+;865:          modifier = BOOSTER_REGEN_MOD;
+ADDRLP4 4180
+CNSTF4 1073741824
+ASGNF4
+line 866
+;866:          break;
+ADDRGP4 $452
+JUMPV
+LABELV $456
+line 868
+;867:        }
+;868:      }
+LABELV $451
+line 852
+ADDRLP4 76
+ADDRLP4 76
+INDIRI4
+CNSTI4 1
+ADDI4
+ASGNI4
+LABELV $453
+ADDRLP4 76
+INDIRI4
+ADDRLP4 4176
+INDIRI4
+LTI4 $450
+LABELV $452
+line 870
+;869:
+;870:      if (ent->health > 0 && ent->health < client->ps.stats[STAT_MAX_HEALTH]
+ADDRLP4 4232
+ADDRFP4 0
+INDIRP4
+ASGNP4
+ADDRLP4 4236
+ADDRLP4 4232
+INDIRP4
+CNSTI4 812
+ADDP4
+INDIRI4
+ASGNI4
+ADDRLP4 4236
+INDIRI4
+CNSTI4 0
+LEI4 $458
+ADDRLP4 4236
+INDIRI4
+ADDRLP4 0
+INDIRP4
+CNSTI4 208
+ADDP4
+INDIRI4
+GEI4 $458
+ADDRLP4 4232
+INDIRP4
+CNSTI4 1924
+ADDP4
+INDIRI4
+CNSTI4 2000
+ADDI4
+ADDRGP4 level+28
+INDIRI4
+GEI4 $458
+line 872
+;871:          && (ent->lastDamageTime + ALIEN_REGEN_DAMAGE_TIME) < level.time)
+;872:        ent->health += BG_FindRegenRateForClass(client->ps.stats[STAT_PCLASS]) * modifier;
+ADDRLP4 0
+INDIRP4
+CNSTI4 212
+ADDP4
+INDIRI4
+ARGI4
+ADDRLP4 4240
+ADDRGP4 BG_FindRegenRateForClass
+CALLI4
+ASGNI4
+ADDRLP4 4244
+ADDRFP4 0
+INDIRP4
+CNSTI4 812
+ADDP4
+ASGNP4
+ADDRLP4 4244
+INDIRP4
+ADDRLP4 4244
+INDIRP4
+INDIRI4
+CVIF4 4
+ADDRLP4 4240
+INDIRI4
+CVIF4 4
+ADDRLP4 4180
+INDIRF4
+MULF4
+ADDF4
+CVFI4 4
+ASGNI4
+LABELV $458
+line 874
+;873:
+;874:      if (ent->health > client->ps.stats[STAT_MAX_HEALTH])
+ADDRFP4 0
+INDIRP4
+CNSTI4 812
+ADDP4
+INDIRI4
+ADDRLP4 0
+INDIRP4
+CNSTI4 208
+ADDP4
+INDIRI4
+LEI4 $461
+line 875
+;875:        ent->health = client->ps.stats[STAT_MAX_HEALTH];
+ADDRFP4 0
+INDIRP4
+CNSTI4 812
+ADDP4
+ADDRLP4 0
+INDIRP4
+CNSTI4 208
+ADDP4
+INDIRI4
+ASGNI4
+LABELV $461
+line 876
+;876:    }
+LABELV $438
+line 878
+;877:
+;878:    if (ent->client->ps.stats[STAT_HEALTH] > 0 && ent->client->ps.stats[STAT_PTEAM] == PTE_ALIENS)
+ADDRLP4 72
+ADDRFP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+ASGNP4
+ADDRLP4 72
+INDIRP4
+CNSTI4 184
+ADDP4
+INDIRI4
+CNSTI4 0
+LEI4 $463
+ADDRLP4 72
+INDIRP4
+CNSTI4 216
+ADDP4
+INDIRI4
+CNSTI4 1
+NEI4 $463
+line 879
+;879:    {
+line 880
+;880:      ent->client->pers.statscounters.timealive++;
+ADDRLP4 76
+ADDRFP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+CNSTI4 1084
+ADDP4
+ASGNP4
+ADDRLP4 76
+INDIRP4
+ADDRLP4 76
+INDIRP4
+INDIRI4
+CNSTI4 1
+ADDI4
+ASGNI4
+line 881
+;881:      level.alienStatsCounters.timealive++;
+ADDRLP4 80
+ADDRGP4 level+190028+44
+ASGNP4
+ADDRLP4 80
+INDIRP4
+ADDRLP4 80
+INDIRP4
+INDIRI4
+CNSTI4 1
+ADDI4
+ASGNI4
+line 882
+;882:      if (G_BuildableRange(ent->client->ps.origin, 900, BA_A_OVERMIND))
+ADDRFP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+CNSTI4 20
+ADDP4
+ARGP4
+CNSTF4 1147207680
+ARGF4
+CNSTI4 2
+ARGI4
+ADDRLP4 84
+ADDRGP4 G_BuildableRange
+CALLI4
+ASGNI4
+ADDRLP4 84
+INDIRI4
+CNSTI4 0
+EQI4 $467
+line 883
+;883:      {
+line 884
+;884:        ent->client->pers.statscounters.timeinbase++;
+ADDRLP4 88
+ADDRFP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+CNSTI4 1088
+ADDP4
+ASGNP4
+ADDRLP4 88
+INDIRP4
+ADDRLP4 88
+INDIRP4
+INDIRI4
+CNSTI4 1
+ADDI4
+ASGNI4
+line 885
+;885:        level.alienStatsCounters.timeinbase++;
+ADDRLP4 92
+ADDRGP4 level+190028+48
+ASGNP4
+ADDRLP4 92
+INDIRP4
+ADDRLP4 92
+INDIRP4
+INDIRI4
+CNSTI4 1
+ADDI4
+ASGNI4
+line 886
+;886:      }
+LABELV $467
+line 887
+;887:      if (BG_ClassHasAbility(ent->client->ps.stats[STAT_PCLASS], SCA_WALLCLIMBER))
+ADDRFP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+CNSTI4 212
+ADDP4
+INDIRI4
+ARGI4
+CNSTI4 1
+ARGI4
+ADDRLP4 88
+ADDRGP4 BG_ClassHasAbility
+CALLI4
+ASGNI4
+ADDRLP4 88
+INDIRI4
+CNSTI4 0
+EQI4 $464
+line 888
+;888:      {
+line 889
+;889:        ent->client->pers.statscounters.dretchbasytime++;
+ADDRLP4 92
+ADDRFP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+CNSTI4 1108
+ADDP4
+ASGNP4
+ADDRLP4 92
+INDIRP4
+ADDRLP4 92
+INDIRP4
+INDIRI4
+CNSTI4 1
+ADDI4
+ASGNI4
+line 890
+;890:        level.alienStatsCounters.dretchbasytime++;
+ADDRLP4 96
+ADDRGP4 level+190028+68
+ASGNP4
+ADDRLP4 96
+INDIRP4
+ADDRLP4 96
+INDIRP4
+INDIRI4
+CNSTI4 1
+ADDI4
+ASGNI4
+line 891
+;891:        if (ent->client->ps.stats[STAT_STATE] & SS_WALLCLIMBING
+ADDRLP4 100
+ADDRFP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+CNSTI4 224
+ADDP4
+INDIRI4
+ASGNI4
+ADDRLP4 104
+CNSTI4 0
+ASGNI4
+ADDRLP4 100
+INDIRI4
+CNSTI4 1
+BANDI4
+ADDRLP4 104
+INDIRI4
+NEI4 $477
+ADDRLP4 100
+INDIRI4
+CNSTI4 2
+BANDI4
+ADDRLP4 104
+INDIRI4
+EQI4 $464
+LABELV $477
+line 893
+;892:            || ent->client->ps.stats[STAT_STATE] & SS_WALLCLIMBINGCEILING)
+;893:        {
+line 894
+;894:          ent->client->pers.statscounters.jetpackusewallwalkusetime++;
+ADDRLP4 108
+ADDRFP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+CNSTI4 1112
+ADDP4
+ASGNP4
+ADDRLP4 108
+INDIRP4
+ADDRLP4 108
+INDIRP4
+INDIRI4
+CNSTI4 1
+ADDI4
+ASGNI4
+line 895
+;895:          level.alienStatsCounters.jetpackusewallwalkusetime++;
+ADDRLP4 112
+ADDRGP4 level+190028+72
+ASGNP4
+ADDRLP4 112
+INDIRP4
+ADDRLP4 112
+INDIRP4
+INDIRI4
+CNSTI4 1
+ADDI4
+ASGNI4
+line 896
+;896:        }
+line 897
+;897:      }
+line 898
+;898:    }
+ADDRGP4 $464
+JUMPV
+LABELV $463
+line 899
+;899:    else if (ent->client->ps.stats[STAT_HEALTH] > 0 && ent->client->ps.stats[STAT_PTEAM]
+ADDRLP4 76
+ADDRFP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+ASGNP4
+ADDRLP4 76
+INDIRP4
+CNSTI4 184
+ADDP4
+INDIRI4
+CNSTI4 0
+LEI4 $480
+ADDRLP4 76
+INDIRP4
+CNSTI4 216
+ADDP4
+INDIRI4
+CNSTI4 2
+NEI4 $480
+line 901
+;900:        == PTE_HUMANS)
+;901:    {
+line 902
+;902:      ent->client->pers.statscounters.timealive++;
+ADDRLP4 80
+ADDRFP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+CNSTI4 1084
+ADDP4
+ASGNP4
+ADDRLP4 80
+INDIRP4
+ADDRLP4 80
+INDIRP4
+INDIRI4
+CNSTI4 1
+ADDI4
+ASGNI4
+line 903
+;903:      level.humanStatsCounters.timealive++;
+ADDRLP4 84
+ADDRGP4 level+190108+44
+ASGNP4
+ADDRLP4 84
+INDIRP4
+ADDRLP4 84
+INDIRP4
+INDIRI4
+CNSTI4 1
+ADDI4
+ASGNI4
+line 904
+;904:      if (G_BuildableRange(ent->client->ps.origin, 900, BA_H_REACTOR))
+ADDRFP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+CNSTI4 20
+ADDP4
+ARGP4
+CNSTF4 1147207680
+ARGF4
+CNSTI4 15
+ARGI4
+ADDRLP4 88
+ADDRGP4 G_BuildableRange
+CALLI4
+ASGNI4
+ADDRLP4 88
+INDIRI4
+CNSTI4 0
+EQI4 $484
+line 905
+;905:      {
+line 906
+;906:        ent->client->pers.statscounters.timeinbase++;
+ADDRLP4 92
+ADDRFP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+CNSTI4 1088
+ADDP4
+ASGNP4
+ADDRLP4 92
+INDIRP4
+ADDRLP4 92
+INDIRP4
+INDIRI4
+CNSTI4 1
+ADDI4
+ASGNI4
+line 907
+;907:        level.humanStatsCounters.timeinbase++;
+ADDRLP4 96
+ADDRGP4 level+190108+48
+ASGNP4
+ADDRLP4 96
+INDIRP4
+ADDRLP4 96
+INDIRP4
+INDIRI4
+CNSTI4 1
+ADDI4
+ASGNI4
+line 908
+;908:      }
+LABELV $484
+line 917
+;909:      /*if (BG_InventoryContainsUpgrade(UP_JETPACK, client->ps.stats))
+;910:       {
+;911:       if (client->ps.pm_type == PM_JETPACK)
+;912:       {
+;913:       ent->client->pers.statscounters.jetpackusewallwalkusetime++;
+;914:       level.humanStatsCounters.jetpackusewallwalkusetime++;
+;915:       }
+;916:       }*/
+;917:    }
+LABELV $480
+LABELV $464
+line 920
+;918:
+;919:    // turn off life support when a team admits defeat 
+;920:    if (client->ps.stats[STAT_PTEAM] == PTE_ALIENS && level.surrenderTeam == PTE_ALIENS)
+ADDRLP4 80
+CNSTI4 1
+ASGNI4
+ADDRLP4 0
+INDIRP4
+CNSTI4 216
+ADDP4
+INDIRI4
+ADDRLP4 80
+INDIRI4
+NEI4 $488
+ADDRGP4 level+189968
+INDIRI4
+ADDRLP4 80
+INDIRI4
+NEI4 $488
+line 921
+;921:    {
+line 922
+;922:      G_Damage(
+ADDRLP4 0
+INDIRP4
+CNSTI4 212
+ADDP4
+INDIRI4
+ARGI4
+ADDRLP4 84
+ADDRGP4 BG_FindRegenRateForClass
+CALLI4
+ASGNI4
+ADDRFP4 0
+INDIRP4
+ARGP4
+ADDRLP4 88
+CNSTP4 0
+ASGNP4
+ADDRLP4 88
+INDIRP4
+ARGP4
+ADDRLP4 88
+INDIRP4
+ARGP4
+ADDRLP4 92
+CNSTP4 0
+ASGNP4
+ADDRLP4 92
+INDIRP4
+ARGP4
+ADDRLP4 92
+INDIRP4
+ARGP4
+ADDRLP4 84
+INDIRI4
+ARGI4
+CNSTI4 2
+ARGI4
+CNSTI4 20
+ARGI4
+ADDRGP4 G_Damage
+CALLV
+pop
+line 925
+;923:        ent, NULL, NULL, NULL, NULL, BG_FindRegenRateForClass(client->ps.stats[STAT_PCLASS]),
+;924:        DAMAGE_NO_ARMOR, MOD_SUICIDE);
+;925:    }
+ADDRGP4 $489
+JUMPV
+LABELV $488
+line 926
+;926:    else if (client->ps.stats[STAT_PTEAM] == PTE_HUMANS && level.surrenderTeam == PTE_HUMANS)
+ADDRLP4 84
+CNSTI4 2
+ASGNI4
+ADDRLP4 0
+INDIRP4
+CNSTI4 216
+ADDP4
+INDIRI4
+ADDRLP4 84
+INDIRI4
+NEI4 $491
+ADDRGP4 level+189968
+INDIRI4
+ADDRLP4 84
+INDIRI4
+NEI4 $491
+line 927
+;927:    {
+line 928
+;928:      G_Damage(ent, NULL, NULL, NULL, NULL, 5, DAMAGE_NO_ARMOR, MOD_SUICIDE);
+ADDRFP4 0
+INDIRP4
+ARGP4
+ADDRLP4 88
+CNSTP4 0
+ASGNP4
+ADDRLP4 88
+INDIRP4
+ARGP4
+ADDRLP4 88
+INDIRP4
+ARGP4
+ADDRLP4 92
+CNSTP4 0
+ASGNP4
+ADDRLP4 92
+INDIRP4
+ARGP4
+ADDRLP4 92
+INDIRP4
+ARGP4
+CNSTI4 5
+ARGI4
+CNSTI4 2
+ARGI4
+CNSTI4 20
+ARGI4
+ADDRGP4 G_Damage
+CALLV
+pop
+line 929
+;929:    }
+LABELV $491
+LABELV $489
+line 930
+;930:  }
+LABELV $424
+line 774
+ADDRLP4 0
+INDIRP4
+CNSTI4 1288
+ADDP4
+INDIRI4
+CNSTI4 1000
+GEI4 $423
+ADDRGP4 $495
+JUMPV
+LABELV $494
+line 933
+;931:
+;932:  while(client->time2000 >= 2000)
+;933:  {
+line 934
+;934:    client->time2000 -= 2000;
+ADDRLP4 48
+ADDRLP4 0
+INDIRP4
+CNSTI4 1292
+ADDP4
+ASGNP4
+ADDRLP4 48
+INDIRP4
+ADDRLP4 48
+INDIRP4
+INDIRI4
+CNSTI4 2000
+SUBI4
+ASGNI4
+line 956
+;935:
+;936:	 //remove this gay shit survival damage . it makes it impossible to not dome camp 
+;937:    /*if (g_survival.integer && (ent->client->ps.stats[STAT_PTEAM] == PTE_HUMANS))
+;938:    {
+;939:      if (ent->client->ps.stats[STAT_HEALTH] > 0)
+;940:      {
+;941:        if (ent->client->ps.stats[STAT_HEALTH] < 2)
+;942:        {
+;943:          G_Damage(ent, NULL, NULL, NULL, NULL, 1, 0, MOD_SUICIDE);
+;944:        }
+;945:        else
+;946:        {
+;947:          ent->health = ent->client->ps.stats[STAT_HEALTH] -= 1;
+;948:			if (ent->health == 1)
+;949:			{
+;950:				ent->client->pers.onehp = 1;
+;951:			}
+;952:        }
+;953:      }
+;954:    }*/
+;955:
+;956:    if (ent->botCommand == BOT_REGULAR)
+ADDRFP4 0
+INDIRP4
+CNSTI4 904
+ADDP4
+INDIRI4
+CNSTI4 1
+NEI4 $497
+line 957
+;957:    {
+line 958
+;958:      if (ent->botEnemy)
+ADDRFP4 0
+INDIRP4
+CNSTI4 908
+ADDP4
+INDIRP4
+CVPU4 4
+CNSTU4 0
+EQU4 $499
+line 959
+;959:      {
+line 960
+;960:        if(!botCanSeeEnemy(ent))
+ADDRFP4 0
+INDIRP4
+ARGP4
+ADDRLP4 52
+ADDRGP4 botCanSeeEnemy
+CALLI4
+ASGNI4
+ADDRLP4 52
+INDIRI4
+CNSTI4 0
+NEI4 $501
+line 961
+;961:        {
+line 962
+;962:          botForgetEnemy(ent);
+ADDRFP4 0
+INDIRP4
+ARGP4
+ADDRGP4 botForgetEnemy
+CALLV
+pop
+line 963
+;963:        }
+LABELV $501
+line 965
+;964:        //VectorSet(ent->client->ps.delta_angles, 0, 0, 0);
+;965:      }
+LABELV $499
+line 966
+;966:    }
+LABELV $497
+line 967
+;967:  }
+LABELV $495
+line 932
+ADDRLP4 0
+INDIRP4
+CNSTI4 1292
+ADDP4
+INDIRI4
+CNSTI4 2000
+GEI4 $494
+ADDRGP4 $504
+JUMPV
+LABELV $503
+line 969
+;968:  while(client->time3000 >= 3000)
+;969:  {
+line 970
+;970:    client->time3000 -= 3000;
+ADDRLP4 48
+ADDRLP4 0
+INDIRP4
+CNSTI4 1296
+ADDP4
+ASGNP4
+ADDRLP4 48
+INDIRP4
+ADDRLP4 48
+INDIRP4
+INDIRI4
+CNSTI4 3000
+SUBI4
+ASGNI4
+line 971
+;971:  }
+LABELV $504
+line 968
+ADDRLP4 0
+INDIRP4
+CNSTI4 1296
+ADDP4
+INDIRI4
+CNSTI4 3000
+GEI4 $503
+ADDRGP4 $507
+JUMPV
+LABELV $506
+line 974
+;972:
+;973:  while(client->time10000 >= 10000)
+;974:  {
+line 975
+;975:    client->time10000 -= 10000;
+ADDRLP4 48
+ADDRLP4 0
+INDIRP4
+CNSTI4 1308
+ADDP4
+ASGNP4
+ADDRLP4 48
+INDIRP4
+ADDRLP4 48
+INDIRP4
+INDIRI4
+CNSTI4 10000
+SUBI4
+ASGNI4
+line 977
+;976:
+;977:    if (client->ps.weapon == WP_ALEVEL3_UPG)
+ADDRLP4 0
+INDIRP4
+CNSTI4 144
+ADDP4
+INDIRI4
+CNSTI4 28
+NEI4 $509
+line 978
+;978:    {
+line 981
+;979:      int ammo, maxAmmo;
+;980:
+;981:      BG_FindAmmoForWeapon(WP_ALEVEL3_UPG, &maxAmmo, NULL);
+CNSTI4 28
+ARGI4
+ADDRLP4 56
+ARGP4
+CNSTP4 0
+ARGP4
+ADDRGP4 BG_FindAmmoForWeapon
+CALLV
+pop
+line 982
+;982:      BG_UnpackAmmoArray(WP_ALEVEL3_UPG, &client->ps.ammo, client->ps.powerups, &ammo, NULL);
+CNSTI4 28
+ARGI4
+ADDRLP4 0
+INDIRP4
+CNSTI4 376
+ADDP4
+ARGP4
+ADDRLP4 0
+INDIRP4
+CNSTI4 312
+ADDP4
+ARGP4
+ADDRLP4 52
+ARGP4
+CNSTP4 0
+ARGP4
+ADDRGP4 BG_UnpackAmmoArray
+CALLV
+pop
+line 984
+;983:
+;984:      if (ammo < maxAmmo)
+ADDRLP4 52
+INDIRI4
+ADDRLP4 56
+INDIRI4
+GEI4 $511
+line 985
+;985:      {
+line 986
+;986:        ammo++;
+ADDRLP4 52
+ADDRLP4 52
+INDIRI4
+CNSTI4 1
+ADDI4
+ASGNI4
+line 987
+;987:        BG_PackAmmoArray(WP_ALEVEL3_UPG, &client->ps.ammo, client->ps.powerups, ammo, 0);
+CNSTI4 28
+ARGI4
+ADDRLP4 0
+INDIRP4
+CNSTI4 376
+ADDP4
+ARGP4
+ADDRLP4 0
+INDIRP4
+CNSTI4 312
+ADDP4
+ARGP4
+ADDRLP4 52
+INDIRI4
+ARGI4
+CNSTI4 0
+ARGI4
+ADDRGP4 BG_PackAmmoArray
+CALLV
+pop
+line 988
+;988:      }
+LABELV $511
+line 989
+;989:    }
+LABELV $509
+line 990
+;990:  }
+LABELV $507
+line 973
+ADDRLP4 0
+INDIRP4
+CNSTI4 1308
+ADDP4
+INDIRI4
+CNSTI4 10000
+GEI4 $506
+line 991
+;991:}
+LABELV $324
+endproc ClientTimerActions 4248 32
+export ClientIntermissionThink
+proc ClientIntermissionThink 28 0
+line 1000
+;992:
+;993:/*
+;994: ====================
+;995: ClientIntermissionThink
+;996: ====================
+;997: */
+;998:void
+;999:ClientIntermissionThink(gclient_t *client)
+;1000:{
+line 1001
+;1001:  client->ps.eFlags &= ~EF_TALK;
+ADDRLP4 0
+ADDRFP4 0
+INDIRP4
+CNSTI4 104
+ADDP4
+ASGNP4
+ADDRLP4 0
+INDIRP4
+ADDRLP4 0
+INDIRP4
+INDIRI4
+CNSTI4 -8193
+BANDI4
+ASGNI4
+line 1002
+;1002:  client->ps.eFlags &= ~EF_FIRING;
+ADDRLP4 4
+ADDRFP4 0
+INDIRP4
+CNSTI4 104
+ADDP4
+ASGNP4
+ADDRLP4 4
+INDIRP4
+ADDRLP4 4
+INDIRP4
+INDIRI4
+CNSTI4 -513
+BANDI4
+ASGNI4
+line 1003
+;1003:  client->ps.eFlags &= ~EF_FIRING2;
+ADDRLP4 8
+ADDRFP4 0
+INDIRP4
+CNSTI4 104
+ADDP4
+ASGNP4
+ADDRLP4 8
+INDIRP4
+ADDRLP4 8
+INDIRP4
+INDIRI4
+CNSTI4 -1025
+BANDI4
+ASGNI4
+line 1008
+;1004:
+;1005:  // the level will exit when everyone wants to or after timeouts
+;1006:
+;1007:  // swap and latch button actions
+;1008:  client->oldbuttons = client->buttons;
+ADDRLP4 12
+ADDRFP4 0
+INDIRP4
+ASGNP4
+ADDRLP4 12
+INDIRP4
+CNSTI4 1176
+ADDP4
+ADDRLP4 12
+INDIRP4
+CNSTI4 1172
+ADDP4
+INDIRI4
+ASGNI4
+line 1009
+;1009:  client->buttons = client->pers.cmd.buttons;
+ADDRLP4 16
+ADDRFP4 0
+INDIRP4
+ASGNP4
+ADDRLP4 16
+INDIRP4
+CNSTI4 1172
+ADDP4
+ADDRLP4 16
+INDIRP4
+CNSTI4 492
+ADDP4
+INDIRI4
+ASGNI4
+line 1010
+;1010:  if (client->buttons & (BUTTON_ATTACK | BUTTON_USE_HOLDABLE) & (client->oldbuttons
+ADDRLP4 20
+ADDRFP4 0
+INDIRP4
+ASGNP4
+ADDRLP4 24
+ADDRLP4 20
+INDIRP4
+CNSTI4 1172
+ADDP4
+INDIRI4
+ASGNI4
+ADDRLP4 24
+INDIRI4
+CNSTI4 5
+BANDI4
+ADDRLP4 20
+INDIRP4
+CNSTI4 1176
+ADDP4
+INDIRI4
+ADDRLP4 24
+INDIRI4
+BXORI4
+BANDI4
+CNSTI4 0
+EQI4 $514
+line 1012
+;1011:      ^ client->buttons))
+;1012:    client->readyToExit = 1;
+ADDRFP4 0
+INDIRP4
+CNSTI4 1160
+ADDP4
+CNSTI4 1
+ASGNI4
+LABELV $514
+line 1013
+;1013:}
+LABELV $513
+endproc ClientIntermissionThink 28 0
+export ClientEvents
+proc ClientEvents 108 32
+line 1025
+;1014:
+;1015:/*
+;1016: ================
+;1017: ClientEvents
+;1018:
+;1019: Events will be passed on to the clients for presentation,
+;1020: but any server game effects are handled here
+;1021: ================
+;1022: */
+;1023:void
+;1024:ClientEvents(gentity_t *ent, int oldEventSequence)
+;1025:{
+line 1035
+;1026:  int i;
+;1027:  int event;
+;1028:  gclient_t *client;
+;1029:  int damage;
+;1030:  vec3_t dir;
+;1031:  vec3_t point, mins;
+;1032:  float fallDistance;
+;1033:  pClass_t class;
+;1034:
+;1035:  client = ent->client;
+ADDRLP4 4
+ADDRFP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+ASGNP4
+line 1036
+;1036:  class = client->ps.stats[STAT_PCLASS];
+ADDRLP4 28
+ADDRLP4 4
+INDIRP4
+CNSTI4 212
+ADDP4
+INDIRI4
+ASGNI4
+line 1038
+;1037:
+;1038:  if (oldEventSequence < client->ps.eventSequence - MAX_PS_EVENTS)
+ADDRFP4 4
+INDIRI4
+ADDRLP4 4
+INDIRP4
+CNSTI4 108
+ADDP4
+INDIRI4
+CNSTI4 2
+SUBI4
+GEI4 $517
+line 1039
+;1039:    oldEventSequence = client->ps.eventSequence - MAX_PS_EVENTS;
+ADDRFP4 4
+ADDRLP4 4
+INDIRP4
+CNSTI4 108
+ADDP4
+INDIRI4
+CNSTI4 2
+SUBI4
+ASGNI4
+LABELV $517
+line 1041
+;1040:
+;1041:  for(i = oldEventSequence;i < client->ps.eventSequence;i++)
+ADDRLP4 0
+ADDRFP4 4
+INDIRI4
+ASGNI4
+ADDRGP4 $522
+JUMPV
+LABELV $519
+line 1042
+;1042:  {
+line 1043
+;1043:    event = client->ps.events[i & (MAX_PS_EVENTS - 1)];
+ADDRLP4 8
+ADDRLP4 0
+INDIRI4
+CNSTI4 1
+BANDI4
+CNSTI4 2
+LSHI4
+ADDRLP4 4
+INDIRP4
+CNSTI4 112
+ADDP4
+ADDP4
+INDIRI4
+ASGNI4
+line 1045
+;1044:
+;1045:    switch(event)
+ADDRLP4 64
+CNSTI4 16
+ASGNI4
+ADDRLP4 8
+INDIRI4
+ADDRLP4 64
+INDIRI4
+EQI4 $525
+ADDRLP4 8
+INDIRI4
+CNSTI4 17
+EQI4 $525
+ADDRLP4 8
+INDIRI4
+ADDRLP4 64
+INDIRI4
+LTI4 $524
+LABELV $558
+ADDRLP4 8
+INDIRI4
+CNSTI4 24
+LTI4 $524
+ADDRLP4 8
+INDIRI4
+CNSTI4 28
+GTI4 $524
+ADDRLP4 8
+INDIRI4
+CNSTI4 2
+LSHI4
+ADDRGP4 $559-96
+ADDP4
+INDIRP4
+JUMPV
+lit
+align 4
+LABELV $559
+address $545
+address $524
+address $542
+address $543
+address $544
+code
+line 1046
+;1046:    {
+LABELV $525
+line 1049
+;1047:      case EV_FALL_MEDIUM:
+;1048:      case EV_FALL_FAR:
+;1049:        if (ent->s.eType != ET_PLAYER)
+ADDRFP4 0
+INDIRP4
+CNSTI4 4
+ADDP4
+INDIRI4
+CNSTI4 1
+EQI4 $526
+line 1050
+;1050:          break; // not in the player model
+ADDRGP4 $524
+JUMPV
+LABELV $526
+line 1052
+;1051:
+;1052:        fallDistance = ((float) client->ps.stats[STAT_FALLDIST] - MIN_FALL_DISTANCE)
+ADDRLP4 24
+ADDRLP4 4
+INDIRP4
+CNSTI4 240
+ADDP4
+INDIRI4
+CVIF4 4
+CNSTF4 1106247680
+SUBF4
+CNSTF4 1119092736
+DIVF4
+ASGNF4
+line 1055
+;1053:            / (MAX_FALL_DISTANCE - MIN_FALL_DISTANCE);
+;1054:
+;1055:        if (fallDistance < 0.0f)
+ADDRLP4 24
+INDIRF4
+CNSTF4 0
+GEF4 $528
+line 1056
+;1056:          fallDistance = 0.0f;
+ADDRLP4 24
+CNSTF4 0
+ASGNF4
+ADDRGP4 $529
+JUMPV
+LABELV $528
+line 1057
+;1057:        else if (fallDistance > 1.0f)
+ADDRLP4 24
+INDIRF4
+CNSTF4 1065353216
+LEF4 $530
+line 1058
+;1058:          fallDistance = 1.0f;
+ADDRLP4 24
+CNSTF4 1065353216
+ASGNF4
+LABELV $530
+LABELV $529
+line 1060
+;1059:
+;1060:        damage = (int) ((float) BG_FindHealthForClass(class) * BG_FindFallDamageForClass(class)
+ADDRLP4 28
+INDIRI4
+ARGI4
+ADDRLP4 72
+ADDRGP4 BG_FindHealthForClass
+CALLI4
+ASGNI4
+ADDRLP4 28
+INDIRI4
+ARGI4
+ADDRLP4 76
+ADDRGP4 BG_FindFallDamageForClass
+CALLF4
+ASGNF4
+ADDRLP4 56
+ADDRLP4 72
+INDIRI4
+CVIF4 4
+ADDRLP4 76
+INDIRF4
+MULF4
+ADDRLP4 24
+INDIRF4
+MULF4
+CVFI4 4
+ASGNI4
+line 1063
+;1061:            * fallDistance);
+;1062:
+;1063:        VectorSet(dir, 0, 0, 1);
+ADDRLP4 80
+CNSTF4 0
+ASGNF4
+ADDRLP4 32
+ADDRLP4 80
+INDIRF4
+ASGNF4
+ADDRLP4 32+4
+ADDRLP4 80
+INDIRF4
+ASGNF4
+ADDRLP4 32+8
+CNSTF4 1065353216
+ASGNF4
+line 1064
+;1064:        BG_FindBBoxForClass(class, mins, NULL, NULL, NULL, NULL);
+ADDRLP4 28
+INDIRI4
+ARGI4
+ADDRLP4 12
+ARGP4
+ADDRLP4 84
+CNSTP4 0
+ASGNP4
+ADDRLP4 84
+INDIRP4
+ARGP4
+ADDRLP4 84
+INDIRP4
+ARGP4
+ADDRLP4 84
+INDIRP4
+ARGP4
+ADDRLP4 84
+INDIRP4
+ARGP4
+ADDRGP4 BG_FindBBoxForClass
+CALLV
+pop
+line 1065
+;1065:        mins[0] = mins[1] = 0.0f;
+ADDRLP4 88
+CNSTF4 0
+ASGNF4
+ADDRLP4 12+4
+ADDRLP4 88
+INDIRF4
+ASGNF4
+ADDRLP4 12
+ADDRLP4 88
+INDIRF4
+ASGNF4
+line 1066
+;1066:        VectorAdd(client->ps.origin, mins, point);
+ADDRLP4 44
+ADDRLP4 4
+INDIRP4
+CNSTI4 20
+ADDP4
+INDIRF4
+ADDRLP4 12
+INDIRF4
+ADDF4
+ASGNF4
+ADDRLP4 44+4
+ADDRLP4 4
+INDIRP4
+CNSTI4 24
+ADDP4
+INDIRF4
+ADDRLP4 12+4
+INDIRF4
+ADDF4
+ASGNF4
+ADDRLP4 44+8
+ADDRLP4 4
+INDIRP4
+CNSTI4 28
+ADDP4
+INDIRF4
+ADDRLP4 12+8
+INDIRF4
+ADDF4
+ASGNF4
+line 1068
+;1067:
+;1068:        ent->pain_debounce_time = level.time + 200; // no normal pain sound
+ADDRFP4 0
+INDIRP4
+CNSTI4 800
+ADDP4
+ADDRGP4 level+28
+INDIRI4
+CNSTI4 200
+ADDI4
+ASGNI4
+line 1069
+;1069:        if (ent->client->ps.stats[STAT_PTEAM] == PTE_HUMANS) //No fall for alienos.
+ADDRFP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+CNSTI4 216
+ADDP4
+INDIRI4
+CNSTI4 2
+NEI4 $524
+line 1070
+;1070:        {
+line 1071
+;1071:          G_Damage(ent, NULL, NULL, dir, point, damage, DAMAGE_NO_LOCDAMAGE, MOD_FALLING);
+ADDRFP4 0
+INDIRP4
+ARGP4
+ADDRLP4 96
+CNSTP4 0
+ASGNP4
+ADDRLP4 96
+INDIRP4
+ARGP4
+ADDRLP4 96
+INDIRP4
+ARGP4
+ADDRLP4 32
+ARGP4
+ADDRLP4 44
+ARGP4
+ADDRLP4 56
+INDIRI4
+ARGI4
+CNSTI4 16
+ARGI4
+CNSTI4 19
+ARGI4
+ADDRGP4 G_Damage
+CALLV
+pop
+line 1072
+;1072:        }
+line 1073
+;1073:        break;
+ADDRGP4 $524
+JUMPV
+LABELV $542
+line 1076
+;1074:
+;1075:      case EV_FIRE_WEAPON:
+;1076:        FireWeapon(ent);
+ADDRFP4 0
+INDIRP4
+ARGP4
+ADDRGP4 FireWeapon
+CALLV
+pop
+line 1077
+;1077:        break;
+ADDRGP4 $524
+JUMPV
+LABELV $543
+line 1080
+;1078:
+;1079:      case EV_FIRE_WEAPON2:
+;1080:        FireWeapon2(ent);
+ADDRFP4 0
+INDIRP4
+ARGP4
+ADDRGP4 FireWeapon2
+CALLV
+pop
+line 1081
+;1081:        break;
+ADDRGP4 $524
+JUMPV
+LABELV $544
+line 1084
+;1082:
+;1083:      case EV_FIRE_WEAPON3:
+;1084:        FireWeapon3(ent);
+ADDRFP4 0
+INDIRP4
+ARGP4
+ADDRGP4 FireWeapon3
+CALLV
+pop
+line 1085
+;1085:        break;
+ADDRGP4 $524
+JUMPV
+LABELV $545
+line 1089
+;1086:
+;1087:      case EV_NOAMMO:
+;1088:        //if we just ran out of grenades, remove the inventory item
+;1089:        if (ent->s.weapon == WP_GRENADE)
+ADDRFP4 0
+INDIRP4
+CNSTI4 192
+ADDP4
+INDIRI4
+CNSTI4 10
+NEI4 $524
+line 1090
+;1090:        {
+line 1093
+;1091:          int j;
+;1092:
+;1093:          BG_RemoveWeaponFromInventory(ent->s.weapon, ent->client->ps.stats);
+ADDRLP4 100
+ADDRFP4 0
+INDIRP4
+ASGNP4
+ADDRLP4 100
+INDIRP4
+CNSTI4 192
+ADDP4
+INDIRI4
+ARGI4
+ADDRLP4 100
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+CNSTI4 184
+ADDP4
+ARGP4
+ADDRGP4 BG_RemoveWeaponFromInventory
+CALLV
+pop
+line 1096
+;1094:
+;1095:          //switch to the first non blaster weapon
+;1096:          for(j = WP_NONE + 1;j < WP_NUM_WEAPONS;j++)
+ADDRLP4 96
+CNSTI4 1
+ASGNI4
+LABELV $548
+line 1097
+;1097:          {
+line 1098
+;1098:            if (j == WP_PISTOL)
+ADDRLP4 96
+INDIRI4
+CNSTI4 1
+NEI4 $552
+line 1099
+;1099:              continue;
+ADDRGP4 $549
+JUMPV
+LABELV $552
+line 1101
+;1100:
+;1101:            if (BG_InventoryContainsWeapon(j, ent->client->ps.stats))
+ADDRLP4 96
+INDIRI4
+ARGI4
+ADDRFP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+CNSTI4 184
+ADDP4
+ARGP4
+ADDRLP4 104
+ADDRGP4 BG_InventoryContainsWeapon
+CALLI4
+ASGNI4
+ADDRLP4 104
+INDIRI4
+CNSTI4 0
+EQI4 $554
+line 1102
+;1102:            {
+line 1103
+;1103:              G_ForceWeaponChange(ent, j);
+ADDRFP4 0
+INDIRP4
+ARGP4
+ADDRLP4 96
+INDIRI4
+ARGI4
+ADDRGP4 G_ForceWeaponChange
+CALLV
+pop
+line 1104
+;1104:              break;
+ADDRGP4 $550
+JUMPV
+LABELV $554
+line 1106
+;1105:            }
+;1106:          }
+LABELV $549
+line 1096
+ADDRLP4 96
+ADDRLP4 96
+INDIRI4
+CNSTI4 1
+ADDI4
+ASGNI4
+ADDRLP4 96
+INDIRI4
+CNSTI4 30
+LTI4 $548
+LABELV $550
+line 1109
+;1107:
+;1108:          //only got the blaster to switch to
+;1109:          if (j == WP_NUM_WEAPONS)
+ADDRLP4 96
+INDIRI4
+CNSTI4 30
+NEI4 $556
+line 1110
+;1110:            G_ForceWeaponChange(ent, WP_PISTOL);
+ADDRFP4 0
+INDIRP4
+ARGP4
+CNSTI4 1
+ARGI4
+ADDRGP4 G_ForceWeaponChange
+CALLV
+pop
+LABELV $556
+line 1113
+;1111:
+;1112:          //update ClientInfo
+;1113:          ClientUserinfoChanged(ent->client->ps.clientNum);
+ADDRFP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+CNSTI4 140
+ADDP4
+INDIRI4
+ARGI4
+ADDRGP4 ClientUserinfoChanged
+CALLV
+pop
+line 1114
+;1114:        }
+line 1115
+;1115:        break;
+line 1118
+;1116:
+;1117:      default:
+;1118:        break;
+LABELV $524
+line 1120
+;1119:    }
+;1120:  }
+LABELV $520
+line 1041
+ADDRLP4 0
+ADDRLP4 0
+INDIRI4
+CNSTI4 1
+ADDI4
+ASGNI4
+LABELV $522
+ADDRLP4 0
+INDIRI4
+ADDRLP4 4
+INDIRP4
+CNSTI4 108
+ADDP4
+INDIRI4
+LTI4 $519
+line 1121
+;1121:}
+LABELV $516
+endproc ClientEvents 108 32
+export SendPendingPredictableEvents
+proc SendPendingPredictableEvents 44 12
+line 1130
+;1122:
+;1123:/*
+;1124: ==============
+;1125: SendPendingPredictableEvents
+;1126: ==============
+;1127: */
+;1128:void
+;1129:SendPendingPredictableEvents(playerState_t *ps)
+;1130:{
+line 1136
+;1131:  gentity_t *t;
+;1132:  int event, seq;
+;1133:  int extEvent, number;
+;1134:
+;1135:  // if there are still events pending
+;1136:  if (ps->entityEventSequence < ps->eventSequence)
+ADDRLP4 20
+ADDRFP4 0
+INDIRP4
+ASGNP4
+ADDRLP4 20
+INDIRP4
+CNSTI4 464
+ADDP4
+INDIRI4
+ADDRLP4 20
+INDIRP4
+CNSTI4 108
+ADDP4
+INDIRI4
+GEI4 $562
+line 1137
+;1137:  {
+line 1140
+;1138:    // create a temporary entity for this event which is sent to everyone
+;1139:    // except the client who generated the event
+;1140:    seq = ps->entityEventSequence & (MAX_PS_EVENTS - 1);
+ADDRLP4 8
+ADDRFP4 0
+INDIRP4
+CNSTI4 464
+ADDP4
+INDIRI4
+CNSTI4 1
+BANDI4
+ASGNI4
+line 1141
+;1141:    event = ps->events[seq] | ((ps->entityEventSequence & 3) << 8);
+ADDRLP4 24
+ADDRFP4 0
+INDIRP4
+ASGNP4
+ADDRLP4 4
+ADDRLP4 8
+INDIRI4
+CNSTI4 2
+LSHI4
+ADDRLP4 24
+INDIRP4
+CNSTI4 112
+ADDP4
+ADDP4
+INDIRI4
+ADDRLP4 24
+INDIRP4
+CNSTI4 464
+ADDP4
+INDIRI4
+CNSTI4 3
+BANDI4
+CNSTI4 8
+LSHI4
+BORI4
+ASGNI4
+line 1143
+;1142:    // set external event to zero before calling BG_PlayerStateToEntityState
+;1143:    extEvent = ps->externalEvent;
+ADDRLP4 12
+ADDRFP4 0
+INDIRP4
+CNSTI4 128
+ADDP4
+INDIRI4
+ASGNI4
+line 1144
+;1144:    ps->externalEvent = 0;
+ADDRFP4 0
+INDIRP4
+CNSTI4 128
+ADDP4
+CNSTI4 0
+ASGNI4
+line 1146
+;1145:    // create temporary entity for event
+;1146:    t = G_TempEntity(ps->origin, event);
+ADDRFP4 0
+INDIRP4
+CNSTI4 20
+ADDP4
+ARGP4
+ADDRLP4 4
+INDIRI4
+ARGI4
+ADDRLP4 28
+ADDRGP4 G_TempEntity
+CALLP4
+ASGNP4
+ADDRLP4 0
+ADDRLP4 28
+INDIRP4
+ASGNP4
+line 1147
+;1147:    number = t->s.number;
+ADDRLP4 16
+ADDRLP4 0
+INDIRP4
+INDIRI4
+ASGNI4
+line 1148
+;1148:    BG_PlayerStateToEntityState(ps, &t->s, qtrue);
+ADDRFP4 0
+INDIRP4
+ARGP4
+ADDRLP4 0
+INDIRP4
+ARGP4
+CNSTI4 1
+ARGI4
+ADDRGP4 BG_PlayerStateToEntityState
+CALLV
+pop
+line 1149
+;1149:    t->s.number = number;
+ADDRLP4 0
+INDIRP4
+ADDRLP4 16
+INDIRI4
+ASGNI4
+line 1150
+;1150:    t->s.eType = ET_EVENTS + event;
+ADDRLP4 0
+INDIRP4
+CNSTI4 4
+ADDP4
+ADDRLP4 4
+INDIRI4
+CNSTI4 22
+ADDI4
+ASGNI4
+line 1151
+;1151:    t->s.eFlags |= EF_PLAYER_EVENT;
+ADDRLP4 32
+ADDRLP4 0
+INDIRP4
+CNSTI4 8
+ADDP4
+ASGNP4
+ADDRLP4 32
+INDIRP4
+ADDRLP4 32
+INDIRP4
+INDIRI4
+CNSTI4 4
+BORI4
+ASGNI4
+line 1152
+;1152:    t->s.otherEntityNum = ps->clientNum;
+ADDRLP4 36
+CNSTI4 140
+ASGNI4
+ADDRLP4 0
+INDIRP4
+ADDRLP4 36
+INDIRI4
+ADDP4
+ADDRFP4 0
+INDIRP4
+ADDRLP4 36
+INDIRI4
+ADDP4
+INDIRI4
+ASGNI4
+line 1154
+;1153:    // send to everyone except the client who generated the event
+;1154:    t->r.svFlags |= SVF_NOTSINGLECLIENT;
+ADDRLP4 40
+ADDRLP4 0
+INDIRP4
+CNSTI4 424
+ADDP4
+ASGNP4
+ADDRLP4 40
+INDIRP4
+ADDRLP4 40
+INDIRP4
+INDIRI4
+CNSTI4 2048
+BORI4
+ASGNI4
+line 1155
+;1155:    t->r.singleClient = ps->clientNum;
+ADDRLP4 0
+INDIRP4
+CNSTI4 428
+ADDP4
+ADDRFP4 0
+INDIRP4
+CNSTI4 140
+ADDP4
+INDIRI4
+ASGNI4
+line 1157
+;1156:    // set back external event
+;1157:    ps->externalEvent = extEvent;
+ADDRFP4 0
+INDIRP4
+CNSTI4 128
+ADDP4
+ADDRLP4 12
+INDIRI4
+ASGNI4
+line 1158
+;1158:  }
+LABELV $562
+line 1159
+;1159:}
+LABELV $561
+endproc SendPendingPredictableEvents 44 12
+export G_UnlaggedStore
+proc G_UnlaggedStore 24 0
+line 1172
+;1160:
+;1161:/*
+;1162: ==============
+;1163: G_UnlaggedStore
+;1164:
+;1165: Called on every server frame.  Stores position data for the client at that 
+;1166: into client->unlaggedHist[] and the time into level.unlaggedTimes[].  
+;1167: This data is used by G_UnlaggedCalc()
+;1168: ==============
+;1169: */
+;1170:void
+;1171:G_UnlaggedStore(void)
+;1172:{
+line 1173
+;1173:  int i = 0;
+ADDRLP4 8
+CNSTI4 0
+ASGNI4
+line 1177
+;1174:  gentity_t *ent;
+;1175:  unlagged_t *save;
+;1176:
+;1177:  if (!g_unlagged.integer)
+ADDRGP4 g_unlagged+12
+INDIRI4
+CNSTI4 0
+NEI4 $565
+line 1178
+;1178:    return;
+ADDRGP4 $564
+JUMPV
+LABELV $565
+line 1179
+;1179:  level.unlaggedIndex++;
+ADDRLP4 12
+ADDRGP4 level+189860
+ASGNP4
+ADDRLP4 12
+INDIRP4
+ADDRLP4 12
+INDIRP4
+INDIRI4
+CNSTI4 1
+ADDI4
+ASGNI4
+line 1180
+;1180:  if (level.unlaggedIndex >= MAX_UNLAGGED_MARKERS)
+ADDRGP4 level+189860
+INDIRI4
+CNSTI4 10
+LTI4 $569
+line 1181
+;1181:    level.unlaggedIndex = 0;
+ADDRGP4 level+189860
+CNSTI4 0
+ASGNI4
+LABELV $569
+line 1183
+;1182:
+;1183:  level.unlaggedTimes[level.unlaggedIndex] = level.time;
+ADDRGP4 level+189860
+INDIRI4
+CNSTI4 2
+LSHI4
+ADDRGP4 level+189864
+ADDP4
+ADDRGP4 level+28
+INDIRI4
+ASGNI4
+line 1185
+;1184:
+;1185:  for(i = 0;i < level.maxclients;i++)
+ADDRLP4 8
+CNSTI4 0
+ASGNI4
+ADDRGP4 $579
+JUMPV
+LABELV $576
+line 1186
+;1186:  {
+line 1187
+;1187:    ent = &g_entities[i];
+ADDRLP4 0
+CNSTI4 2476
+ADDRLP4 8
+INDIRI4
+MULI4
+ADDRGP4 g_entities
+ADDP4
+ASGNP4
+line 1188
+;1188:    save = &ent->client->unlaggedHist[level.unlaggedIndex];
+ADDRLP4 4
+CNSTI4 40
+ADDRGP4 level+189860
+INDIRI4
+MULI4
+ADDRLP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+CNSTI4 1408
+ADDP4
+ADDP4
+ASGNP4
+line 1189
+;1189:    save->used = qfalse;
+ADDRLP4 4
+INDIRP4
+CNSTI4 36
+ADDP4
+CNSTI4 0
+ASGNI4
+line 1190
+;1190:    if (!ent->r.linked || !(ent->r.contents & CONTENTS_BODY))
+ADDRLP4 20
+CNSTI4 0
+ASGNI4
+ADDRLP4 0
+INDIRP4
+CNSTI4 416
+ADDP4
+INDIRI4
+ADDRLP4 20
+INDIRI4
+EQI4 $584
+ADDRLP4 0
+INDIRP4
+CNSTI4 460
+ADDP4
+INDIRI4
+CNSTI4 33554432
+BANDI4
+ADDRLP4 20
+INDIRI4
+NEI4 $582
+LABELV $584
+line 1191
+;1191:      continue;
+ADDRGP4 $577
+JUMPV
+LABELV $582
+line 1192
+;1192:    if (ent->client->pers.connected != CON_CONNECTED)
+ADDRLP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+CNSTI4 472
+ADDP4
+INDIRI4
+CNSTI4 2
+EQI4 $585
+line 1193
+;1193:      continue;
+ADDRGP4 $577
+JUMPV
+LABELV $585
+line 1194
+;1194:    VectorCopy(ent->r.mins, save->mins);
+ADDRLP4 4
+INDIRP4
+CNSTI4 12
+ADDP4
+ADDRLP4 0
+INDIRP4
+CNSTI4 436
+ADDP4
+INDIRB
+ASGNB 12
+line 1195
+;1195:    VectorCopy(ent->r.maxs, save->maxs);
+ADDRLP4 4
+INDIRP4
+CNSTI4 24
+ADDP4
+ADDRLP4 0
+INDIRP4
+CNSTI4 448
+ADDP4
+INDIRB
+ASGNB 12
+line 1196
+;1196:    VectorCopy(ent->s.pos.trBase, save->origin);
+ADDRLP4 4
+INDIRP4
+ADDRLP4 0
+INDIRP4
+CNSTI4 24
+ADDP4
+INDIRB
+ASGNB 12
+line 1197
+;1197:    save->used = qtrue;
+ADDRLP4 4
+INDIRP4
+CNSTI4 36
+ADDP4
+CNSTI4 1
+ASGNI4
+line 1198
+;1198:  }
+LABELV $577
+line 1185
+ADDRLP4 8
+ADDRLP4 8
+INDIRI4
+CNSTI4 1
+ADDI4
+ASGNI4
+LABELV $579
+ADDRLP4 8
+INDIRI4
+ADDRGP4 level+20
+INDIRI4
+LTI4 $576
+line 1199
+;1199:}
+LABELV $564
+endproc G_UnlaggedStore 24 0
+export G_UnlaggedClear
+proc G_UnlaggedClear 4 0
+line 1211
+;1200:
+;1201:/*
+;1202: ==============
+;1203: G_UnlaggedClear
+;1204: 
+;1205: Mark all unlaggedHist[] markers for this client invalid.  Useful for
+;1206: preventing teleporting and death.
+;1207: ==============
+;1208: */
+;1209:void
+;1210:G_UnlaggedClear(gentity_t *ent)
+;1211:{
+line 1214
+;1212:  int i;
+;1213:
+;1214:  for(i = 0;i < MAX_UNLAGGED_MARKERS;i++)
+ADDRLP4 0
+CNSTI4 0
+ASGNI4
+LABELV $588
+line 1215
+;1215:    ent->client->unlaggedHist[i].used = qfalse;
+CNSTI4 40
+ADDRLP4 0
+INDIRI4
+MULI4
+ADDRFP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+CNSTI4 1408
+ADDP4
+ADDP4
+CNSTI4 36
+ADDP4
+CNSTI4 0
+ASGNI4
+LABELV $589
+line 1214
+ADDRLP4 0
+ADDRLP4 0
+INDIRI4
+CNSTI4 1
+ADDI4
+ASGNI4
+ADDRLP4 0
+INDIRI4
+CNSTI4 10
+LTI4 $588
+line 1216
+;1216:}
+LABELV $587
+endproc G_UnlaggedClear 4 0
+export G_UnlaggedCalc
+proc G_UnlaggedCalc 212 0
+line 1228
+;1217:
+;1218:/*
+;1219: ==============
+;1220: G_UnlaggedCalc
+;1221:
+;1222: Loops through all active clients and calculates their predicted position
+;1223: for time then stores it in client->unlaggedCalc
+;1224: ==============
+;1225: */
+;1226:void
+;1227:G_UnlaggedCalc(int time, gentity_t *rewindEnt)
+;1228:{
+line 1229
+;1229:  int i = 0;
+ADDRLP4 16
+CNSTI4 0
+ASGNI4
+line 1231
+;1230:  gentity_t *ent;
+;1231:  int startIndex = level.unlaggedIndex;
+ADDRLP4 4
+ADDRGP4 level+189860
+INDIRI4
+ASGNI4
+line 1232
+;1232:  int stopIndex = -1;
+ADDRLP4 8
+CNSTI4 -1
+ASGNI4
+line 1233
+;1233:  int frameMsec = 0;
+ADDRLP4 20
+CNSTI4 0
+ASGNI4
+line 1234
+;1234:  float lerp = 0.5f;
+ADDRLP4 12
+CNSTF4 1056964608
+ASGNF4
+line 1236
+;1235:
+;1236:  if (!g_unlagged.integer)
+ADDRGP4 g_unlagged+12
+INDIRI4
+CNSTI4 0
+NEI4 $594
+line 1237
+;1237:    return;
+ADDRGP4 $592
+JUMPV
+LABELV $594
+line 1240
+;1238:
+;1239:  // clear any calculated values from a previous run
+;1240:  for(i = 0;i < level.maxclients;i++)
+ADDRLP4 16
+CNSTI4 0
+ASGNI4
+ADDRGP4 $600
+JUMPV
+LABELV $597
+line 1241
+;1241:  {
+line 1242
+;1242:    ent = &g_entities[i];
+ADDRLP4 0
+CNSTI4 2476
+ADDRLP4 16
+INDIRI4
+MULI4
+ADDRGP4 g_entities
+ADDP4
+ASGNP4
+line 1243
+;1243:    ent->client->unlaggedCalc.used = qfalse;
+ADDRLP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+CNSTI4 1884
+ADDP4
+CNSTI4 0
+ASGNI4
+line 1244
+;1244:  }
+LABELV $598
+line 1240
+ADDRLP4 16
+ADDRLP4 16
+INDIRI4
+CNSTI4 1
+ADDI4
+ASGNI4
+LABELV $600
+ADDRLP4 16
+INDIRI4
+ADDRGP4 level+20
+INDIRI4
+LTI4 $597
+line 1246
+;1245:
+;1246:  for(i = 0;i < MAX_UNLAGGED_MARKERS;i++)
+ADDRLP4 16
+CNSTI4 0
+ASGNI4
+LABELV $602
+line 1247
+;1247:  {
+line 1248
+;1248:    if (level.unlaggedTimes[startIndex] <= time)
+ADDRLP4 4
+INDIRI4
+CNSTI4 2
+LSHI4
+ADDRGP4 level+189864
+ADDP4
+INDIRI4
+ADDRFP4 0
+INDIRI4
+GTI4 $606
+line 1249
+;1249:      break;
+ADDRGP4 $604
+JUMPV
+LABELV $606
+line 1250
+;1250:    stopIndex = startIndex;
+ADDRLP4 8
+ADDRLP4 4
+INDIRI4
+ASGNI4
+line 1251
+;1251:    if (--startIndex < 0)
+ADDRLP4 24
+ADDRLP4 4
+INDIRI4
+CNSTI4 1
+SUBI4
+ASGNI4
+ADDRLP4 4
+ADDRLP4 24
+INDIRI4
+ASGNI4
+ADDRLP4 24
+INDIRI4
+CNSTI4 0
+GEI4 $609
+line 1252
+;1252:      startIndex = MAX_UNLAGGED_MARKERS - 1;
+ADDRLP4 4
+CNSTI4 9
+ASGNI4
+LABELV $609
+line 1253
+;1253:  }
+LABELV $603
+line 1246
+ADDRLP4 16
+ADDRLP4 16
+INDIRI4
+CNSTI4 1
+ADDI4
+ASGNI4
+ADDRLP4 16
+INDIRI4
+CNSTI4 10
+LTI4 $602
+LABELV $604
+line 1254
+;1254:  if (i == MAX_UNLAGGED_MARKERS)
+ADDRLP4 16
+INDIRI4
+CNSTI4 10
+NEI4 $611
+line 1255
+;1255:  {
+line 1258
+;1256:    // if we searched all markers and the oldest one still isn't old enough
+;1257:    // just use the oldest marker with no lerping
+;1258:    lerp = 0.0f;
+ADDRLP4 12
+CNSTF4 0
+ASGNF4
+line 1259
+;1259:  }
+LABELV $611
+line 1262
+;1260:
+;1261:  // client is on the current frame, no need for unlagged
+;1262:  if (stopIndex == -1)
+ADDRLP4 8
+INDIRI4
+CNSTI4 -1
+NEI4 $613
+line 1263
+;1263:    return;
+ADDRGP4 $592
+JUMPV
+LABELV $613
+line 1266
+;1264:
+;1265:  // lerp between two markers
+;1266:  frameMsec = level.unlaggedTimes[stopIndex] - level.unlaggedTimes[startIndex];
+ADDRLP4 24
+CNSTI4 2
+ASGNI4
+ADDRLP4 20
+ADDRLP4 8
+INDIRI4
+ADDRLP4 24
+INDIRI4
+LSHI4
+ADDRGP4 level+189864
+ADDP4
+INDIRI4
+ADDRLP4 4
+INDIRI4
+ADDRLP4 24
+INDIRI4
+LSHI4
+ADDRGP4 level+189864
+ADDP4
+INDIRI4
+SUBI4
+ASGNI4
+line 1267
+;1267:  if (frameMsec > 0)
+ADDRLP4 20
+INDIRI4
+CNSTI4 0
+LEI4 $617
+line 1268
+;1268:  {
+line 1269
+;1269:    lerp = (float) (time - level.unlaggedTimes[startIndex]) / (float) frameMsec;
+ADDRLP4 12
+ADDRFP4 0
+INDIRI4
+ADDRLP4 4
+INDIRI4
+CNSTI4 2
+LSHI4
+ADDRGP4 level+189864
+ADDP4
+INDIRI4
+SUBI4
+CVIF4 4
+ADDRLP4 20
+INDIRI4
+CVIF4 4
+DIVF4
+ASGNF4
+line 1270
+;1270:  }
+LABELV $617
+line 1272
+;1271:
+;1272:  for(i = 0;i < level.maxclients;i++)
+ADDRLP4 16
+CNSTI4 0
+ASGNI4
+ADDRGP4 $623
+JUMPV
+LABELV $620
+line 1273
+;1273:  {
+line 1274
+;1274:    ent = &g_entities[i];
+ADDRLP4 0
+CNSTI4 2476
+ADDRLP4 16
+INDIRI4
+MULI4
+ADDRGP4 g_entities
+ADDP4
+ASGNP4
+line 1275
+;1275:    if (ent == rewindEnt)
+ADDRLP4 0
+INDIRP4
+CVPU4 4
+ADDRFP4 4
+INDIRP4
+CVPU4 4
+NEU4 $625
+line 1276
+;1276:      continue;
+ADDRGP4 $621
+JUMPV
+LABELV $625
+line 1277
+;1277:    if (!ent->r.linked || !(ent->r.contents & CONTENTS_BODY))
+ADDRLP4 32
+CNSTI4 0
+ASGNI4
+ADDRLP4 0
+INDIRP4
+CNSTI4 416
+ADDP4
+INDIRI4
+ADDRLP4 32
+INDIRI4
+EQI4 $629
+ADDRLP4 0
+INDIRP4
+CNSTI4 460
+ADDP4
+INDIRI4
+CNSTI4 33554432
+BANDI4
+ADDRLP4 32
+INDIRI4
+NEI4 $627
+LABELV $629
+line 1278
+;1278:      continue;
+ADDRGP4 $621
+JUMPV
+LABELV $627
+line 1279
+;1279:    if (ent->client->pers.connected != CON_CONNECTED)
+ADDRLP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+CNSTI4 472
+ADDP4
+INDIRI4
+CNSTI4 2
+EQI4 $630
+line 1280
+;1280:      continue;
+ADDRGP4 $621
+JUMPV
+LABELV $630
+line 1281
+;1281:    if (!ent->client->unlaggedHist[startIndex].used)
+CNSTI4 40
+ADDRLP4 4
+INDIRI4
+MULI4
+ADDRLP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+CNSTI4 1408
+ADDP4
+ADDP4
+CNSTI4 36
+ADDP4
+INDIRI4
+CNSTI4 0
+NEI4 $632
+line 1282
+;1282:      continue;
+ADDRGP4 $621
+JUMPV
+LABELV $632
+line 1283
+;1283:    if (!ent->client->unlaggedHist[stopIndex].used)
+CNSTI4 40
+ADDRLP4 8
+INDIRI4
+MULI4
+ADDRLP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+CNSTI4 1408
+ADDP4
+ADDP4
+CNSTI4 36
+ADDP4
+INDIRI4
+CNSTI4 0
+NEI4 $634
+line 1284
+;1284:      continue;
+ADDRGP4 $621
+JUMPV
+LABELV $634
+line 1287
+;1285:
+;1286:    // between two unlagged markers
+;1287:    VectorLerp(lerp, ent->client->unlaggedHist[ startIndex ].mins,
+ADDRLP4 36
+ADDRLP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+ASGNP4
+ADDRLP4 40
+CNSTI4 40
+ASGNI4
+ADDRLP4 44
+ADDRLP4 36
+INDIRP4
+CNSTI4 1408
+ADDP4
+ASGNP4
+ADDRLP4 48
+CNSTI4 12
+ASGNI4
+ADDRLP4 52
+ADDRLP4 40
+INDIRI4
+ADDRLP4 4
+INDIRI4
+MULI4
+ADDRLP4 44
+INDIRP4
+ADDP4
+ADDRLP4 48
+INDIRI4
+ADDP4
+INDIRF4
+ASGNF4
+ADDRLP4 36
+INDIRP4
+CNSTI4 1860
+ADDP4
+ADDRLP4 52
+INDIRF4
+ADDRLP4 12
+INDIRF4
+ADDRLP4 40
+INDIRI4
+ADDRLP4 8
+INDIRI4
+MULI4
+ADDRLP4 44
+INDIRP4
+ADDP4
+ADDRLP4 48
+INDIRI4
+ADDP4
+INDIRF4
+ADDRLP4 52
+INDIRF4
+SUBF4
+MULF4
+ADDF4
+ASGNF4
+ADDRLP4 56
+ADDRLP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+ASGNP4
+ADDRLP4 60
+CNSTI4 40
+ASGNI4
+ADDRLP4 64
+ADDRLP4 56
+INDIRP4
+CNSTI4 1408
+ADDP4
+ASGNP4
+ADDRLP4 68
+CNSTI4 16
+ASGNI4
+ADDRLP4 72
+ADDRLP4 60
+INDIRI4
+ADDRLP4 4
+INDIRI4
+MULI4
+ADDRLP4 64
+INDIRP4
+ADDP4
+ADDRLP4 68
+INDIRI4
+ADDP4
+INDIRF4
+ASGNF4
+ADDRLP4 56
+INDIRP4
+CNSTI4 1864
+ADDP4
+ADDRLP4 72
+INDIRF4
+ADDRLP4 12
+INDIRF4
+ADDRLP4 60
+INDIRI4
+ADDRLP4 8
+INDIRI4
+MULI4
+ADDRLP4 64
+INDIRP4
+ADDP4
+ADDRLP4 68
+INDIRI4
+ADDP4
+INDIRF4
+ADDRLP4 72
+INDIRF4
+SUBF4
+MULF4
+ADDF4
+ASGNF4
+ADDRLP4 76
+ADDRLP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+ASGNP4
+ADDRLP4 80
+CNSTI4 40
+ASGNI4
+ADDRLP4 84
+ADDRLP4 76
+INDIRP4
+CNSTI4 1408
+ADDP4
+ASGNP4
+ADDRLP4 88
+CNSTI4 20
+ASGNI4
+ADDRLP4 92
+ADDRLP4 80
+INDIRI4
+ADDRLP4 4
+INDIRI4
+MULI4
+ADDRLP4 84
+INDIRP4
+ADDP4
+ADDRLP4 88
+INDIRI4
+ADDP4
+INDIRF4
+ASGNF4
+ADDRLP4 76
+INDIRP4
+CNSTI4 1868
+ADDP4
+ADDRLP4 92
+INDIRF4
+ADDRLP4 12
+INDIRF4
+ADDRLP4 80
+INDIRI4
+ADDRLP4 8
+INDIRI4
+MULI4
+ADDRLP4 84
+INDIRP4
+ADDP4
+ADDRLP4 88
+INDIRI4
+ADDP4
+INDIRF4
+ADDRLP4 92
+INDIRF4
+SUBF4
+MULF4
+ADDF4
+ASGNF4
+line 1290
+;1288:        ent->client->unlaggedHist[ stopIndex ].mins,
+;1289:        ent->client->unlaggedCalc.mins);
+;1290:    VectorLerp(lerp, ent->client->unlaggedHist[ startIndex ].maxs,
+ADDRLP4 96
+ADDRLP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+ASGNP4
+ADDRLP4 100
+CNSTI4 40
+ASGNI4
+ADDRLP4 104
+ADDRLP4 96
+INDIRP4
+CNSTI4 1408
+ADDP4
+ASGNP4
+ADDRLP4 108
+CNSTI4 24
+ASGNI4
+ADDRLP4 112
+ADDRLP4 100
+INDIRI4
+ADDRLP4 4
+INDIRI4
+MULI4
+ADDRLP4 104
+INDIRP4
+ADDP4
+ADDRLP4 108
+INDIRI4
+ADDP4
+INDIRF4
+ASGNF4
+ADDRLP4 96
+INDIRP4
+CNSTI4 1872
+ADDP4
+ADDRLP4 112
+INDIRF4
+ADDRLP4 12
+INDIRF4
+ADDRLP4 100
+INDIRI4
+ADDRLP4 8
+INDIRI4
+MULI4
+ADDRLP4 104
+INDIRP4
+ADDP4
+ADDRLP4 108
+INDIRI4
+ADDP4
+INDIRF4
+ADDRLP4 112
+INDIRF4
+SUBF4
+MULF4
+ADDF4
+ASGNF4
+ADDRLP4 116
+ADDRLP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+ASGNP4
+ADDRLP4 120
+CNSTI4 40
+ASGNI4
+ADDRLP4 124
+ADDRLP4 116
+INDIRP4
+CNSTI4 1408
+ADDP4
+ASGNP4
+ADDRLP4 128
+CNSTI4 28
+ASGNI4
+ADDRLP4 132
+ADDRLP4 120
+INDIRI4
+ADDRLP4 4
+INDIRI4
+MULI4
+ADDRLP4 124
+INDIRP4
+ADDP4
+ADDRLP4 128
+INDIRI4
+ADDP4
+INDIRF4
+ASGNF4
+ADDRLP4 116
+INDIRP4
+CNSTI4 1876
+ADDP4
+ADDRLP4 132
+INDIRF4
+ADDRLP4 12
+INDIRF4
+ADDRLP4 120
+INDIRI4
+ADDRLP4 8
+INDIRI4
+MULI4
+ADDRLP4 124
+INDIRP4
+ADDP4
+ADDRLP4 128
+INDIRI4
+ADDP4
+INDIRF4
+ADDRLP4 132
+INDIRF4
+SUBF4
+MULF4
+ADDF4
+ASGNF4
+ADDRLP4 136
+ADDRLP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+ASGNP4
+ADDRLP4 140
+CNSTI4 40
+ASGNI4
+ADDRLP4 144
+ADDRLP4 136
+INDIRP4
+CNSTI4 1408
+ADDP4
+ASGNP4
+ADDRLP4 148
+CNSTI4 32
+ASGNI4
+ADDRLP4 152
+ADDRLP4 140
+INDIRI4
+ADDRLP4 4
+INDIRI4
+MULI4
+ADDRLP4 144
+INDIRP4
+ADDP4
+ADDRLP4 148
+INDIRI4
+ADDP4
+INDIRF4
+ASGNF4
+ADDRLP4 136
+INDIRP4
+CNSTI4 1880
+ADDP4
+ADDRLP4 152
+INDIRF4
+ADDRLP4 12
+INDIRF4
+ADDRLP4 140
+INDIRI4
+ADDRLP4 8
+INDIRI4
+MULI4
+ADDRLP4 144
+INDIRP4
+ADDP4
+ADDRLP4 148
+INDIRI4
+ADDP4
+INDIRF4
+ADDRLP4 152
+INDIRF4
+SUBF4
+MULF4
+ADDF4
+ASGNF4
+line 1293
+;1291:        ent->client->unlaggedHist[ stopIndex ].maxs,
+;1292:        ent->client->unlaggedCalc.maxs);
+;1293:    VectorLerp(lerp, ent->client->unlaggedHist[ startIndex ].origin,
+ADDRLP4 156
+ADDRLP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+ASGNP4
+ADDRLP4 160
+CNSTI4 40
+ASGNI4
+ADDRLP4 164
+ADDRLP4 156
+INDIRP4
+CNSTI4 1408
+ADDP4
+ASGNP4
+ADDRLP4 168
+ADDRLP4 160
+INDIRI4
+ADDRLP4 4
+INDIRI4
+MULI4
+ADDRLP4 164
+INDIRP4
+ADDP4
+INDIRF4
+ASGNF4
+ADDRLP4 156
+INDIRP4
+CNSTI4 1848
+ADDP4
+ADDRLP4 168
+INDIRF4
+ADDRLP4 12
+INDIRF4
+ADDRLP4 160
+INDIRI4
+ADDRLP4 8
+INDIRI4
+MULI4
+ADDRLP4 164
+INDIRP4
+ADDP4
+INDIRF4
+ADDRLP4 168
+INDIRF4
+SUBF4
+MULF4
+ADDF4
+ASGNF4
+ADDRLP4 172
+ADDRLP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+ASGNP4
+ADDRLP4 176
+CNSTI4 40
+ASGNI4
+ADDRLP4 180
+ADDRLP4 172
+INDIRP4
+CNSTI4 1408
+ADDP4
+ASGNP4
+ADDRLP4 184
+CNSTI4 4
+ASGNI4
+ADDRLP4 188
+ADDRLP4 176
+INDIRI4
+ADDRLP4 4
+INDIRI4
+MULI4
+ADDRLP4 180
+INDIRP4
+ADDP4
+ADDRLP4 184
+INDIRI4
+ADDP4
+INDIRF4
+ASGNF4
+ADDRLP4 172
+INDIRP4
+CNSTI4 1852
+ADDP4
+ADDRLP4 188
+INDIRF4
+ADDRLP4 12
+INDIRF4
+ADDRLP4 176
+INDIRI4
+ADDRLP4 8
+INDIRI4
+MULI4
+ADDRLP4 180
+INDIRP4
+ADDP4
+ADDRLP4 184
+INDIRI4
+ADDP4
+INDIRF4
+ADDRLP4 188
+INDIRF4
+SUBF4
+MULF4
+ADDF4
+ASGNF4
+ADDRLP4 192
+ADDRLP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+ASGNP4
+ADDRLP4 196
+CNSTI4 40
+ASGNI4
+ADDRLP4 200
+ADDRLP4 192
+INDIRP4
+CNSTI4 1408
+ADDP4
+ASGNP4
+ADDRLP4 204
+CNSTI4 8
+ASGNI4
+ADDRLP4 208
+ADDRLP4 196
+INDIRI4
+ADDRLP4 4
+INDIRI4
+MULI4
+ADDRLP4 200
+INDIRP4
+ADDP4
+ADDRLP4 204
+INDIRI4
+ADDP4
+INDIRF4
+ASGNF4
+ADDRLP4 192
+INDIRP4
+CNSTI4 1856
+ADDP4
+ADDRLP4 208
+INDIRF4
+ADDRLP4 12
+INDIRF4
+ADDRLP4 196
+INDIRI4
+ADDRLP4 8
+INDIRI4
+MULI4
+ADDRLP4 200
+INDIRP4
+ADDP4
+ADDRLP4 204
+INDIRI4
+ADDP4
+INDIRF4
+ADDRLP4 208
+INDIRF4
+SUBF4
+MULF4
+ADDF4
+ASGNF4
+line 1297
+;1294:        ent->client->unlaggedHist[ stopIndex ].origin,
+;1295:        ent->client->unlaggedCalc.origin);
+;1296:
+;1297:    ent->client->unlaggedCalc.used = qtrue;
+ADDRLP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+CNSTI4 1884
+ADDP4
+CNSTI4 1
+ASGNI4
+line 1298
+;1298:  }
+LABELV $621
+line 1272
+ADDRLP4 16
+ADDRLP4 16
+INDIRI4
+CNSTI4 1
+ADDI4
+ASGNI4
+LABELV $623
+ADDRLP4 16
+INDIRI4
+ADDRGP4 level+20
+INDIRI4
+LTI4 $620
+line 1299
+;1299:}
+LABELV $592
+endproc G_UnlaggedCalc 212 0
+export G_UnlaggedOff
+proc G_UnlaggedOff 20 4
+line 1310
+;1300:
+;1301:/*
+;1302: ==============
+;1303: G_UnlaggedOff
+;1304:
+;1305: Reverses the changes made to all active clients by G_UnlaggedOn()
+;1306: ==============
+;1307: */
+;1308:void
+;1309:G_UnlaggedOff(void)
+;1310:{
+line 1311
+;1311:  int i = 0;
+ADDRLP4 4
+CNSTI4 0
+ASGNI4
+line 1314
+;1312:  gentity_t *ent;
+;1313:
+;1314:  if (!g_unlagged.integer)
+ADDRGP4 g_unlagged+12
+INDIRI4
+CNSTI4 0
+NEI4 $637
+line 1315
+;1315:    return;
+ADDRGP4 $636
+JUMPV
+LABELV $637
+line 1317
+;1316:
+;1317:  for(i = 0;i < level.maxclients;i++)
+ADDRLP4 4
+CNSTI4 0
+ASGNI4
+ADDRGP4 $643
+JUMPV
+LABELV $640
+line 1318
+;1318:  {
+line 1319
+;1319:    ent = &g_entities[i];
+ADDRLP4 0
+CNSTI4 2476
+ADDRLP4 4
+INDIRI4
+MULI4
+ADDRGP4 g_entities
+ADDP4
+ASGNP4
+line 1320
+;1320:    if (!ent->client->unlaggedBackup.used)
+ADDRLP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+CNSTI4 1844
+ADDP4
+INDIRI4
+CNSTI4 0
+NEI4 $645
+line 1321
+;1321:      continue;
+ADDRGP4 $641
+JUMPV
+LABELV $645
+line 1322
+;1322:    VectorCopy(ent->client->unlaggedBackup.mins, ent->r.mins);
+ADDRLP4 0
+INDIRP4
+CNSTI4 436
+ADDP4
+ADDRLP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+CNSTI4 1820
+ADDP4
+INDIRB
+ASGNB 12
+line 1323
+;1323:    VectorCopy(ent->client->unlaggedBackup.maxs, ent->r.maxs);
+ADDRLP4 0
+INDIRP4
+CNSTI4 448
+ADDP4
+ADDRLP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+CNSTI4 1832
+ADDP4
+INDIRB
+ASGNB 12
+line 1324
+;1324:    VectorCopy(ent->client->unlaggedBackup.origin, ent->r.currentOrigin);
+ADDRLP4 0
+INDIRP4
+CNSTI4 488
+ADDP4
+ADDRLP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+CNSTI4 1808
+ADDP4
+INDIRB
+ASGNB 12
+line 1325
+;1325:    ent->client->unlaggedBackup.used = qfalse;
+ADDRLP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+CNSTI4 1844
+ADDP4
+CNSTI4 0
+ASGNI4
+line 1326
+;1326:    trap_LinkEntity(ent);
+ADDRLP4 0
+INDIRP4
+ARGP4
+ADDRGP4 trap_LinkEntity
+CALLV
+pop
+line 1327
+;1327:  }
+LABELV $641
+line 1317
+ADDRLP4 4
+ADDRLP4 4
+INDIRI4
+CNSTI4 1
+ADDI4
+ASGNI4
+LABELV $643
+ADDRLP4 4
+INDIRI4
+ADDRGP4 level+20
+INDIRI4
+LTI4 $640
+line 1328
+;1328:}
+LABELV $636
+endproc G_UnlaggedOff 20 4
+export G_UnlaggedOn
+proc G_UnlaggedOn 60 8
+line 1346
+;1329:
+;1330:/*
+;1331: ==============
+;1332: G_UnlaggedOn
+;1333:
+;1334: Called after G_UnlaggedCalc() to apply the calculated values to all active
+;1335: clients.  Once finished tracing, G_UnlaggedOff() must be called to restore
+;1336: the clients' position data
+;1337:
+;1338: As an optimization, all clients that have an unlagged position that is
+;1339: not touchable at "range" from "muzzle" will be ignored.  This is required
+;1340: to prevent a huge amount of trap_LinkEntity() calls per user cmd.
+;1341: ==============
+;1342: */
+;1343:
+;1344:void
+;1345:G_UnlaggedOn(gentity_t *attacker, vec3_t muzzle, float range)
+;1346:{
+line 1347
+;1347:  int i = 0;
+ADDRLP4 8
+CNSTI4 0
+ASGNI4
+line 1351
+;1348:  gentity_t *ent;
+;1349:  unlagged_t *calc;
+;1350:
+;1351:  if (!g_unlagged.integer)
+ADDRGP4 g_unlagged+12
+INDIRI4
+CNSTI4 0
+NEI4 $648
+line 1352
+;1352:    return;
+ADDRGP4 $647
+JUMPV
+LABELV $648
+line 1354
+;1353:
+;1354:  if (!attacker->client->pers.useUnlagged)
+ADDRFP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+CNSTI4 1048
+ADDP4
+INDIRI4
+CNSTI4 0
+NEI4 $651
+line 1355
+;1355:    return;
+ADDRGP4 $647
+JUMPV
+LABELV $651
+line 1357
+;1356:
+;1357:  for(i = 0;i < level.maxclients;i++)
+ADDRLP4 8
+CNSTI4 0
+ASGNI4
+ADDRGP4 $656
+JUMPV
+LABELV $653
+line 1358
+;1358:  {
+line 1359
+;1359:    ent = &g_entities[i];
+ADDRLP4 0
+CNSTI4 2476
+ADDRLP4 8
+INDIRI4
+MULI4
+ADDRGP4 g_entities
+ADDP4
+ASGNP4
+line 1360
+;1360:    calc = &ent->client->unlaggedCalc;
+ADDRLP4 4
+ADDRLP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+CNSTI4 1848
+ADDP4
+ASGNP4
+line 1362
+;1361:
+;1362:    if (!calc->used)
+ADDRLP4 4
+INDIRP4
+CNSTI4 36
+ADDP4
+INDIRI4
+CNSTI4 0
+NEI4 $658
+line 1363
+;1363:      continue;
+ADDRGP4 $654
+JUMPV
+LABELV $658
+line 1364
+;1364:    if (ent->client->unlaggedBackup.used)
+ADDRLP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+CNSTI4 1844
+ADDP4
+INDIRI4
+CNSTI4 0
+EQI4 $660
+line 1365
+;1365:      continue;
+ADDRGP4 $654
+JUMPV
+LABELV $660
+line 1366
+;1366:    if (!ent->r.linked || !(ent->r.contents & CONTENTS_BODY))
+ADDRLP4 16
+CNSTI4 0
+ASGNI4
+ADDRLP4 0
+INDIRP4
+CNSTI4 416
+ADDP4
+INDIRI4
+ADDRLP4 16
+INDIRI4
+EQI4 $664
+ADDRLP4 0
+INDIRP4
+CNSTI4 460
+ADDP4
+INDIRI4
+CNSTI4 33554432
+BANDI4
+ADDRLP4 16
+INDIRI4
+NEI4 $662
+LABELV $664
+line 1367
+;1367:      continue;
+ADDRGP4 $654
+JUMPV
+LABELV $662
+line 1368
+;1368:    if (VectorCompare(ent->r.currentOrigin, calc->origin))
+ADDRLP4 0
+INDIRP4
+CNSTI4 488
+ADDP4
+ARGP4
+ADDRLP4 4
+INDIRP4
+ARGP4
+ADDRLP4 20
+ADDRGP4 VectorCompare
+CALLI4
+ASGNI4
+ADDRLP4 20
+INDIRI4
+CNSTI4 0
+EQI4 $665
+line 1369
+;1369:      continue;
+ADDRGP4 $654
+JUMPV
+LABELV $665
+line 1370
+;1370:    if (muzzle)
+ADDRFP4 4
+INDIRP4
+CVPU4 4
+CNSTU4 0
+EQU4 $667
+line 1371
+;1371:    {
+line 1372
+;1372:      float r1 = Distance(calc->origin, calc->maxs);
+ADDRLP4 4
+INDIRP4
+ARGP4
+ADDRLP4 4
+INDIRP4
+CNSTI4 24
+ADDP4
+ARGP4
+ADDRLP4 40
+ADDRGP4 Distance
+CALLF4
+ASGNF4
+ADDRLP4 24
+ADDRLP4 40
+INDIRF4
+ASGNF4
+line 1373
+;1373:      float r2 = Distance(calc->origin, calc->mins);
+ADDRLP4 4
+INDIRP4
+ARGP4
+ADDRLP4 4
+INDIRP4
+CNSTI4 12
+ADDP4
+ARGP4
+ADDRLP4 48
+ADDRGP4 Distance
+CALLF4
+ASGNF4
+ADDRLP4 28
+ADDRLP4 48
+INDIRF4
+ASGNF4
+line 1374
+;1374:      float maxRadius = (r1 > r2) ? r1 : r2;
+ADDRLP4 24
+INDIRF4
+ADDRLP4 28
+INDIRF4
+LEF4 $670
+ADDRLP4 52
+ADDRLP4 24
+INDIRF4
+ASGNF4
+ADDRGP4 $671
+JUMPV
+LABELV $670
+ADDRLP4 52
+ADDRLP4 28
+INDIRF4
+ASGNF4
+LABELV $671
+ADDRLP4 32
+ADDRLP4 52
+INDIRF4
+ASGNF4
+line 1376
+;1375:
+;1376:      if (Distance(muzzle, calc->origin) > range + maxRadius)
+ADDRFP4 4
+INDIRP4
+ARGP4
+ADDRLP4 4
+INDIRP4
+ARGP4
+ADDRLP4 56
+ADDRGP4 Distance
+CALLF4
+ASGNF4
+ADDRLP4 56
+INDIRF4
+ADDRFP4 8
+INDIRF4
+ADDRLP4 32
+INDIRF4
+ADDF4
+LEF4 $672
+line 1377
+;1377:        continue;
+ADDRGP4 $654
+JUMPV
+LABELV $672
+line 1378
+;1378:    }
+LABELV $667
+line 1381
+;1379:
+;1380:    // create a backup of the real positions
+;1381:    VectorCopy(ent->r.mins, ent->client->unlaggedBackup.mins);
+ADDRLP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+CNSTI4 1820
+ADDP4
+ADDRLP4 0
+INDIRP4
+CNSTI4 436
+ADDP4
+INDIRB
+ASGNB 12
+line 1382
+;1382:    VectorCopy(ent->r.maxs, ent->client->unlaggedBackup.maxs);
+ADDRLP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+CNSTI4 1832
+ADDP4
+ADDRLP4 0
+INDIRP4
+CNSTI4 448
+ADDP4
+INDIRB
+ASGNB 12
+line 1383
+;1383:    VectorCopy(ent->r.currentOrigin, ent->client->unlaggedBackup.origin);
+ADDRLP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+CNSTI4 1808
+ADDP4
+ADDRLP4 0
+INDIRP4
+CNSTI4 488
+ADDP4
+INDIRB
+ASGNB 12
+line 1384
+;1384:    ent->client->unlaggedBackup.used = qtrue;
+ADDRLP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+CNSTI4 1844
+ADDP4
+CNSTI4 1
+ASGNI4
+line 1387
+;1385:
+;1386:    // move the client to the calculated unlagged position
+;1387:    VectorCopy(calc->mins, ent->r.mins);
+ADDRLP4 0
+INDIRP4
+CNSTI4 436
+ADDP4
+ADDRLP4 4
+INDIRP4
+CNSTI4 12
+ADDP4
+INDIRB
+ASGNB 12
+line 1388
+;1388:    VectorCopy(calc->maxs, ent->r.maxs);
+ADDRLP4 0
+INDIRP4
+CNSTI4 448
+ADDP4
+ADDRLP4 4
+INDIRP4
+CNSTI4 24
+ADDP4
+INDIRB
+ASGNB 12
+line 1389
+;1389:    VectorCopy(calc->origin, ent->r.currentOrigin);
+ADDRLP4 0
+INDIRP4
+CNSTI4 488
+ADDP4
+ADDRLP4 4
+INDIRP4
+INDIRB
+ASGNB 12
+line 1390
+;1390:    trap_LinkEntity(ent);
+ADDRLP4 0
+INDIRP4
+ARGP4
+ADDRGP4 trap_LinkEntity
+CALLV
+pop
+line 1391
+;1391:  }
+LABELV $654
+line 1357
+ADDRLP4 8
+ADDRLP4 8
+INDIRI4
+CNSTI4 1
+ADDI4
+ASGNI4
+LABELV $656
+ADDRLP4 8
+INDIRI4
+ADDRGP4 level+20
+INDIRI4
+LTI4 $653
+line 1392
+;1392:}
+LABELV $647
+endproc G_UnlaggedOn 60 8
+proc G_UnlaggedDetectCollisions 124 28
+line 1418
+;1393:
+;1394:/*
+;1395: ==============
+;1396: G_UnlaggedDetectCollisions
+;1397:
+;1398: cgame prediction will predict a client's own position all the way up to
+;1399: the current time, but only updates other player's positions up to the
+;1400: postition sent in the most recent snapshot.
+;1401:
+;1402: This allows player X to essentially "move through" the position of player Y 
+;1403: when player X's cmd is processed with Pmove() on the server.  This is because
+;1404: player Y was clipping player X's Pmove() on his client, but when the same
+;1405: cmd is processed with Pmove on the server it is not clipped.
+;1406:
+;1407: Long story short (too late): don't use unlagged positions for players who
+;1408: were blocking this player X's client-side Pmove().  This makes the assumption
+;1409: that if player X's movement was blocked in the client he's going to still
+;1410: be up against player Y when the Pmove() is run on the server with the
+;1411: same cmd.
+;1412:
+;1413: NOTE: this must be called after Pmove() and G_UnlaggedCalc()
+;1414: ==============
+;1415: */
+;1416:static void
+;1417:G_UnlaggedDetectCollisions(gentity_t *ent)
+;1418:{
+line 1424
+;1419:  unlagged_t *calc;
+;1420:  trace_t tr;
+;1421:  float r1, r2;
+;1422:  float range;
+;1423:
+;1424:  if (!g_unlagged.integer)
+ADDRGP4 g_unlagged+12
+INDIRI4
+CNSTI4 0
+NEI4 $675
+line 1425
+;1425:    return;
+ADDRGP4 $674
+JUMPV
+LABELV $675
+line 1426
+;1426:  if (!ent->client->pers.useUnlagged)
+ADDRFP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+CNSTI4 1048
+ADDP4
+INDIRI4
+CNSTI4 0
+NEI4 $678
+line 1427
+;1427:    return;
+ADDRGP4 $674
+JUMPV
+LABELV $678
+line 1429
+;1428:
+;1429:  calc = &ent->client->unlaggedCalc;
+ADDRLP4 0
+ADDRFP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+CNSTI4 1848
+ADDP4
+ASGNP4
+line 1432
+;1430:
+;1431:  // if the client isn't moving, this is not necessary
+;1432:  if (VectorCompare(ent->client->oldOrigin, ent->client->ps.origin))
+ADDRLP4 76
+ADDRFP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+ASGNP4
+ADDRLP4 76
+INDIRP4
+CNSTI4 1184
+ADDP4
+ARGP4
+ADDRLP4 76
+INDIRP4
+CNSTI4 20
+ADDP4
+ARGP4
+ADDRLP4 80
+ADDRGP4 VectorCompare
+CALLI4
+ASGNI4
+ADDRLP4 80
+INDIRI4
+CNSTI4 0
+EQI4 $680
+line 1433
+;1433:    return;
+ADDRGP4 $674
+JUMPV
+LABELV $680
+line 1435
+;1434:
+;1435:  range = Distance(ent->client->oldOrigin, ent->client->ps.origin);
+ADDRLP4 84
+ADDRFP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+ASGNP4
+ADDRLP4 84
+INDIRP4
+CNSTI4 1184
+ADDP4
+ARGP4
+ADDRLP4 84
+INDIRP4
+CNSTI4 20
+ADDP4
+ARGP4
+ADDRLP4 88
+ADDRGP4 Distance
+CALLF4
+ASGNF4
+ADDRLP4 72
+ADDRLP4 88
+INDIRF4
+ASGNF4
+line 1439
+;1436:
+;1437:  // increase the range by the player's largest possible radius since it's
+;1438:  // the players bounding box that collides, not their origin
+;1439:  r1 = Distance(calc->origin, calc->mins);
+ADDRLP4 0
+INDIRP4
+ARGP4
+ADDRLP4 0
+INDIRP4
+CNSTI4 12
+ADDP4
+ARGP4
+ADDRLP4 96
+ADDRGP4 Distance
+CALLF4
+ASGNF4
+ADDRLP4 64
+ADDRLP4 96
+INDIRF4
+ASGNF4
+line 1440
+;1440:  r2 = Distance(calc->origin, calc->maxs);
+ADDRLP4 0
+INDIRP4
+ARGP4
+ADDRLP4 0
+INDIRP4
+CNSTI4 24
+ADDP4
+ARGP4
+ADDRLP4 104
+ADDRGP4 Distance
+CALLF4
+ASGNF4
+ADDRLP4 68
+ADDRLP4 104
+INDIRF4
+ASGNF4
+line 1441
+;1441:  range += (r1 > r2) ? r1 : r2;
+ADDRLP4 64
+INDIRF4
+ADDRLP4 68
+INDIRF4
+LEF4 $683
+ADDRLP4 108
+ADDRLP4 64
+INDIRF4
+ASGNF4
+ADDRGP4 $684
+JUMPV
+LABELV $683
+ADDRLP4 108
+ADDRLP4 68
+INDIRF4
+ASGNF4
+LABELV $684
+ADDRLP4 72
+ADDRLP4 72
+INDIRF4
+ADDRLP4 108
+INDIRF4
+ADDF4
+ASGNF4
+line 1443
+;1442:
+;1443:  G_UnlaggedOn(ent, ent->client->oldOrigin, range);
+ADDRLP4 112
+ADDRFP4 0
+INDIRP4
+ASGNP4
+ADDRLP4 112
+INDIRP4
+ARGP4
+ADDRLP4 112
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+CNSTI4 1184
+ADDP4
+ARGP4
+ADDRLP4 72
+INDIRF4
+ARGF4
+ADDRGP4 G_UnlaggedOn
+CALLV
+pop
+line 1445
+;1444:
+;1445:  trap_Trace(
+ADDRLP4 4
+ARGP4
+ADDRLP4 116
+ADDRFP4 0
+INDIRP4
+ASGNP4
+ADDRLP4 120
+ADDRLP4 116
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+ASGNP4
+ADDRLP4 120
+INDIRP4
+CNSTI4 1184
+ADDP4
+ARGP4
+ADDRLP4 116
+INDIRP4
+CNSTI4 436
+ADDP4
+ARGP4
+ADDRLP4 116
+INDIRP4
+CNSTI4 448
+ADDP4
+ARGP4
+ADDRLP4 120
+INDIRP4
+CNSTI4 20
+ADDP4
+ARGP4
+ADDRLP4 116
+INDIRP4
+INDIRI4
+ARGI4
+CNSTI4 33619969
+ARGI4
+ADDRGP4 trap_Trace
+CALLV
+pop
+line 1448
+;1446:    &tr, ent->client->oldOrigin, ent->r.mins, ent->r.maxs, ent->client->ps.origin, ent->s.number,
+;1447:    MASK_PLAYERSOLID);
+;1448:  if (tr.entityNum >= 0 && tr.entityNum < MAX_CLIENTS)
+ADDRLP4 4+52
+INDIRI4
+CNSTI4 0
+LTI4 $685
+ADDRLP4 4+52
+INDIRI4
+CNSTI4 64
+GEI4 $685
+line 1449
+;1449:    g_entities[tr.entityNum].client->unlaggedCalc.used = qfalse;
+CNSTI4 2476
+ADDRLP4 4+52
+INDIRI4
+MULI4
+ADDRGP4 g_entities+516
+ADDP4
+INDIRP4
+CNSTI4 1884
+ADDP4
+CNSTI4 0
+ASGNI4
+LABELV $685
+line 1451
+;1450:
+;1451:  G_UnlaggedOff();
+ADDRGP4 G_UnlaggedOff
+CALLV
+pop
+line 1452
+;1452:}
+LABELV $674
+endproc G_UnlaggedDetectCollisions 124 28
+lit
+align 4
+LABELV $856
+byte 4 1115684864
+byte 4 1115684864
+byte 4 1115684864
+export ClientThink_real
+code
+proc ClientThink_real 4876 28
+line 1467
+;1453:
+;1454:/*
+;1455: ==============
+;1456: ClientThink
+;1457:
+;1458: This will be called once for each client frame, which will
+;1459: usually be a couple times for each server frame on fast clients.
+;1460:
+;1461: If "g_synchronousClients 1" is set, this will be called exactly
+;1462: once for each server frame, which makes for smooth demo recording.
+;1463: ==============
+;1464: */
+;1465:void
+;1466:ClientThink_real(gentity_t *ent)
+;1467:{
+line 1474
+;1468:  gclient_t *client;
+;1469:  pmove_t pm;
+;1470:  int oldEventSequence;
+;1471:  int msec;
+;1472:  usercmd_t *ucmd;
+;1473:
+;1474:  client = ent->client;
+ADDRLP4 0
+ADDRFP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+ASGNP4
+line 1477
+;1475:
+;1476:  // don't think if the client is not yet connected (and thus not yet spawned in)
+;1477:  if (client->pers.connected != CON_CONNECTED)
+ADDRLP4 0
+INDIRP4
+CNSTI4 472
+ADDP4
+INDIRI4
+CNSTI4 2
+EQI4 $692
+line 1478
+;1478:    return;
+ADDRGP4 $691
+JUMPV
+LABELV $692
+line 1481
+;1479:
+;1480:  // mark the time, so the connection sprite can be removed
+;1481:  ucmd = &ent->client->pers.cmd;
+ADDRLP4 364
+ADDRFP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+CNSTI4 476
+ADDP4
+ASGNP4
+line 1484
+;1482:
+;1483:  // sanity check the command time to prevent speedup cheating
+;1484:  if (ucmd->serverTime > level.time + 200)
+ADDRLP4 364
+INDIRP4
+INDIRI4
+ADDRGP4 level+28
+INDIRI4
+CNSTI4 200
+ADDI4
+LEI4 $694
+line 1485
+;1485:  {
+line 1486
+;1486:    ucmd->serverTime = level.time + 200;
+ADDRLP4 364
+INDIRP4
+ADDRGP4 level+28
+INDIRI4
+CNSTI4 200
+ADDI4
+ASGNI4
+line 1488
+;1487:    //    G_Printf("serverTime <<<<<\n" );
+;1488:  }
+LABELV $694
+line 1490
+;1489:
+;1490:  if (ucmd->serverTime < level.time - 1000)
+ADDRLP4 364
+INDIRP4
+INDIRI4
+ADDRGP4 level+28
+INDIRI4
+CNSTI4 1000
+SUBI4
+GEI4 $698
+line 1491
+;1491:  {
+line 1492
+;1492:    ucmd->serverTime = level.time - 1000;
+ADDRLP4 364
+INDIRP4
+ADDRGP4 level+28
+INDIRI4
+CNSTI4 1000
+SUBI4
+ASGNI4
+line 1494
+;1493:    //    G_Printf("serverTime >>>>>\n" );
+;1494:  }
+LABELV $698
+line 1498
+;1495:
+;1496:  // ucmd->serverTime is a client predicted value, but it works for making a
+;1497:  // replacement for client->ps.ping when in SPECTATOR_FOLLOW 
+;1498:  client->pers.ping = level.time - ucmd->serverTime;
+ADDRLP4 0
+INDIRP4
+CNSTI4 660
+ADDP4
+ADDRGP4 level+28
+INDIRI4
+ADDRLP4 364
+INDIRP4
+INDIRI4
+SUBI4
+ASGNI4
+line 1501
+;1499:
+;1500:  // account for the one frame of delay on client side
+;1501:  client->pers.ping -= level.time - level.previousTime;
+ADDRLP4 376
+ADDRLP4 0
+INDIRP4
+CNSTI4 660
+ADDP4
+ASGNP4
+ADDRLP4 376
+INDIRP4
+ADDRLP4 376
+INDIRP4
+INDIRI4
+ADDRGP4 level+28
+INDIRI4
+ADDRGP4 level+32
+INDIRI4
+SUBI4
+SUBI4
+ASGNI4
+line 1504
+;1502:
+;1503:  // account for the time that's elapsed since the last ClientEndFrame()
+;1504:  client->pers.ping += trap_Milliseconds() - level.frameMsec;
+ADDRLP4 380
+ADDRGP4 trap_Milliseconds
+CALLI4
+ASGNI4
+ADDRLP4 384
+ADDRLP4 0
+INDIRP4
+CNSTI4 660
+ADDP4
+ASGNP4
+ADDRLP4 384
+INDIRP4
+ADDRLP4 384
+INDIRP4
+INDIRI4
+ADDRLP4 380
+INDIRI4
+ADDRGP4 level+36
+INDIRI4
+SUBI4
+ADDI4
+ASGNI4
+line 1506
+;1505:
+;1506:  if (client->pers.ping < 0)
+ADDRLP4 0
+INDIRP4
+CNSTI4 660
+ADDP4
+INDIRI4
+CNSTI4 0
+GEI4 $706
+line 1507
+;1507:    client->pers.ping = 0;
+ADDRLP4 0
+INDIRP4
+CNSTI4 660
+ADDP4
+CNSTI4 0
+ASGNI4
+LABELV $706
+line 1509
+;1508:
+;1509:  msec = ucmd->serverTime - client->ps.commandTime;
+ADDRLP4 368
+ADDRLP4 364
+INDIRP4
+INDIRI4
+ADDRLP4 0
+INDIRP4
+INDIRI4
+SUBI4
+ASGNI4
+line 1512
+;1510:  // following others may result in bad times, but we still want
+;1511:  // to check for follow toggles
+;1512:  if (msec < 1 && client->sess.spectatorState != SPECTATOR_FOLLOW)
+ADDRLP4 368
+INDIRI4
+CNSTI4 1
+GEI4 $708
+ADDRLP4 0
+INDIRP4
+CNSTI4 1132
+ADDP4
+INDIRI4
+CNSTI4 3
+EQI4 $708
+line 1513
+;1513:    return;
+ADDRGP4 $691
+JUMPV
+LABELV $708
+line 1515
+;1514:
+;1515:  if (msec > 200)
+ADDRLP4 368
+INDIRI4
+CNSTI4 200
+LEI4 $710
+line 1516
+;1516:    msec = 200;
+ADDRLP4 368
+CNSTI4 200
+ASGNI4
+LABELV $710
+line 1518
+;1517:
+;1518:  client->unlaggedTime = ucmd->serverTime;
+ADDRLP4 0
+INDIRP4
+CNSTI4 1888
+ADDP4
+ADDRLP4 364
+INDIRP4
+INDIRI4
+ASGNI4
+line 1520
+;1519:
+;1520:  if (pmove_msec.integer < 8)
+ADDRGP4 pmove_msec+12
+INDIRI4
+CNSTI4 8
+GEI4 $712
+line 1521
+;1521:    trap_Cvar_Set("pmove_msec", "8");
+ADDRGP4 $715
+ARGP4
+ADDRGP4 $716
+ARGP4
+ADDRGP4 trap_Cvar_Set
+CALLV
+pop
+ADDRGP4 $713
+JUMPV
+LABELV $712
+line 1522
+;1522:  else if (pmove_msec.integer > 33)
+ADDRGP4 pmove_msec+12
+INDIRI4
+CNSTI4 33
+LEI4 $717
+line 1523
+;1523:    trap_Cvar_Set("pmove_msec", "33");
+ADDRGP4 $715
+ARGP4
+ADDRGP4 $720
+ARGP4
+ADDRGP4 trap_Cvar_Set
+CALLV
+pop
+LABELV $717
+LABELV $713
+line 1525
+;1524:
+;1525:  if (pmove_fixed.integer || client->pers.pmoveFixed)
+ADDRLP4 388
+CNSTI4 0
+ASGNI4
+ADDRGP4 pmove_fixed+12
+INDIRI4
+ADDRLP4 388
+INDIRI4
+NEI4 $724
+ADDRLP4 0
+INDIRP4
+CNSTI4 512
+ADDP4
+INDIRI4
+ADDRLP4 388
+INDIRI4
+EQI4 $721
+LABELV $724
+line 1526
+;1526:  {
+line 1527
+;1527:    ucmd->serverTime = ((ucmd->serverTime + pmove_msec.integer - 1) / pmove_msec.integer)
+ADDRLP4 364
+INDIRP4
+ADDRLP4 364
+INDIRP4
+INDIRI4
+ADDRGP4 pmove_msec+12
+INDIRI4
+ADDI4
+CNSTI4 1
+SUBI4
+ADDRGP4 pmove_msec+12
+INDIRI4
+DIVI4
+ADDRGP4 pmove_msec+12
+INDIRI4
+MULI4
+ASGNI4
+line 1531
+;1528:        * pmove_msec.integer;
+;1529:    //if (ucmd->serverTime - client->ps.commandTime <= 0)
+;1530:    //  return;
+;1531:  }
+LABELV $721
+line 1536
+;1532:
+;1533:  //
+;1534:  // check for exiting intermission
+;1535:  //
+;1536:  if (level.intermissiontime)
+ADDRGP4 level+185040
+INDIRI4
+CNSTI4 0
+EQI4 $728
+line 1537
+;1537:  {
+line 1538
+;1538:    ClientIntermissionThink(client);
+ADDRLP4 0
+INDIRP4
+ARGP4
+ADDRGP4 ClientIntermissionThink
+CALLV
+pop
+line 1539
+;1539:    return;
+ADDRGP4 $691
+JUMPV
+LABELV $728
+line 1542
+;1540:  }
+;1541:
+;1542:  if (client->pers.teamSelection != PTE_NONE && client->pers.joinedATeam)
+ADDRLP4 396
+CNSTI4 0
+ASGNI4
+ADDRLP4 0
+INDIRP4
+CNSTI4 628
+ADDP4
+INDIRI4
+ADDRLP4 396
+INDIRI4
+EQI4 $731
+ADDRLP4 0
+INDIRP4
+CNSTI4 636
+ADDP4
+INDIRI4
+ADDRLP4 396
+INDIRI4
+EQI4 $731
+line 1543
+;1543:    G_UpdatePTRConnection(client);
+ADDRLP4 0
+INDIRP4
+ARGP4
+ADDRGP4 G_UpdatePTRConnection
+CALLV
+pop
+LABELV $731
+line 1546
+;1544:
+;1545:  // spectators don't do much
+;1546:  if (client->sess.sessionTeam == TEAM_SPECTATOR)
+ADDRLP4 0
+INDIRP4
+CNSTI4 1120
+ADDP4
+INDIRI4
+CNSTI4 1
+NEI4 $733
+line 1547
+;1547:  {
+line 1548
+;1548:    if (client->sess.spectatorState == SPECTATOR_SCOREBOARD)
+ADDRLP4 0
+INDIRP4
+CNSTI4 1132
+ADDP4
+INDIRI4
+CNSTI4 4
+NEI4 $735
+line 1549
+;1549:      return;
+ADDRGP4 $691
+JUMPV
+LABELV $735
+line 1551
+;1550:
+;1551:    SpectatorThink(ent, ucmd);
+ADDRFP4 0
+INDIRP4
+ARGP4
+ADDRLP4 364
+INDIRP4
+ARGP4
+ADDRGP4 SpectatorThink
+CALLV
+pop
+line 1552
+;1552:    return;
+ADDRGP4 $691
+JUMPV
+LABELV $733
+line 1556
+;1553:  }
+;1554:
+;1555:  // check for inactivity timer, but never drop the local client of a non-dedicated server
+;1556:  if (!ClientInactivityTimer(client))
+ADDRLP4 0
+INDIRP4
+ARGP4
+ADDRLP4 400
+ADDRGP4 ClientInactivityTimer
+CALLI4
+ASGNI4
+ADDRLP4 400
+INDIRI4
+CNSTI4 0
+NEI4 $737
+line 1557
+;1557:    return;
+ADDRGP4 $691
+JUMPV
+LABELV $737
+line 1560
+;1558:
+;1559:  // calculate where ent is currently seeing all the other active clients 
+;1560:  G_UnlaggedCalc(ent->client->unlaggedTime, ent);
+ADDRLP4 404
+ADDRFP4 0
+INDIRP4
+ASGNP4
+ADDRLP4 404
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+CNSTI4 1888
+ADDP4
+INDIRI4
+ARGI4
+ADDRLP4 404
+INDIRP4
+ARGP4
+ADDRGP4 G_UnlaggedCalc
+CALLV
+pop
+line 1562
+;1561:
+;1562:  if (client->noclip)
+ADDRLP4 0
+INDIRP4
+CNSTI4 1164
+ADDP4
+INDIRI4
+CNSTI4 0
+EQI4 $739
+line 1563
+;1563:    client->ps.pm_type = PM_NOCLIP;
+ADDRLP4 0
+INDIRP4
+CNSTI4 4
+ADDP4
+CNSTI4 1
+ASGNI4
+ADDRGP4 $740
+JUMPV
+LABELV $739
+line 1564
+;1564:  else if (client->ps.stats[STAT_HEALTH] <= 0)
+ADDRLP4 0
+INDIRP4
+CNSTI4 184
+ADDP4
+INDIRI4
+CNSTI4 0
+GTI4 $741
+line 1565
+;1565:    client->ps.pm_type = PM_DEAD;
+ADDRLP4 0
+INDIRP4
+CNSTI4 4
+ADDP4
+CNSTI4 5
+ASGNI4
+ADDRGP4 $742
+JUMPV
+LABELV $741
+line 1566
+;1566:  else if (client->ps.stats[STAT_STATE] & SS_INFESTING || client->ps.stats[STAT_STATE]
+ADDRLP4 408
+ADDRLP4 0
+INDIRP4
+CNSTI4 224
+ADDP4
+INDIRI4
+ASGNI4
+ADDRLP4 412
+CNSTI4 0
+ASGNI4
+ADDRLP4 408
+INDIRI4
+CNSTI4 16
+BANDI4
+ADDRLP4 412
+INDIRI4
+NEI4 $745
+ADDRLP4 408
+INDIRI4
+CNSTI4 256
+BANDI4
+ADDRLP4 412
+INDIRI4
+EQI4 $743
+LABELV $745
+line 1568
+;1567:      & SS_HOVELING)
+;1568:    client->ps.pm_type = PM_FREEZE;
+ADDRLP4 0
+INDIRP4
+CNSTI4 4
+ADDP4
+CNSTI4 6
+ASGNI4
+ADDRGP4 $744
+JUMPV
+LABELV $743
+line 1569
+;1569:  else if (client->ps.stats[STAT_STATE] & SS_BLOBLOCKED || client->ps.stats[STAT_STATE]
+ADDRLP4 416
+ADDRLP4 0
+INDIRP4
+CNSTI4 224
+ADDP4
+INDIRI4
+ASGNI4
+ADDRLP4 420
+CNSTI4 0
+ASGNI4
+ADDRLP4 416
+INDIRI4
+CNSTI4 64
+BANDI4
+ADDRLP4 420
+INDIRI4
+NEI4 $748
+ADDRLP4 416
+INDIRI4
+CNSTI4 32
+BANDI4
+ADDRLP4 420
+INDIRI4
+EQI4 $746
+LABELV $748
+line 1571
+;1570:      & SS_GRABBED)
+;1571:    client->ps.pm_type = PM_GRABBED;
+ADDRLP4 424
+CNSTI4 4
+ASGNI4
+ADDRLP4 0
+INDIRP4
+ADDRLP4 424
+INDIRI4
+ADDP4
+ADDRLP4 424
+INDIRI4
+ASGNI4
+ADDRGP4 $747
+JUMPV
+LABELV $746
+line 1575
+;1572:  /*else if (BG_InventoryContainsUpgrade(UP_JETPACK, client->ps.stats) && BG_UpgradeIsActive(UP_JETPACK, client->ps.stats))
+;1573:   client->ps.pm_type = PM_JETPACK;*/
+;1574:  else
+;1575:    client->ps.pm_type = PM_NORMAL;
+ADDRLP4 0
+INDIRP4
+CNSTI4 4
+ADDP4
+CNSTI4 0
+ASGNI4
+LABELV $747
+LABELV $744
+LABELV $742
+LABELV $740
+line 1577
+;1576:
+;1577:  if (client->ps.stats[STAT_STATE] & SS_GRABBED && client->grabExpiryTime < level.time)
+ADDRLP4 0
+INDIRP4
+CNSTI4 224
+ADDP4
+INDIRI4
+CNSTI4 32
+BANDI4
+CNSTI4 0
+EQI4 $749
+ADDRLP4 0
+INDIRP4
+CNSTI4 1348
+ADDP4
+INDIRI4
+ADDRGP4 level+28
+INDIRI4
+GEI4 $749
+line 1578
+;1578:    client->ps.stats[STAT_STATE] &= ~SS_GRABBED;
+ADDRLP4 432
+ADDRLP4 0
+INDIRP4
+CNSTI4 224
+ADDP4
+ASGNP4
+ADDRLP4 432
+INDIRP4
+ADDRLP4 432
+INDIRP4
+INDIRI4
+CNSTI4 -33
+BANDI4
+ASGNI4
+LABELV $749
+line 1580
+;1579:
+;1580:  if (client->ps.stats[STAT_STATE] & SS_BLOBLOCKED && client->lastLockTime + LOCKBLOB_LOCKTIME
+ADDRLP4 0
+INDIRP4
+CNSTI4 224
+ADDP4
+INDIRI4
+CNSTI4 64
+BANDI4
+CNSTI4 0
+EQI4 $752
+ADDRLP4 0
+INDIRP4
+CNSTI4 1352
+ADDP4
+INDIRI4
+CNSTI4 5000
+ADDI4
+ADDRGP4 level+28
+INDIRI4
+GEI4 $752
+line 1582
+;1581:      < level.time)
+;1582:    client->ps.stats[STAT_STATE] &= ~SS_BLOBLOCKED;
+ADDRLP4 440
+ADDRLP4 0
+INDIRP4
+CNSTI4 224
+ADDP4
+ASGNP4
+ADDRLP4 440
+INDIRP4
+ADDRLP4 440
+INDIRP4
+INDIRI4
+CNSTI4 -65
+BANDI4
+ASGNI4
+LABELV $752
+line 1584
+;1583:
+;1584:  if (client->ps.stats[STAT_STATE] & SS_SLOWLOCKED && client->lastSlowTime + ABUILDER_BLOB_TIME
+ADDRLP4 0
+INDIRP4
+CNSTI4 224
+ADDP4
+INDIRI4
+CNSTI4 1024
+BANDI4
+CNSTI4 0
+EQI4 $755
+ADDRLP4 0
+INDIRP4
+CNSTI4 1356
+ADDP4
+INDIRI4
+CNSTI4 5000
+ADDI4
+ADDRGP4 level+28
+INDIRI4
+GEI4 $755
+line 1586
+;1585:      < level.time)
+;1586:    client->ps.stats[STAT_STATE] &= ~SS_SLOWLOCKED;
+ADDRLP4 448
+ADDRLP4 0
+INDIRP4
+CNSTI4 224
+ADDP4
+ASGNP4
+ADDRLP4 448
+INDIRP4
+ADDRLP4 448
+INDIRP4
+INDIRI4
+CNSTI4 -1025
+BANDI4
+ASGNI4
+LABELV $755
+line 1588
+;1587:
+;1588:  client->ps.stats[STAT_BOOSTTIME] = level.time - client->lastBoostedTime;
+ADDRLP4 0
+INDIRP4
+CNSTI4 236
+ADDP4
+ADDRGP4 level+28
+INDIRI4
+ADDRLP4 0
+INDIRP4
+CNSTI4 1360
+ADDP4
+INDIRI4
+SUBI4
+ASGNI4
+line 1590
+;1589:
+;1590:  if (client->ps.stats[STAT_STATE] & SS_BOOSTED && client->lastBoostedTime + BOOST_TIME
+ADDRLP4 0
+INDIRP4
+CNSTI4 224
+ADDP4
+INDIRI4
+CNSTI4 512
+BANDI4
+CNSTI4 0
+EQI4 $759
+ADDRLP4 0
+INDIRP4
+CNSTI4 1360
+ADDP4
+INDIRI4
+CNSTI4 30000
+ADDI4
+ADDRGP4 level+28
+INDIRI4
+GEI4 $759
+line 1592
+;1591:      < level.time)
+;1592:    client->ps.stats[STAT_STATE] &= ~SS_BOOSTED;
+ADDRLP4 460
+ADDRLP4 0
+INDIRP4
+CNSTI4 224
+ADDP4
+ASGNP4
+ADDRLP4 460
+INDIRP4
+ADDRLP4 460
+INDIRP4
+INDIRI4
+CNSTI4 -513
+BANDI4
+ASGNI4
+LABELV $759
+line 1594
+;1593:
+;1594:  if (client->ps.stats[STAT_STATE] & SS_POISONCLOUDED && client->lastPoisonCloudedTime
+ADDRLP4 0
+INDIRP4
+CNSTI4 224
+ADDP4
+INDIRI4
+CNSTI4 2048
+BANDI4
+CNSTI4 0
+EQI4 $762
+ADDRLP4 0
+INDIRP4
+CNSTI4 1340
+ADDP4
+INDIRI4
+CNSTI4 10000
+ADDI4
+ADDRGP4 level+28
+INDIRI4
+GEI4 $762
+line 1596
+;1595:      + LEVEL1_PCLOUD_TIME < level.time)
+;1596:    client->ps.stats[STAT_STATE] &= ~SS_POISONCLOUDED;
+ADDRLP4 468
+ADDRLP4 0
+INDIRP4
+CNSTI4 224
+ADDP4
+ASGNP4
+ADDRLP4 468
+INDIRP4
+ADDRLP4 468
+INDIRP4
+INDIRI4
+CNSTI4 -2049
+BANDI4
+ASGNI4
+LABELV $762
+line 1598
+;1597:
+;1598:  if (client->ps.stats[STAT_STATE] & SS_POISONED && client->lastPoisonTime + ALIEN_POISON_TIME
+ADDRLP4 0
+INDIRP4
+CNSTI4 224
+ADDP4
+INDIRI4
+CNSTI4 128
+BANDI4
+CNSTI4 0
+EQI4 $765
+ADDRLP4 0
+INDIRP4
+CNSTI4 1320
+ADDP4
+INDIRI4
+CNSTI4 5000
+ADDI4
+ADDRGP4 level+28
+INDIRI4
+GEI4 $765
+line 1600
+;1599:      < level.time)
+;1600:    client->ps.stats[STAT_STATE] &= ~SS_POISONED;
+ADDRLP4 476
+ADDRLP4 0
+INDIRP4
+CNSTI4 224
+ADDP4
+ASGNP4
+ADDRLP4 476
+INDIRP4
+ADDRLP4 476
+INDIRP4
+INDIRI4
+CNSTI4 -129
+BANDI4
+ASGNI4
+LABELV $765
+line 1602
+;1601:
+;1602:  if (client->ps.stats[STAT_STATE] & SS_ONFIRE && client->lastOnFireTime + ONFIRE_TIME
+ADDRLP4 0
+INDIRP4
+CNSTI4 224
+ADDP4
+INDIRI4
+CNSTI4 32768
+BANDI4
+CNSTI4 0
+EQI4 $768
+ADDRLP4 0
+INDIRP4
+CNSTI4 1324
+ADDP4
+INDIRI4
+CNSTI4 5000
+ADDI4
+ADDRGP4 level+28
+INDIRI4
+GEI4 $768
+line 1604
+;1603:        < level.time)
+;1604:      client->ps.stats[STAT_STATE] &= ~SS_ONFIRE;
+ADDRLP4 484
+ADDRLP4 0
+INDIRP4
+CNSTI4 224
+ADDP4
+ASGNP4
+ADDRLP4 484
+INDIRP4
+ADDRLP4 484
+INDIRP4
+INDIRI4
+CNSTI4 -32769
+BANDI4
+ASGNI4
+LABELV $768
+line 1606
+;1605:
+;1606:  client->ps.gravity = g_gravity.value;
+ADDRLP4 0
+INDIRP4
+CNSTI4 48
+ADDP4
+ADDRGP4 g_gravity+8
+INDIRF4
+CVFI4 4
+ASGNI4
+line 1608
+;1607:
+;1608:  if (BG_InventoryContainsUpgrade(UP_MEDKIT, client->ps.stats) && BG_UpgradeIsActive(
+CNSTI4 3
+ARGI4
+ADDRLP4 0
+INDIRP4
+CNSTI4 184
+ADDP4
+ARGP4
+ADDRLP4 488
+ADDRGP4 BG_InventoryContainsUpgrade
+CALLI4
+ASGNI4
+ADDRLP4 488
+INDIRI4
+CNSTI4 0
+EQI4 $772
+CNSTI4 3
+ARGI4
+ADDRLP4 0
+INDIRP4
+CNSTI4 184
+ADDP4
+ARGP4
+ADDRLP4 492
+ADDRGP4 BG_UpgradeIsActive
+CALLI4
+ASGNI4
+ADDRLP4 492
+INDIRI4
+CNSTI4 0
+EQI4 $772
+line 1610
+;1609:    UP_MEDKIT, client->ps.stats))
+;1610:  {
+line 1612
+;1611:    //if currently using a medkit or have no need for a medkit now
+;1612:    if (client->ps.stats[STAT_STATE] & SS_MEDKIT_ACTIVE || (client->ps.stats[STAT_HEALTH]
+ADDRLP4 500
+ADDRLP4 0
+INDIRP4
+CNSTI4 224
+ADDP4
+INDIRI4
+ASGNI4
+ADDRLP4 504
+CNSTI4 0
+ASGNI4
+ADDRLP4 500
+INDIRI4
+CNSTI4 4096
+BANDI4
+ADDRLP4 504
+INDIRI4
+NEI4 $776
+ADDRLP4 0
+INDIRP4
+CNSTI4 184
+ADDP4
+INDIRI4
+ADDRLP4 0
+INDIRP4
+CNSTI4 208
+ADDP4
+INDIRI4
+NEI4 $774
+ADDRLP4 500
+INDIRI4
+CNSTI4 128
+BANDI4
+ADDRLP4 504
+INDIRI4
+NEI4 $774
+LABELV $776
+line 1614
+;1613:        == client->ps.stats[STAT_MAX_HEALTH] && !(client->ps.stats[STAT_STATE] & SS_POISONED)))
+;1614:    {
+line 1615
+;1615:      BG_DeactivateUpgrade(UP_MEDKIT, client->ps.stats);
+CNSTI4 3
+ARGI4
+ADDRLP4 0
+INDIRP4
+CNSTI4 184
+ADDP4
+ARGP4
+ADDRGP4 BG_DeactivateUpgrade
+CALLV
+pop
+line 1616
+;1616:    }
+ADDRGP4 $775
+JUMPV
+LABELV $774
+line 1617
+;1617:    else if (client->ps.stats[STAT_HEALTH] > 0)
+ADDRLP4 0
+INDIRP4
+CNSTI4 184
+ADDP4
+INDIRI4
+CNSTI4 0
+LEI4 $777
+line 1618
+;1618:    {
+line 1620
+;1619:      //remove anti toxin
+;1620:      BG_DeactivateUpgrade(UP_MEDKIT, client->ps.stats);
+CNSTI4 3
+ARGI4
+ADDRLP4 0
+INDIRP4
+CNSTI4 184
+ADDP4
+ARGP4
+ADDRGP4 BG_DeactivateUpgrade
+CALLV
+pop
+line 1621
+;1621:      BG_RemoveUpgradeFromInventory(UP_MEDKIT, client->ps.stats);
+CNSTI4 3
+ARGI4
+ADDRLP4 0
+INDIRP4
+CNSTI4 184
+ADDP4
+ARGP4
+ADDRGP4 BG_RemoveUpgradeFromInventory
+CALLV
+pop
+line 1623
+;1622:
+;1623:      client->ps.stats[STAT_STATE] &= ~SS_POISONED;
+ADDRLP4 508
+ADDRLP4 0
+INDIRP4
+CNSTI4 224
+ADDP4
+ASGNP4
+ADDRLP4 508
+INDIRP4
+ADDRLP4 508
+INDIRP4
+INDIRI4
+CNSTI4 -129
+BANDI4
+ASGNI4
+line 1624
+;1624:      client->ps.stats[STAT_STATE] &= ~SS_POISONCLOUDED;
+ADDRLP4 512
+ADDRLP4 0
+INDIRP4
+CNSTI4 224
+ADDP4
+ASGNP4
+ADDRLP4 512
+INDIRP4
+ADDRLP4 512
+INDIRP4
+INDIRI4
+CNSTI4 -2049
+BANDI4
+ASGNI4
+line 1625
+;1625:      client->poisonImmunityTime = level.time + MEDKIT_POISON_IMMUNITY_TIME;
+ADDRLP4 0
+INDIRP4
+CNSTI4 1328
+ADDP4
+ADDRGP4 level+28
+INDIRI4
+ASGNI4
+line 1627
+;1626:
+;1627:      client->ps.stats[STAT_STATE] |= SS_MEDKIT_ACTIVE;
+ADDRLP4 516
+ADDRLP4 0
+INDIRP4
+CNSTI4 224
+ADDP4
+ASGNP4
+ADDRLP4 516
+INDIRP4
+ADDRLP4 516
+INDIRP4
+INDIRI4
+CNSTI4 4096
+BORI4
+ASGNI4
+line 1628
+;1628:      client->lastMedKitTime = level.time;
+ADDRLP4 0
+INDIRP4
+CNSTI4 1364
+ADDP4
+ADDRGP4 level+28
+INDIRI4
+ASGNI4
+line 1629
+;1629:      client->medKitHealthToRestore = client->ps.stats[STAT_MAX_HEALTH]
+ADDRLP4 0
+INDIRP4
+CNSTI4 1368
+ADDP4
+ADDRLP4 0
+INDIRP4
+CNSTI4 208
+ADDP4
+INDIRI4
+ADDRLP4 0
+INDIRP4
+CNSTI4 184
+ADDP4
+INDIRI4
+SUBI4
+ASGNI4
+line 1631
+;1630:          - client->ps.stats[STAT_HEALTH];
+;1631:      client->medKitIncrementTime = level.time + (MEDKIT_STARTUP_TIME / MEDKIT_STARTUP_SPEED);
+ADDRLP4 0
+INDIRP4
+CNSTI4 1372
+ADDP4
+ADDRGP4 level+28
+INDIRI4
+CNSTI4 800
+ADDI4
+ASGNI4
+line 1633
+;1632:
+;1633:      G_AddEvent(ent, EV_MEDKIT_USED, 0);
+ADDRFP4 0
+INDIRP4
+ARGP4
+CNSTI4 61
+ARGI4
+CNSTI4 0
+ARGI4
+ADDRGP4 G_AddEvent
+CALLV
+pop
+line 1634
+;1634:    }
+LABELV $777
+LABELV $775
+line 1635
+;1635:  }
+LABELV $772
+line 1637
+;1636:
+;1637:  if (BG_InventoryContainsUpgrade(UP_GRENADE, client->ps.stats) && BG_UpgradeIsActive(
+CNSTI4 5
+ARGI4
+ADDRLP4 0
+INDIRP4
+CNSTI4 184
+ADDP4
+ARGP4
+ADDRLP4 496
+ADDRGP4 BG_InventoryContainsUpgrade
+CALLI4
+ASGNI4
+ADDRLP4 496
+INDIRI4
+CNSTI4 0
+EQI4 $782
+CNSTI4 5
+ARGI4
+ADDRLP4 0
+INDIRP4
+CNSTI4 184
+ADDP4
+ARGP4
+ADDRLP4 500
+ADDRGP4 BG_UpgradeIsActive
+CALLI4
+ASGNI4
+ADDRLP4 500
+INDIRI4
+CNSTI4 0
+EQI4 $782
+line 1639
+;1638:    UP_GRENADE, client->ps.stats))
+;1639:  {
+line 1640
+;1640:    int lastWeapon = ent->s.weapon;
+ADDRLP4 504
+ADDRFP4 0
+INDIRP4
+CNSTI4 192
+ADDP4
+INDIRI4
+ASGNI4
+line 1643
+;1641:
+;1642:    //remove grenade
+;1643:    BG_DeactivateUpgrade(UP_GRENADE, client->ps.stats);
+CNSTI4 5
+ARGI4
+ADDRLP4 0
+INDIRP4
+CNSTI4 184
+ADDP4
+ARGP4
+ADDRGP4 BG_DeactivateUpgrade
+CALLV
+pop
+line 1644
+;1644:    BG_RemoveUpgradeFromInventory(UP_GRENADE, client->ps.stats);
+CNSTI4 5
+ARGI4
+ADDRLP4 0
+INDIRP4
+CNSTI4 184
+ADDP4
+ARGP4
+ADDRGP4 BG_RemoveUpgradeFromInventory
+CALLV
+pop
+line 1647
+;1645:
+;1646:    //M-M-M-M-MONSTER HACK
+;1647:    ent->s.weapon = WP_GRENADE;
+ADDRFP4 0
+INDIRP4
+CNSTI4 192
+ADDP4
+CNSTI4 10
+ASGNI4
+line 1648
+;1648:    FireWeapon(ent);
+ADDRFP4 0
+INDIRP4
+ARGP4
+ADDRGP4 FireWeapon
+CALLV
+pop
+line 1649
+;1649:    ent->s.weapon = lastWeapon;
+ADDRFP4 0
+INDIRP4
+CNSTI4 192
+ADDP4
+ADDRLP4 504
+INDIRI4
+ASGNI4
+line 1650
+;1650:  }
+LABELV $782
+line 1652
+;1651:
+;1652:  if (BG_InventoryContainsUpgrade(UP_MINE, client->ps.stats) && BG_UpgradeIsActive(
+CNSTI4 6
+ARGI4
+ADDRLP4 0
+INDIRP4
+CNSTI4 184
+ADDP4
+ARGP4
+ADDRLP4 504
+ADDRGP4 BG_InventoryContainsUpgrade
+CALLI4
+ASGNI4
+ADDRLP4 504
+INDIRI4
+CNSTI4 0
+EQI4 $784
+CNSTI4 6
+ARGI4
+ADDRLP4 0
+INDIRP4
+CNSTI4 184
+ADDP4
+ARGP4
+ADDRLP4 508
+ADDRGP4 BG_UpgradeIsActive
+CALLI4
+ASGNI4
+ADDRLP4 508
+INDIRI4
+CNSTI4 0
+EQI4 $784
+line 1654
+;1653:    UP_MINE, client->ps.stats))
+;1654:  {
+line 1655
+;1655:    int lastWeapon = ent->s.weapon;
+ADDRLP4 512
+ADDRFP4 0
+INDIRP4
+CNSTI4 192
+ADDP4
+INDIRI4
+ASGNI4
+line 1658
+;1656:
+;1657:    //remove grenade
+;1658:    BG_DeactivateUpgrade(UP_MINE, client->ps.stats);
+CNSTI4 6
+ARGI4
+ADDRLP4 0
+INDIRP4
+CNSTI4 184
+ADDP4
+ARGP4
+ADDRGP4 BG_DeactivateUpgrade
+CALLV
+pop
+line 1659
+;1659:    BG_RemoveUpgradeFromInventory(UP_MINE, client->ps.stats);
+CNSTI4 6
+ARGI4
+ADDRLP4 0
+INDIRP4
+CNSTI4 184
+ADDP4
+ARGP4
+ADDRGP4 BG_RemoveUpgradeFromInventory
+CALLV
+pop
+line 1662
+;1660:
+;1661:    //M-M-M-M-MONSTER HACK
+;1662:    ent->s.weapon = WP_MINE;
+ADDRFP4 0
+INDIRP4
+CNSTI4 192
+ADDP4
+CNSTI4 11
+ASGNI4
+line 1663
+;1663:    FireWeapon(ent);
+ADDRFP4 0
+INDIRP4
+ARGP4
+ADDRGP4 FireWeapon
+CALLV
+pop
+line 1664
+;1664:    ent->s.weapon = lastWeapon;
+ADDRFP4 0
+INDIRP4
+CNSTI4 192
+ADDP4
+ADDRLP4 512
+INDIRI4
+ASGNI4
+line 1665
+;1665:  }
+LABELV $784
+line 1683
+;1666:
+;1667:  /*if( BG_InventoryContainsUpgrade( UP_BOMB, client->ps.stats ) &&
+;1668:   BG_UpgradeIsActive( UP_BOMB, client->ps.stats ) )
+;1669:   {
+;1670:   int lastWeapon = ent->s.weapon;
+;1671:
+;1672:   //remove grenade
+;1673:   BG_DeactivateUpgrade( UP_BOMB, client->ps.stats );
+;1674:   BG_RemoveUpgradeFromInventory( UP_BOMB, client->ps.stats );
+;1675:
+;1676:   //M-M-M-M-MONSTER HACK
+;1677:   ent->s.weapon = WP_BOMB;
+;1678:   FireWeapon( ent );
+;1679:   ent->s.weapon = lastWeapon;
+;1680:   }*/
+;1681:
+;1682:  // set speed
+;1683:  client->ps.speed = g_speed.value * BG_FindSpeedForClass(client->ps.stats[STAT_PCLASS]);
+ADDRLP4 0
+INDIRP4
+CNSTI4 212
+ADDP4
+INDIRI4
+ARGI4
+ADDRLP4 516
+ADDRGP4 BG_FindSpeedForClass
+CALLF4
+ASGNF4
+ADDRLP4 0
+INDIRP4
+CNSTI4 52
+ADDP4
+ADDRGP4 g_speed+8
+INDIRF4
+ADDRLP4 516
+INDIRF4
+MULF4
+CVFI4 4
+ASGNI4
+line 1690
+;1684:
+;1685:  /*if(client->pers.hyperspeed == 1)
+;1686:   {
+;1687:   client->ps.speed = client->ps.speed * 5.5;
+;1688:   }*/
+;1689:
+;1690:  if (client->lastCreepSlowTime + CREEP_TIMEOUT < level.time)
+ADDRLP4 0
+INDIRP4
+CNSTI4 1376
+ADDP4
+INDIRI4
+CNSTI4 1000
+ADDI4
+ADDRGP4 level+28
+INDIRI4
+GEI4 $787
+line 1691
+;1691:    client->ps.stats[STAT_STATE] &= ~SS_CREEPSLOWED;
+ADDRLP4 520
+ADDRLP4 0
+INDIRP4
+CNSTI4 224
+ADDP4
+ASGNP4
+ADDRLP4 520
+INDIRP4
+ADDRLP4 520
+INDIRP4
+INDIRI4
+CNSTI4 -5
+BANDI4
+ASGNI4
+LABELV $787
+line 1708
+;1692:
+;1693:  //randomly disable the jet pack if damaged
+;1694:  /*if (BG_InventoryContainsUpgrade(UP_JETPACK, client->ps.stats) && BG_UpgradeIsActive(UP_JETPACK, client->ps.stats))
+;1695:   {
+;1696:   if (ent->lastDamageTime + JETPACK_DISABLE_TIME > level.time)
+;1697:   {
+;1698:   if (random() > JETPACK_DISABLE_CHANCE)
+;1699:   client->ps.pm_type = PM_NORMAL;
+;1700:   }
+;1701:
+;1702:   //switch jetpack off if no reactor
+;1703:   //if( !level.reactorPresent )
+;1704:   //  BG_DeactivateUpgrade( UP_JETPACK, client->ps.stats );
+;1705:   }*/
+;1706:
+;1707:  // set up for pmove
+;1708:  oldEventSequence = client->ps.eventSequence;
+ADDRLP4 372
+ADDRLP4 0
+INDIRP4
+CNSTI4 108
+ADDP4
+INDIRI4
+ASGNI4
+line 1710
+;1709:
+;1710:  memset(&pm, 0, sizeof(pm));
+ADDRLP4 4
+ARGP4
+CNSTI4 0
+ARGI4
+CNSTI4 360
+ARGI4
+ADDRGP4 memset
+CALLP4
+pop
+line 1712
+;1711:
+;1712:  if (!(ucmd->buttons & BUTTON_TALK) && !(client->ps.pm_flags & PMF_RESPAWNED))
+ADDRLP4 524
+CNSTI4 0
+ASGNI4
+ADDRLP4 364
+INDIRP4
+CNSTI4 16
+ADDP4
+INDIRI4
+CNSTI4 2
+BANDI4
+ADDRLP4 524
+INDIRI4
+NEI4 $790
+ADDRLP4 0
+INDIRP4
+CNSTI4 12
+ADDP4
+INDIRI4
+CNSTI4 512
+BANDI4
+ADDRLP4 524
+INDIRI4
+NEI4 $790
+line 1713
+;1713:  {
+line 1714
+;1714:    switch(client->ps.weapon)
+ADDRLP4 528
+ADDRLP4 0
+INDIRP4
+CNSTI4 144
+ADDP4
+INDIRI4
+ASGNI4
+ADDRLP4 528
+INDIRI4
+CNSTI4 22
+LTI4 $793
+ADDRLP4 528
+INDIRI4
+CNSTI4 28
+GTI4 $793
+ADDRLP4 528
+INDIRI4
+CNSTI4 2
+LSHI4
+ADDRGP4 $804-88
+ADDP4
+INDIRP4
+JUMPV
+lit
+align 4
+LABELV $804
+address $795
+address $799
+address $799
+address $793
+address $793
+address $800
+address $800
+code
+line 1715
+;1715:    {
+LABELV $795
+line 1717
+;1716:      case WP_ALEVEL0:
+;1717:        if (client->ps.weaponTime <= 0)
+ADDRLP4 0
+INDIRP4
+CNSTI4 44
+ADDP4
+INDIRI4
+CNSTI4 0
+GTI4 $793
+line 1718
+;1718:          pm.autoWeaponHit[client->ps.weapon] = CheckVenomAttack(ent);
+ADDRFP4 0
+INDIRP4
+ARGP4
+ADDRLP4 536
+ADDRGP4 CheckVenomAttack
+CALLI4
+ASGNI4
+ADDRLP4 0
+INDIRP4
+CNSTI4 144
+ADDP4
+INDIRI4
+CNSTI4 2
+LSHI4
+ADDRLP4 4+44
+ADDP4
+ADDRLP4 536
+INDIRI4
+ASGNI4
+line 1719
+;1719:        break;
+ADDRGP4 $793
+JUMPV
+LABELV $799
+line 1723
+;1720:
+;1721:      case WP_ALEVEL1:
+;1722:      case WP_ALEVEL1_UPG:
+;1723:        CheckGrabAttack(ent);
+ADDRFP4 0
+INDIRP4
+ARGP4
+ADDRGP4 CheckGrabAttack
+CALLV
+pop
+line 1724
+;1724:        break;
+ADDRGP4 $793
+JUMPV
+LABELV $800
+line 1728
+;1725:
+;1726:      case WP_ALEVEL3:
+;1727:      case WP_ALEVEL3_UPG:
+;1728:        if (client->ps.weaponTime <= 0)
+ADDRLP4 0
+INDIRP4
+CNSTI4 44
+ADDP4
+INDIRI4
+CNSTI4 0
+GTI4 $793
+line 1729
+;1729:          pm.autoWeaponHit[client->ps.weapon] = CheckPounceAttack(ent);
+ADDRFP4 0
+INDIRP4
+ARGP4
+ADDRLP4 540
+ADDRGP4 CheckPounceAttack
+CALLI4
+ASGNI4
+ADDRLP4 0
+INDIRP4
+CNSTI4 144
+ADDP4
+INDIRI4
+CNSTI4 2
+LSHI4
+ADDRLP4 4+44
+ADDP4
+ADDRLP4 540
+INDIRI4
+ASGNI4
+line 1730
+;1730:        break;
+line 1733
+;1731:
+;1732:      default:
+;1733:        break;
+LABELV $793
+line 1735
+;1734:    }
+;1735:  }
+LABELV $790
+line 1737
+;1736:
+;1737:  if (ent->flags & FL_FORCE_GESTURE)
+ADDRFP4 0
+INDIRP4
+CNSTI4 536
+ADDP4
+INDIRI4
+CNSTI4 32768
+BANDI4
+CNSTI4 0
+EQI4 $806
+line 1738
+;1738:  {
+line 1739
+;1739:    ent->flags &= ~FL_FORCE_GESTURE;
+ADDRLP4 528
+ADDRFP4 0
+INDIRP4
+CNSTI4 536
+ADDP4
+ASGNP4
+ADDRLP4 528
+INDIRP4
+ADDRLP4 528
+INDIRP4
+INDIRI4
+CNSTI4 -32769
+BANDI4
+ASGNI4
+line 1740
+;1740:    ent->client->pers.cmd.buttons |= BUTTON_GESTURE;
+ADDRLP4 532
+ADDRFP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+CNSTI4 492
+ADDP4
+ASGNP4
+ADDRLP4 532
+INDIRP4
+ADDRLP4 532
+INDIRP4
+INDIRI4
+CNSTI4 8
+BORI4
+ASGNI4
+line 1741
+;1741:  }
+LABELV $806
+line 1743
+;1742:
+;1743:  pm.ps = &client->ps;
+ADDRLP4 4
+ADDRLP4 0
+INDIRP4
+ASGNP4
+line 1744
+;1744:  pm.pmext = &client->pmext;
+ADDRLP4 4+4
+ADDRLP4 0
+INDIRP4
+CNSTI4 468
+ADDP4
+ASGNP4
+line 1745
+;1745:  pm.cmd = *ucmd;
+ADDRLP4 4+8
+ADDRLP4 364
+INDIRP4
+INDIRB
+ASGNB 24
+line 1747
+;1746:
+;1747:  if (pm.ps->pm_type == PM_DEAD)
+ADDRLP4 4
+INDIRP4
+CNSTI4 4
+ADDP4
+INDIRI4
+CNSTI4 5
+NEI4 $810
+line 1748
+;1748:    pm.tracemask = MASK_PLAYERSOLID; // & ~CONTENTS_BODY;
+ADDRLP4 4+32
+CNSTI4 33619969
+ASGNI4
+LABELV $810
+line 1750
+;1749:
+;1750:  if (pm.ps->stats[STAT_STATE] & SS_INFESTING || pm.ps->stats[STAT_STATE] & SS_HOVELING)
+ADDRLP4 528
+ADDRLP4 4
+INDIRP4
+CNSTI4 224
+ADDP4
+INDIRI4
+ASGNI4
+ADDRLP4 532
+CNSTI4 0
+ASGNI4
+ADDRLP4 528
+INDIRI4
+CNSTI4 16
+BANDI4
+ADDRLP4 532
+INDIRI4
+NEI4 $815
+ADDRLP4 528
+INDIRI4
+CNSTI4 256
+BANDI4
+ADDRLP4 532
+INDIRI4
+EQI4 $813
+LABELV $815
+line 1751
+;1751:    pm.tracemask = MASK_PLAYERSOLID & ~CONTENTS_BODY;
+ADDRLP4 4+32
+CNSTI4 65537
+ASGNI4
+ADDRGP4 $814
+JUMPV
+LABELV $813
+line 1753
+;1752:  else
+;1753:    pm.tracemask = MASK_PLAYERSOLID;
+ADDRLP4 4+32
+CNSTI4 33619969
+ASGNI4
+LABELV $814
+line 1755
+;1754:
+;1755:  pm.trace = trap_Trace;
+ADDRLP4 4+352
+ADDRGP4 trap_Trace
+ASGNP4
+line 1756
+;1756:  pm.pointcontents = trap_PointContents;
+ADDRLP4 4+356
+ADDRGP4 trap_PointContents
+ASGNP4
+line 1757
+;1757:  pm.debugLevel = g_debugMove.integer;
+ADDRLP4 4+36
+ADDRGP4 g_debugMove+12
+INDIRI4
+ASGNI4
+line 1758
+;1758:  pm.noFootsteps = 0;
+ADDRLP4 4+40
+CNSTI4 0
+ASGNI4
+line 1760
+;1759:
+;1760:  pm.pmove_fixed = pmove_fixed.integer | client->pers.pmoveFixed;
+ADDRLP4 4+344
+ADDRGP4 pmove_fixed+12
+INDIRI4
+ADDRLP4 0
+INDIRP4
+CNSTI4 512
+ADDP4
+INDIRI4
+BORI4
+ASGNI4
+line 1761
+;1761:  pm.pmove_msec = pmove_msec.integer;
+ADDRLP4 4+348
+ADDRGP4 pmove_msec+12
+INDIRI4
+ASGNI4
+line 1763
+;1762:
+;1763:  VectorCopy(client->ps.origin, client->oldOrigin);
+ADDRLP4 0
+INDIRP4
+CNSTI4 1184
+ADDP4
+ADDRLP4 0
+INDIRP4
+CNSTI4 20
+ADDP4
+INDIRB
+ASGNB 12
+line 1767
+;1764:
+;1765:  // moved from after Pmove -- potentially the cause of
+;1766:  // future triggering bugs
+;1767:  if (!ent->client->noclip)
+ADDRFP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+CNSTI4 1164
+ADDP4
+INDIRI4
+CNSTI4 0
+NEI4 $827
+line 1768
+;1768:    G_TouchTriggers(ent);
+ADDRFP4 0
+INDIRP4
+ARGP4
+ADDRGP4 G_TouchTriggers
+CALLV
+pop
+LABELV $827
+line 1770
+;1769:
+;1770:  Pmove(&pm);
+ADDRLP4 4
+ARGP4
+ADDRGP4 Pmove
+CALLV
+pop
+line 1772
+;1771:
+;1772:  G_UnlaggedDetectCollisions(ent);
+ADDRFP4 0
+INDIRP4
+ARGP4
+ADDRGP4 G_UnlaggedDetectCollisions
+CALLV
+pop
+line 1775
+;1773:
+;1774:  // save results of pmove
+;1775:  if (ent->client->ps.eventSequence != oldEventSequence)
+ADDRFP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+CNSTI4 108
+ADDP4
+INDIRI4
+ADDRLP4 372
+INDIRI4
+EQI4 $829
+line 1776
+;1776:    ent->eventTime = level.time;
+ADDRFP4 0
+INDIRP4
+CNSTI4 552
+ADDP4
+ADDRGP4 level+28
+INDIRI4
+ASGNI4
+LABELV $829
+line 1778
+;1777:
+;1778:  if (g_smoothClients.integer)
+ADDRGP4 g_smoothClients+12
+INDIRI4
+CNSTI4 0
+EQI4 $832
+line 1779
+;1779:    BG_PlayerStateToEntityStateExtraPolate(
+ADDRLP4 540
+ADDRFP4 0
+INDIRP4
+ASGNP4
+ADDRLP4 544
+ADDRLP4 540
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+ASGNP4
+ADDRLP4 544
+INDIRP4
+ARGP4
+ADDRLP4 540
+INDIRP4
+ARGP4
+ADDRLP4 544
+INDIRP4
+INDIRI4
+ARGI4
+CNSTI4 1
+ARGI4
+ADDRGP4 BG_PlayerStateToEntityStateExtraPolate
+CALLV
+pop
+ADDRGP4 $833
+JUMPV
+LABELV $832
+line 1782
+;1780:      &ent->client->ps, &ent->s, ent->client->ps.commandTime, qtrue);
+;1781:  else
+;1782:    BG_PlayerStateToEntityState(&ent->client->ps, &ent->s, qtrue);
+ADDRLP4 548
+ADDRFP4 0
+INDIRP4
+ASGNP4
+ADDRLP4 548
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+ARGP4
+ADDRLP4 548
+INDIRP4
+ARGP4
+CNSTI4 1
+ARGI4
+ADDRGP4 BG_PlayerStateToEntityState
+CALLV
+pop
+LABELV $833
+line 1784
+;1783:
+;1784:  SendPendingPredictableEvents(&ent->client->ps);
+ADDRFP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+ARGP4
+ADDRGP4 SendPendingPredictableEvents
+CALLV
+pop
+line 1786
+;1785:
+;1786:  if (!(ent->client->ps.eFlags & EF_FIRING))
+ADDRFP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+CNSTI4 104
+ADDP4
+INDIRI4
+CNSTI4 512
+BANDI4
+CNSTI4 0
+NEI4 $835
+line 1787
+;1787:    client->fireHeld = qfalse; // for grapple
+ADDRLP4 0
+INDIRP4
+CNSTI4 1264
+ADDP4
+CNSTI4 0
+ASGNI4
+LABELV $835
+line 1788
+;1788:  if (!(ent->client->ps.eFlags & EF_FIRING2))
+ADDRFP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+CNSTI4 104
+ADDP4
+INDIRI4
+CNSTI4 1024
+BANDI4
+CNSTI4 0
+NEI4 $837
+line 1789
+;1789:    client->fire2Held = qfalse;
+ADDRLP4 0
+INDIRP4
+CNSTI4 1268
+ADDP4
+CNSTI4 0
+ASGNI4
+LABELV $837
+line 1792
+;1790:
+;1791:  // use the snapped origin for linking so it matches client predicted versions
+;1792:  VectorCopy(ent->s.pos.trBase, ent->r.currentOrigin);
+ADDRLP4 552
+ADDRFP4 0
+INDIRP4
+ASGNP4
+ADDRLP4 552
+INDIRP4
+CNSTI4 488
+ADDP4
+ADDRLP4 552
+INDIRP4
+CNSTI4 24
+ADDP4
+INDIRB
+ASGNB 12
+line 1794
+;1793:
+;1794:  VectorCopy(pm.mins, ent->r.mins);
+ADDRFP4 0
+INDIRP4
+CNSTI4 436
+ADDP4
+ADDRLP4 4+308
+INDIRB
+ASGNB 12
+line 1795
+;1795:  VectorCopy(pm.maxs, ent->r.maxs);
+ADDRFP4 0
+INDIRP4
+CNSTI4 448
+ADDP4
+ADDRLP4 4+320
+INDIRB
+ASGNB 12
+line 1797
+;1796:
+;1797:  ent->waterlevel = pm.waterlevel;
+ADDRFP4 0
+INDIRP4
+CNSTI4 896
+ADDP4
+ADDRLP4 4+336
+INDIRI4
+ASGNI4
+line 1798
+;1798:  ent->watertype = pm.watertype;
+ADDRFP4 0
+INDIRP4
+CNSTI4 892
+ADDP4
+ADDRLP4 4+332
+INDIRI4
+ASGNI4
+line 1801
+;1799:
+;1800:  // touch other objects
+;1801:  ClientImpacts(ent, &pm);
+ADDRFP4 0
+INDIRP4
+ARGP4
+ADDRLP4 4
+ARGP4
+ADDRGP4 ClientImpacts
+CALLV
+pop
+line 1803
+;1802:
+;1803:  if (!(ent->r.svFlags & SVF_BOT))
+ADDRFP4 0
+INDIRP4
+CNSTI4 424
+ADDP4
+INDIRI4
+CNSTI4 8
+BANDI4
+CNSTI4 0
+NEI4 $843
+line 1804
+;1804:  {
+line 1805
+;1805:    ACEND_PathMap(ent);
+ADDRFP4 0
+INDIRP4
+ARGP4
+ADDRGP4 ACEND_PathMap
+CALLV
+pop
+line 1806
+;1806:  }
+LABELV $843
+line 1809
+;1807:
+;1808:  // execute client events
+;1809:  ClientEvents(ent, oldEventSequence);
+ADDRFP4 0
+INDIRP4
+ARGP4
+ADDRLP4 372
+INDIRI4
+ARGI4
+ADDRGP4 ClientEvents
+CALLV
+pop
+line 1812
+;1810:
+;1811:  // link entity now, after any personal teleporters have been used
+;1812:  trap_LinkEntity(ent);
+ADDRFP4 0
+INDIRP4
+ARGP4
+ADDRGP4 trap_LinkEntity
+CALLV
+pop
+line 1815
+;1813:
+;1814:  // NOTE: now copy the exact origin over otherwise clients can be snapped into solid
+;1815:  VectorCopy(ent->client->ps.origin, ent->r.currentOrigin);
+ADDRLP4 556
+ADDRFP4 0
+INDIRP4
+ASGNP4
+ADDRLP4 556
+INDIRP4
+CNSTI4 488
+ADDP4
+ADDRLP4 556
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+CNSTI4 20
+ADDP4
+INDIRB
+ASGNB 12
+line 1816
+;1816:  VectorCopy(ent->client->ps.origin, ent->s.origin);
+ADDRLP4 560
+ADDRFP4 0
+INDIRP4
+ASGNP4
+ADDRLP4 560
+INDIRP4
+CNSTI4 92
+ADDP4
+ADDRLP4 560
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+CNSTI4 20
+ADDP4
+INDIRB
+ASGNB 12
+line 1819
+;1817:
+;1818:  // save results of triggers and client events
+;1819:  if (ent->client->ps.eventSequence != oldEventSequence)
+ADDRFP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+CNSTI4 108
+ADDP4
+INDIRI4
+ADDRLP4 372
+INDIRI4
+EQI4 $845
+line 1820
+;1820:    ent->eventTime = level.time;
+ADDRFP4 0
+INDIRP4
+CNSTI4 552
+ADDP4
+ADDRGP4 level+28
+INDIRI4
+ASGNI4
+LABELV $845
+line 1823
+;1821:
+;1822:  // Don't think anymore if dead
+;1823:  if (client->ps.stats[STAT_HEALTH] <= 0)
+ADDRLP4 0
+INDIRP4
+CNSTI4 184
+ADDP4
+INDIRI4
+CNSTI4 0
+GTI4 $848
+line 1824
+;1824:    return;
+ADDRGP4 $691
+JUMPV
+LABELV $848
+line 1827
+;1825:
+;1826:  // swap and latch button actions
+;1827:  client->oldbuttons = client->buttons;
+ADDRLP4 0
+INDIRP4
+CNSTI4 1176
+ADDP4
+ADDRLP4 0
+INDIRP4
+CNSTI4 1172
+ADDP4
+INDIRI4
+ASGNI4
+line 1828
+;1828:  client->buttons = ucmd->buttons;
+ADDRLP4 0
+INDIRP4
+CNSTI4 1172
+ADDP4
+ADDRLP4 364
+INDIRP4
+CNSTI4 16
+ADDP4
+INDIRI4
+ASGNI4
+line 1829
+;1829:  client->latched_buttons |= client->buttons & ~client->oldbuttons;
+ADDRLP4 572
+ADDRLP4 0
+INDIRP4
+CNSTI4 1180
+ADDP4
+ASGNP4
+ADDRLP4 572
+INDIRP4
+ADDRLP4 572
+INDIRP4
+INDIRI4
+ADDRLP4 0
+INDIRP4
+CNSTI4 1172
+ADDP4
+INDIRI4
+ADDRLP4 0
+INDIRP4
+CNSTI4 1176
+ADDP4
+INDIRI4
+BCOMI4
+BANDI4
+BORI4
+ASGNI4
+line 1831
+;1830:
+;1831:  if ((client->buttons & BUTTON_GETFLAG) && !(client->oldbuttons & BUTTON_GETFLAG)
+ADDRLP4 580
+CNSTI4 128
+ASGNI4
+ADDRLP4 584
+CNSTI4 0
+ASGNI4
+ADDRLP4 0
+INDIRP4
+CNSTI4 1172
+ADDP4
+INDIRI4
+ADDRLP4 580
+INDIRI4
+BANDI4
+ADDRLP4 584
+INDIRI4
+EQI4 $850
+ADDRLP4 0
+INDIRP4
+CNSTI4 1176
+ADDP4
+INDIRI4
+ADDRLP4 580
+INDIRI4
+BANDI4
+ADDRLP4 584
+INDIRI4
+NEI4 $850
+ADDRLP4 0
+INDIRP4
+CNSTI4 184
+ADDP4
+INDIRI4
+ADDRLP4 584
+INDIRI4
+LEI4 $850
+line 1833
+;1832:      && client->ps.stats[STAT_HEALTH] > 0)
+;1833:  {
+line 1838
+;1834:    trace_t trace;
+;1835:    vec3_t view, point;
+;1836:    gentity_t *traceEnt;
+;1837:
+;1838:    if (client->ps.stats[STAT_STATE] & SS_HOVELING)
+ADDRLP4 0
+INDIRP4
+CNSTI4 224
+ADDP4
+INDIRI4
+CNSTI4 256
+BANDI4
+CNSTI4 0
+EQI4 $852
+line 1839
+;1839:    {
+line 1840
+;1840:      gentity_t *hovel = client->hovel;
+ADDRLP4 676
+ADDRLP4 0
+INDIRP4
+CNSTI4 1316
+ADDP4
+INDIRP4
+ASGNP4
+line 1843
+;1841:
+;1842:      //only let the player out if there is room
+;1843:      if (!AHovel_Blocked(hovel, ent, qtrue))
+ADDRLP4 676
+INDIRP4
+ARGP4
+ADDRFP4 0
+INDIRP4
+ARGP4
+CNSTI4 1
+ARGI4
+ADDRLP4 680
+ADDRGP4 AHovel_Blocked
+CALLI4
+ASGNI4
+ADDRLP4 680
+INDIRI4
+CNSTI4 0
+NEI4 $854
+line 1844
+;1844:      {
+line 1846
+;1845:        //prevent lerping
+;1846:        client->ps.eFlags ^= EF_TELEPORT_BIT;
+ADDRLP4 684
+ADDRLP4 0
+INDIRP4
+CNSTI4 104
+ADDP4
+ASGNP4
+ADDRLP4 684
+INDIRP4
+ADDRLP4 684
+INDIRP4
+INDIRI4
+CNSTI4 2
+BXORI4
+ASGNI4
+line 1847
+;1847:        client->ps.eFlags &= ~EF_NODRAW;
+ADDRLP4 688
+ADDRLP4 0
+INDIRP4
+CNSTI4 104
+ADDP4
+ASGNP4
+ADDRLP4 688
+INDIRP4
+ADDRLP4 688
+INDIRP4
+INDIRI4
+CNSTI4 -257
+BANDI4
+ASGNI4
+line 1848
+;1848:        G_UnlaggedClear(ent);
+ADDRFP4 0
+INDIRP4
+ARGP4
+ADDRGP4 G_UnlaggedClear
+CALLV
+pop
+line 1851
+;1849:
+;1850:        //client leaves hovel
+;1851:        client->ps.stats[STAT_STATE] &= ~SS_HOVELING;
+ADDRLP4 692
+ADDRLP4 0
+INDIRP4
+CNSTI4 224
+ADDP4
+ASGNP4
+ADDRLP4 692
+INDIRP4
+ADDRLP4 692
+INDIRP4
+INDIRI4
+CNSTI4 -257
+BANDI4
+ASGNI4
+line 1854
+;1852:
+;1853:        //hovel is empty
+;1854:        G_SetBuildableAnim(hovel, BANIM_ATTACK2, qfalse);
+ADDRLP4 676
+INDIRP4
+ARGP4
+CNSTI4 7
+ARGI4
+CNSTI4 0
+ARGI4
+ADDRGP4 G_SetBuildableAnim
+CALLV
+pop
+line 1855
+;1855:        hovel->active = qfalse;
+ADDRLP4 676
+INDIRP4
+CNSTI4 968
+ADDP4
+CNSTI4 0
+ASGNI4
+line 1856
+;1856:      }
+ADDRGP4 $853
+JUMPV
+LABELV $854
+line 1858
+;1857:      else
+;1858:      {
+line 1860
+;1859:        //exit is blocked
+;1860:        G_TriggerMenu(ent->client->ps.clientNum, MN_A_HOVEL_BLOCKED);
+ADDRFP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+CNSTI4 140
+ADDP4
+INDIRI4
+ARGI4
+CNSTI4 7
+ARGI4
+ADDRGP4 G_TriggerMenu
+CALLV
+pop
+line 1861
+;1861:      }
+line 1862
+;1862:    }
+ADDRGP4 $853
+JUMPV
+LABELV $852
+line 1864
+;1863:    else
+;1864:    {
+line 1869
+;1865:#define USE_OBJECT_RANGE 64
+;1866:
+;1867:      int entityList[MAX_GENTITIES];
+;1868:      vec3_t range =
+;1869:      { USE_OBJECT_RANGE, USE_OBJECT_RANGE, USE_OBJECT_RANGE };
+ADDRLP4 680
+ADDRGP4 $856
+INDIRB
+ASGNB 12
+line 1874
+;1870:      vec3_t mins, maxs;
+;1871:      int i, num;
+;1872:
+;1873:      //TA: look for object infront of player
+;1874:      AngleVectors(client->ps.viewangles, view, NULL, NULL);
+ADDRLP4 0
+INDIRP4
+CNSTI4 152
+ADDP4
+ARGP4
+ADDRLP4 592
+ARGP4
+ADDRLP4 4816
+CNSTP4 0
+ASGNP4
+ADDRLP4 4816
+INDIRP4
+ARGP4
+ADDRLP4 4816
+INDIRP4
+ARGP4
+ADDRGP4 AngleVectors
+CALLV
+pop
+line 1875
+;1875:      VectorMA(client->ps.origin, USE_OBJECT_RANGE, view, point);
+ADDRLP4 4824
+CNSTF4 1115684864
+ASGNF4
+ADDRLP4 604
+ADDRLP4 0
+INDIRP4
+CNSTI4 20
+ADDP4
+INDIRF4
+ADDRLP4 4824
+INDIRF4
+ADDRLP4 592
+INDIRF4
+MULF4
+ADDF4
+ASGNF4
+ADDRLP4 604+4
+ADDRLP4 0
+INDIRP4
+CNSTI4 24
+ADDP4
+INDIRF4
+ADDRLP4 4824
+INDIRF4
+ADDRLP4 592+4
+INDIRF4
+MULF4
+ADDF4
+ASGNF4
+ADDRLP4 604+8
+ADDRLP4 0
+INDIRP4
+CNSTI4 28
+ADDP4
+INDIRF4
+CNSTF4 1115684864
+ADDRLP4 592+8
+INDIRF4
+MULF4
+ADDF4
+ASGNF4
+line 1876
+;1876:      trap_Trace(&trace, client->ps.origin, NULL, NULL, point, ent->s.number, MASK_SHOT);
+ADDRLP4 616
+ARGP4
+ADDRLP4 0
+INDIRP4
+CNSTI4 20
+ADDP4
+ARGP4
+ADDRLP4 4828
+CNSTP4 0
+ASGNP4
+ADDRLP4 4828
+INDIRP4
+ARGP4
+ADDRLP4 4828
+INDIRP4
+ARGP4
+ADDRLP4 604
+ARGP4
+ADDRFP4 0
+INDIRP4
+INDIRI4
+ARGI4
+CNSTI4 33554433
+ARGI4
+ADDRGP4 trap_Trace
+CALLV
+pop
+line 1878
+;1877:
+;1878:      traceEnt = &g_entities[trace.entityNum];
+ADDRLP4 588
+CNSTI4 2476
+ADDRLP4 616+52
+INDIRI4
+MULI4
+ADDRGP4 g_entities
+ADDP4
+ASGNP4
+line 1880
+;1879:
+;1880:      if (traceEnt && traceEnt->biteam == client->ps.stats[STAT_PTEAM] && traceEnt->use)
+ADDRLP4 4836
+CNSTU4 0
+ASGNU4
+ADDRLP4 588
+INDIRP4
+CVPU4 4
+ADDRLP4 4836
+INDIRU4
+EQU4 $862
+ADDRLP4 588
+INDIRP4
+CNSTI4 956
+ADDP4
+INDIRI4
+ADDRLP4 0
+INDIRP4
+CNSTI4 216
+ADDP4
+INDIRI4
+NEI4 $862
+ADDRLP4 588
+INDIRP4
+CNSTI4 788
+ADDP4
+INDIRP4
+CVPU4 4
+ADDRLP4 4836
+INDIRU4
+EQU4 $862
+line 1881
+;1881:        traceEnt->use(traceEnt, ent, ent); //other and activator are the same in this context
+ADDRLP4 588
+INDIRP4
+ARGP4
+ADDRLP4 4844
+ADDRFP4 0
+INDIRP4
+ASGNP4
+ADDRLP4 4844
+INDIRP4
+ARGP4
+ADDRLP4 4844
+INDIRP4
+ARGP4
+ADDRLP4 588
+INDIRP4
+CNSTI4 788
+ADDP4
+INDIRP4
+CALLV
+pop
+ADDRGP4 $863
+JUMPV
+LABELV $862
+line 1883
+;1882:      else
+;1883:      {
+line 1886
+;1884:        //no entity in front of player - do a small area search
+;1885:
+;1886:        VectorAdd(client->ps.origin, range, maxs);
+ADDRLP4 4804
+ADDRLP4 0
+INDIRP4
+CNSTI4 20
+ADDP4
+INDIRF4
+ADDRLP4 680
+INDIRF4
+ADDF4
+ASGNF4
+ADDRLP4 4804+4
+ADDRLP4 0
+INDIRP4
+CNSTI4 24
+ADDP4
+INDIRF4
+ADDRLP4 680+4
+INDIRF4
+ADDF4
+ASGNF4
+ADDRLP4 4804+8
+ADDRLP4 0
+INDIRP4
+CNSTI4 28
+ADDP4
+INDIRF4
+ADDRLP4 680+8
+INDIRF4
+ADDF4
+ASGNF4
+line 1887
+;1887:        VectorSubtract(client->ps.origin, range, mins);
+ADDRLP4 4792
+ADDRLP4 0
+INDIRP4
+CNSTI4 20
+ADDP4
+INDIRF4
+ADDRLP4 680
+INDIRF4
+SUBF4
+ASGNF4
+ADDRLP4 4792+4
+ADDRLP4 0
+INDIRP4
+CNSTI4 24
+ADDP4
+INDIRF4
+ADDRLP4 680+4
+INDIRF4
+SUBF4
+ASGNF4
+ADDRLP4 4792+8
+ADDRLP4 0
+INDIRP4
+CNSTI4 28
+ADDP4
+INDIRF4
+ADDRLP4 680+8
+INDIRF4
+SUBF4
+ASGNF4
+line 1889
+;1888:
+;1889:        num = trap_EntitiesInBox(mins, maxs, entityList, MAX_GENTITIES);
+ADDRLP4 4792
+ARGP4
+ADDRLP4 4804
+ARGP4
+ADDRLP4 696
+ARGP4
+CNSTI4 1024
+ARGI4
+ADDRLP4 4856
+ADDRGP4 trap_EntitiesInBox
+CALLI4
+ASGNI4
+ADDRLP4 692
+ADDRLP4 4856
+INDIRI4
+ASGNI4
+line 1890
+;1890:        for(i = 0;i < num;i++)
+ADDRLP4 676
+CNSTI4 0
+ASGNI4
+ADDRGP4 $875
+JUMPV
+LABELV $872
+line 1891
+;1891:        {
+line 1892
+;1892:          traceEnt = &g_entities[entityList[i]];
+ADDRLP4 588
+CNSTI4 2476
+ADDRLP4 676
+INDIRI4
+CNSTI4 2
+LSHI4
+ADDRLP4 696
+ADDP4
+INDIRI4
+MULI4
+ADDRGP4 g_entities
+ADDP4
+ASGNP4
+line 1894
+;1893:
+;1894:          if(traceEnt->s.weapon == WP_MINE)
+ADDRLP4 588
+INDIRP4
+CNSTI4 192
+ADDP4
+INDIRI4
+CNSTI4 11
+NEI4 $876
+line 1895
+;1895:          {
+line 1896
+;1896:            if(traceEnt->r.ownerNum == ent->s.number)
+ADDRLP4 588
+INDIRP4
+CNSTI4 512
+ADDP4
+INDIRI4
+ADDRFP4 0
+INDIRP4
+INDIRI4
+NEI4 $873
+line 1897
+;1897:            {
+line 1898
+;1898:              traceEnt->use(traceEnt, ent, ent); //other and activator are the same in this context
+ADDRLP4 588
+INDIRP4
+ARGP4
+ADDRLP4 4864
+ADDRFP4 0
+INDIRP4
+ASGNP4
+ADDRLP4 4864
+INDIRP4
+ARGP4
+ADDRLP4 4864
+INDIRP4
+ARGP4
+ADDRLP4 588
+INDIRP4
+CNSTI4 788
+ADDP4
+INDIRP4
+CALLV
+pop
+line 1899
+;1899:              break;
+ADDRGP4 $874
+JUMPV
+line 1901
+;1900:            }
+;1901:            continue;
+LABELV $876
+line 1904
+;1902:          }
+;1903:
+;1904:          if (traceEnt && traceEnt->biteam == client->ps.stats[STAT_PTEAM] && traceEnt->use)
+ADDRLP4 4864
+CNSTU4 0
+ASGNU4
+ADDRLP4 588
+INDIRP4
+CVPU4 4
+ADDRLP4 4864
+INDIRU4
+EQU4 $880
+ADDRLP4 588
+INDIRP4
+CNSTI4 956
+ADDP4
+INDIRI4
+ADDRLP4 0
+INDIRP4
+CNSTI4 216
+ADDP4
+INDIRI4
+NEI4 $880
+ADDRLP4 588
+INDIRP4
+CNSTI4 788
+ADDP4
+INDIRP4
+CVPU4 4
+ADDRLP4 4864
+INDIRU4
+EQU4 $880
+line 1905
+;1905:          {
+line 1906
+;1906:            traceEnt->use(traceEnt, ent, ent); //other and activator are the same in this context
+ADDRLP4 588
+INDIRP4
+ARGP4
+ADDRLP4 4872
+ADDRFP4 0
+INDIRP4
+ASGNP4
+ADDRLP4 4872
+INDIRP4
+ARGP4
+ADDRLP4 4872
+INDIRP4
+ARGP4
+ADDRLP4 588
+INDIRP4
+CNSTI4 788
+ADDP4
+INDIRP4
+CALLV
+pop
+line 1907
+;1907:            break;
+ADDRGP4 $874
+JUMPV
+LABELV $880
+line 1909
+;1908:          }
+;1909:        }
+LABELV $873
+line 1890
+ADDRLP4 676
+ADDRLP4 676
+INDIRI4
+CNSTI4 1
+ADDI4
+ASGNI4
+LABELV $875
+ADDRLP4 676
+INDIRI4
+ADDRLP4 692
+INDIRI4
+LTI4 $872
+LABELV $874
+line 1911
+;1910:
+;1911:        if (i == num && client->ps.stats[STAT_PTEAM] == PTE_ALIENS)
+ADDRLP4 676
+INDIRI4
+ADDRLP4 692
+INDIRI4
+NEI4 $882
+ADDRLP4 0
+INDIRP4
+CNSTI4 216
+ADDP4
+INDIRI4
+CNSTI4 1
+NEI4 $882
+line 1912
+;1912:        {
+line 1913
+;1913:          if (BG_UpgradeClassAvailable(&client->ps))
+ADDRLP4 0
+INDIRP4
+ARGP4
+ADDRLP4 4860
+ADDRGP4 BG_UpgradeClassAvailable
+CALLI4
+ASGNI4
+ADDRLP4 4860
+INDIRI4
+CNSTI4 0
+EQI4 $884
+line 1914
+;1914:          {
+line 1916
+;1915:            //no nearby objects and alien - show class menu
+;1916:            G_TriggerMenu(ent->client->ps.clientNum, MN_A_INFEST);
+ADDRFP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+CNSTI4 140
+ADDP4
+INDIRI4
+ARGI4
+CNSTI4 5
+ARGI4
+ADDRGP4 G_TriggerMenu
+CALLV
+pop
+line 1917
+;1917:          }
+ADDRGP4 $885
+JUMPV
+LABELV $884
+line 1919
+;1918:          else
+;1919:          {
+line 1921
+;1920:            //flash frags
+;1921:            G_AddEvent(ent, EV_ALIEN_EVOLVE_FAILED, 0);
+ADDRFP4 0
+INDIRP4
+ARGP4
+CNSTI4 63
+ARGI4
+CNSTI4 0
+ARGI4
+ADDRGP4 G_AddEvent
+CALLV
+pop
+line 1922
+;1922:          }
+LABELV $885
+line 1923
+;1923:        }
+LABELV $882
+line 1924
+;1924:      }
+LABELV $863
+line 1925
+;1925:    }
+LABELV $853
+line 1926
+;1926:  }
+LABELV $850
+line 1928
+;1927:
+;1928:  if (level.framenum > client->retriggerArmouryMenu && client->retriggerArmouryMenu)
+ADDRLP4 588
+ADDRLP4 0
+INDIRP4
+CNSTI4 1404
+ADDP4
+INDIRI4
+ASGNI4
+ADDRGP4 level+24
+INDIRI4
+ADDRLP4 588
+INDIRI4
+LEI4 $886
+ADDRLP4 588
+INDIRI4
+CNSTI4 0
+EQI4 $886
+line 1929
+;1929:  {
+line 1930
+;1930:    G_TriggerMenu(client->ps.clientNum, MN_H_ARMOURY);
+ADDRLP4 0
+INDIRP4
+CNSTI4 140
+ADDP4
+INDIRI4
+ARGI4
+CNSTI4 22
+ARGI4
+ADDRGP4 G_TriggerMenu
+CALLV
+pop
+line 1932
+;1931:
+;1932:    client->retriggerArmouryMenu = 0;
+ADDRLP4 0
+INDIRP4
+CNSTI4 1404
+ADDP4
+CNSTI4 0
+ASGNI4
+line 1933
+;1933:  }
+LABELV $886
+line 1936
+;1934:
+;1935:  // Give clients some credit periodically
+;1936:  if (ent->client->lastKillTime + FREEKILL_PERIOD < level.time)
+ADDRFP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+CNSTI4 1256
+ADDP4
+INDIRI4
+CNSTI4 40000
+ADDI4
+ADDRGP4 level+28
+INDIRI4
+GEI4 $889
+line 1937
+;1937:  {
+line 1939
+;1938:    //if( !g_suddenDeath.integer ) {
+;1939:    if (ent->client->ps.stats[STAT_PTEAM] == PTE_ALIENS)
+ADDRFP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+CNSTI4 216
+ADDP4
+INDIRI4
+CNSTI4 1
+NEI4 $892
+line 1940
+;1940:      G_AddCreditToClient(ent->client, FREEKILL_ALIEN, qtrue);
+ADDRFP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+ARGP4
+CNSTI4 175
+ARGI4
+CNSTI4 1
+ARGI4
+ADDRGP4 G_AddCreditToClient
+CALLV
+pop
+LABELV $892
+line 1941
+;1941:    if (ent->client->ps.stats[STAT_PTEAM] == PTE_HUMANS)
+ADDRFP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+CNSTI4 216
+ADDP4
+INDIRI4
+CNSTI4 2
+NEI4 $894
+line 1942
+;1942:      G_AddCreditToClient(ent->client, FREEKILL_HUMAN, qtrue);
+ADDRFP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+ARGP4
+CNSTI4 175
+ARGI4
+CNSTI4 1
+ARGI4
+ADDRGP4 G_AddCreditToClient
+CALLV
+pop
+LABELV $894
+line 1944
+;1943:    //}
+;1944:    ent->client->lastKillTime = level.time;
+ADDRFP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+CNSTI4 1256
+ADDP4
+ADDRGP4 level+28
+INDIRI4
+ASGNI4
+line 1945
+;1945:  }
+LABELV $889
+line 1948
+;1946:
+;1947:  // perform once-a-second actions
+;1948:  ClientTimerActions(ent, msec);
+ADDRFP4 0
+INDIRP4
+ARGP4
+ADDRLP4 368
+INDIRI4
+ARGI4
+ADDRGP4 ClientTimerActions
+CALLV
+pop
+line 1950
+;1949:
+;1950:  if (ent->suicideTime > 0 && ent->suicideTime < level.time)
+ADDRLP4 592
+ADDRFP4 0
+INDIRP4
+CNSTI4 1920
+ADDP4
+INDIRI4
+ASGNI4
+ADDRLP4 592
+INDIRI4
+CNSTI4 0
+LEI4 $897
+ADDRLP4 592
+INDIRI4
+ADDRGP4 level+28
+INDIRI4
+GEI4 $897
+line 1951
+;1951:  {
+line 1952
+;1952:    ent->flags &= ~FL_GODMODE;
+ADDRLP4 596
+ADDRFP4 0
+INDIRP4
+CNSTI4 536
+ADDP4
+ASGNP4
+ADDRLP4 596
+INDIRP4
+ADDRLP4 596
+INDIRP4
+INDIRI4
+CNSTI4 -17
+BANDI4
+ASGNI4
+line 1953
+;1953:    ent->client->ps.stats[STAT_HEALTH] = ent->health = 0;
+ADDRLP4 600
+ADDRFP4 0
+INDIRP4
+ASGNP4
+ADDRLP4 604
+CNSTI4 0
+ASGNI4
+ADDRLP4 600
+INDIRP4
+CNSTI4 812
+ADDP4
+ADDRLP4 604
+INDIRI4
+ASGNI4
+ADDRLP4 600
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+CNSTI4 184
+ADDP4
+ADDRLP4 604
+INDIRI4
+ASGNI4
+line 1954
+;1954:    player_die(ent, ent, ent, 100000, MOD_SUICIDE);
+ADDRLP4 608
+ADDRFP4 0
+INDIRP4
+ASGNP4
+ADDRLP4 608
+INDIRP4
+ARGP4
+ADDRLP4 608
+INDIRP4
+ARGP4
+ADDRLP4 608
+INDIRP4
+ARGP4
+CNSTI4 100000
+ARGI4
+CNSTI4 20
+ARGI4
+ADDRGP4 player_die
+CALLV
+pop
+line 1956
+;1955:
+;1956:    ent->suicideTime = 0;
+ADDRFP4 0
+INDIRP4
+CNSTI4 1920
+ADDP4
+CNSTI4 0
+ASGNI4
+line 1957
+;1957:  }
+LABELV $897
+line 1958
+;1958:}
+LABELV $691
+endproc ClientThink_real 4876 28
+export ClientThink
+proc ClientThink 12 8
+line 1969
+;1959:
+;1960:/*
+;1961: ==================
+;1962: ClientThink
+;1963:
+;1964: A new command has arrived from the client
+;1965: ==================
+;1966: */
+;1967:void
+;1968:ClientThink(int clientNum)
+;1969:{
+line 1972
+;1970:  gentity_t *ent;
+;1971:
+;1972:  ent = g_entities + clientNum;
+ADDRLP4 0
+CNSTI4 2476
+ADDRFP4 0
+INDIRI4
+MULI4
+ADDRGP4 g_entities
+ADDP4
+ASGNP4
+line 1973
+;1973:  trap_GetUsercmd(clientNum, &ent->client->pers.cmd);
+ADDRFP4 0
+INDIRI4
+ARGI4
+ADDRLP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+CNSTI4 476
+ADDP4
+ARGP4
+ADDRGP4 trap_GetUsercmd
+CALLV
+pop
+line 1977
+;1974:
+;1975:  // mark the time we got info, so we can display the
+;1976:  // phone jack if they don't get any for a while
+;1977:  ent->client->lastCmdTime = level.time;
+ADDRLP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+CNSTI4 1168
+ADDP4
+ADDRGP4 level+28
+INDIRI4
+ASGNI4
+line 1979
+;1978:
+;1979:  if (ent->client && g_survival.integer && ent->client->ps.stats[STAT_PTEAM] == PTE_HUMANS)
+ADDRLP4 4
+ADDRLP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+ASGNP4
+ADDRLP4 4
+INDIRP4
+CVPU4 4
+CNSTU4 0
+EQU4 $902
+ADDRGP4 g_survival+12
+INDIRI4
+CNSTI4 0
+EQI4 $902
+ADDRLP4 4
+INDIRP4
+CNSTI4 216
+ADDP4
+INDIRI4
+CNSTI4 2
+NEI4 $902
+line 1980
+;1980:  {
+line 1981
+;1981:    ent->s.constantLight = ent->client->ps.stats[STAT_HEALTH];
+ADDRLP4 0
+INDIRP4
+CNSTI4 152
+ADDP4
+ADDRLP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+CNSTI4 184
+ADDP4
+INDIRI4
+ASGNI4
+line 1982
+;1982:  }
+LABELV $902
+line 1984
+;1983:
+;1984:  if (!(ent->r.svFlags & SVF_BOT) && !g_synchronousClients.integer)
+ADDRLP4 8
+CNSTI4 0
+ASGNI4
+ADDRLP4 0
+INDIRP4
+CNSTI4 424
+ADDP4
+INDIRI4
+CNSTI4 8
+BANDI4
+ADDRLP4 8
+INDIRI4
+NEI4 $905
+ADDRGP4 g_synchronousClients+12
+INDIRI4
+ADDRLP4 8
+INDIRI4
+NEI4 $905
+line 1985
+;1985:    ClientThink_real(ent);
+ADDRLP4 0
+INDIRP4
+ARGP4
+ADDRGP4 ClientThink_real
+CALLV
+pop
+LABELV $905
+line 1986
+;1986:}
+LABELV $900
+endproc ClientThink 12 8
+export G_RunClient
+proc G_RunClient 8 4
+line 1990
+;1987:
+;1988:void
+;1989:G_RunClient(gentity_t *ent)
+;1990:{
+line 1992
+;1991:
+;1992:  if (ent->client && g_survival.integer && ent->client->ps.stats[STAT_PTEAM] == PTE_HUMANS)
+ADDRLP4 0
+ADDRFP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+ASGNP4
+ADDRLP4 0
+INDIRP4
+CVPU4 4
+CNSTU4 0
+EQU4 $909
+ADDRGP4 g_survival+12
+INDIRI4
+CNSTI4 0
+EQI4 $909
+ADDRLP4 0
+INDIRP4
+CNSTI4 216
+ADDP4
+INDIRI4
+CNSTI4 2
+NEI4 $909
+line 1993
+;1993:  {
+line 1994
+;1994:    ent->s.constantLight = ent->client->ps.stats[STAT_HEALTH];
+ADDRLP4 4
+ADDRFP4 0
+INDIRP4
+ASGNP4
+ADDRLP4 4
+INDIRP4
+CNSTI4 152
+ADDP4
+ADDRLP4 4
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+CNSTI4 184
+ADDP4
+INDIRI4
+ASGNI4
+line 1995
+;1995:  }
+LABELV $909
+line 1997
+;1996:
+;1997:  if (!(ent->r.svFlags & SVF_BOT) && !g_synchronousClients.integer)
+ADDRLP4 4
+CNSTI4 0
+ASGNI4
+ADDRFP4 0
+INDIRP4
+CNSTI4 424
+ADDP4
+INDIRI4
+CNSTI4 8
+BANDI4
+ADDRLP4 4
+INDIRI4
+NEI4 $912
+ADDRGP4 g_synchronousClients+12
+INDIRI4
+ADDRLP4 4
+INDIRI4
+NEI4 $912
+line 1998
+;1998:    return;
+ADDRGP4 $908
+JUMPV
+LABELV $912
+line 2000
+;1999:
+;2000:  ent->client->pers.cmd.serverTime = level.time;
+ADDRFP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+CNSTI4 476
+ADDP4
+ADDRGP4 level+28
+INDIRI4
+ASGNI4
+line 2001
+;2001:  ClientThink_real(ent);
+ADDRFP4 0
+INDIRP4
+ARGP4
+ADDRGP4 ClientThink_real
+CALLV
+pop
+line 2002
+;2002:}
+LABELV $908
+endproc G_RunClient 8 4
+export SpectatorClientEndFrame
+proc SpectatorClientEndFrame 56 8
+line 2012
+;2003:
+;2004:/*
+;2005: ==================
+;2006: SpectatorClientEndFrame
+;2007:
+;2008: ==================
+;2009: */
+;2010:void
+;2011:SpectatorClientEndFrame(gentity_t *ent)
+;2012:{
+line 2019
+;2013:  gclient_t *cl;
+;2014:  int clientNum, flags;
+;2015:  int score, ping;
+;2016:  vec3_t spawn_origin, spawn_angles;
+;2017:
+;2018:  // if we are doing a chase cam or a remote view, grab the latest info
+;2019:  if (ent->client->sess.spectatorState == SPECTATOR_FOLLOW)
+ADDRFP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+CNSTI4 1132
+ADDP4
+INDIRI4
+CNSTI4 3
+NEI4 $917
+line 2020
+;2020:  {
+line 2021
+;2021:    clientNum = ent->client->sess.spectatorClient;
+ADDRLP4 0
+ADDRFP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+CNSTI4 1136
+ADDP4
+INDIRI4
+ASGNI4
+line 2023
+;2022:
+;2023:    if (clientNum >= 0)
+ADDRLP4 0
+INDIRI4
+CNSTI4 0
+LTI4 $919
+line 2024
+;2024:    {
+line 2025
+;2025:      cl = &level.clients[clientNum];
+ADDRLP4 4
+CNSTI4 2148
+ADDRLP4 0
+INDIRI4
+MULI4
+ADDRGP4 level
+INDIRP4
+ADDP4
+ASGNP4
+line 2027
+;2026:
+;2027:      if (cl->pers.connected == CON_CONNECTED)
+ADDRLP4 4
+INDIRP4
+CNSTI4 472
+ADDP4
+INDIRI4
+CNSTI4 2
+NEI4 $921
+line 2028
+;2028:      {
+line 2030
+;2029:
+;2030:        if (cl -> sess.spectatorState != SPECTATOR_FOLLOW)
+ADDRLP4 4
+INDIRP4
+CNSTI4 1132
+ADDP4
+INDIRI4
+CNSTI4 3
+EQI4 $923
+line 2031
+;2031:        {
+line 2032
+;2032:          flags = (cl->ps.eFlags & ~(EF_VOTED | EF_TEAMVOTED)) | (ent->client->ps.eFlags
+ADDRLP4 44
+CNSTI4 104
+ASGNI4
+ADDRLP4 20
+ADDRLP4 4
+INDIRP4
+ADDRLP4 44
+INDIRI4
+ADDP4
+INDIRI4
+CNSTI4 -98305
+BANDI4
+ADDRFP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+ADDRLP4 44
+INDIRI4
+ADDP4
+INDIRI4
+CNSTI4 98304
+BANDI4
+BORI4
+ASGNI4
+line 2034
+;2033:              & (EF_VOTED | EF_TEAMVOTED));
+;2034:          score = ent->client->ps.persistant[PERS_SCORE];
+ADDRLP4 24
+ADDRFP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+CNSTI4 248
+ADDP4
+INDIRI4
+ASGNI4
+line 2035
+;2035:          ping = ent->client->ps.ping;
+ADDRLP4 28
+ADDRFP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+CNSTI4 452
+ADDP4
+INDIRI4
+ASGNI4
+line 2036
+;2036:          ent->client->ps = cl->ps;
+ADDRFP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+ADDRLP4 4
+INDIRP4
+INDIRB
+ASGNB 468
+line 2037
+;2037:          ent->client->ps.persistant[PERS_SCORE] = score;
+ADDRFP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+CNSTI4 248
+ADDP4
+ADDRLP4 24
+INDIRI4
+ASGNI4
+line 2038
+;2038:          ent->client->ps.ping = ping;
+ADDRFP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+CNSTI4 452
+ADDP4
+ADDRLP4 28
+INDIRI4
+ASGNI4
+line 2039
+;2039:          ent->client->ps.eFlags = flags;
+ADDRFP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+CNSTI4 104
+ADDP4
+ADDRLP4 20
+INDIRI4
+ASGNI4
+line 2040
+;2040:          ent->client->ps.pm_flags |= PMF_FOLLOW;
+ADDRLP4 48
+ADDRFP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+CNSTI4 12
+ADDP4
+ASGNP4
+ADDRLP4 48
+INDIRP4
+ADDRLP4 48
+INDIRP4
+INDIRI4
+CNSTI4 4096
+BORI4
+ASGNI4
+line 2041
+;2041:          ent->client->ps.pm_flags &= ~PMF_QUEUED;
+ADDRLP4 52
+ADDRFP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+CNSTI4 12
+ADDP4
+ASGNP4
+ADDRLP4 52
+INDIRP4
+ADDRLP4 52
+INDIRP4
+INDIRI4
+CNSTI4 -8193
+BANDI4
+ASGNI4
+line 2042
+;2042:        }
+ADDRGP4 $924
+JUMPV
+LABELV $923
+line 2044
+;2043:        else //we are stickyspec-spectating someone who is spectating someone else
+;2044:        {
+line 2045
+;2045:          ent->client->ps.clientNum = (g_entities + clientNum)->s.number;
+ADDRFP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+CNSTI4 140
+ADDP4
+CNSTI4 2476
+ADDRLP4 0
+INDIRI4
+MULI4
+ADDRGP4 g_entities
+ADDP4
+INDIRI4
+ASGNI4
+line 2046
+;2046:          ent->client->ps.commandTime = cl->ps.commandTime;
+ADDRFP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+ADDRLP4 4
+INDIRP4
+INDIRI4
+ASGNI4
+line 2047
+;2047:          ent->client->ps.weapon = 0;
+ADDRFP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+CNSTI4 144
+ADDP4
+CNSTI4 0
+ASGNI4
+line 2048
+;2048:          ent->client->ps.pm_flags |= PMF_FOLLOW;
+ADDRLP4 44
+ADDRFP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+CNSTI4 12
+ADDP4
+ASGNP4
+ADDRLP4 44
+INDIRP4
+ADDRLP4 44
+INDIRP4
+INDIRI4
+CNSTI4 4096
+BORI4
+ASGNI4
+line 2049
+;2049:          ent->client->ps.stats[STAT_PCLASS] = PCL_NONE;
+ADDRFP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+CNSTI4 212
+ADDP4
+CNSTI4 0
+ASGNI4
+line 2051
+;2050:
+;2051:          if (cl->pers.teamSelection == PTE_ALIENS)
+ADDRLP4 4
+INDIRP4
+CNSTI4 628
+ADDP4
+INDIRI4
+CNSTI4 1
+NEI4 $925
+line 2052
+;2052:            G_SelectAlienLockSpawnPoint(spawn_origin, spawn_angles);
+ADDRLP4 8
+ARGP4
+ADDRLP4 32
+ARGP4
+ADDRGP4 G_SelectAlienLockSpawnPoint
+CALLP4
+pop
+ADDRGP4 $926
+JUMPV
+LABELV $925
+line 2053
+;2053:          else if (cl->pers.teamSelection == PTE_HUMANS)
+ADDRLP4 4
+INDIRP4
+CNSTI4 628
+ADDP4
+INDIRI4
+CNSTI4 2
+NEI4 $927
+line 2054
+;2054:            G_SelectHumanLockSpawnPoint(spawn_origin, spawn_angles);
+ADDRLP4 8
+ARGP4
+ADDRLP4 32
+ARGP4
+ADDRGP4 G_SelectHumanLockSpawnPoint
+CALLP4
+pop
+LABELV $927
+LABELV $926
+line 2056
+;2055:
+;2056:          G_SetOrigin(ent, spawn_origin);
+ADDRFP4 0
+INDIRP4
+ARGP4
+ADDRLP4 8
+ARGP4
+ADDRGP4 G_SetOrigin
+CALLV
+pop
+line 2057
+;2057:          VectorCopy(spawn_origin, ent->client->ps.origin);
+ADDRFP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+CNSTI4 20
+ADDP4
+ADDRLP4 8
+INDIRB
+ASGNB 12
+line 2058
+;2058:          G_SetClientViewAngle(ent, spawn_angles);
+ADDRFP4 0
+INDIRP4
+ARGP4
+ADDRLP4 32
+ARGP4
+ADDRGP4 G_SetClientViewAngle
+CALLV
+pop
+line 2059
+;2059:        }
+LABELV $924
+line 2060
+;2060:      }
+LABELV $921
+line 2061
+;2061:    }
+LABELV $919
+line 2062
+;2062:  }
+LABELV $917
+line 2063
+;2063:}
+LABELV $916
+endproc SpectatorClientEndFrame 56 8
+export ClientEndFrame
+proc ClientEndFrame 32 16
+line 2076
+;2064:
+;2065:/*
+;2066: ==============
+;2067: ClientEndFrame
+;2068:
+;2069: Called at the end of each server frame for each connected client
+;2070: A fast client will have multiple ClientThink for each ClientEdFrame,
+;2071: while a slow client may have multiple ClientEndFrame between ClientThink.
+;2072: ==============
+;2073: */
+;2074:void
+;2075:ClientEndFrame(gentity_t *ent)
+;2076:{
+line 2079
+;2077:  clientPersistant_t *pers;
+;2078:
+;2079:  if (ent->client->sess.sessionTeam == TEAM_SPECTATOR)
+ADDRFP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+CNSTI4 1120
+ADDP4
+INDIRI4
+CNSTI4 1
+NEI4 $930
+line 2080
+;2080:  {
+line 2081
+;2081:    SpectatorClientEndFrame(ent);
+ADDRFP4 0
+INDIRP4
+ARGP4
+ADDRGP4 SpectatorClientEndFrame
+CALLV
+pop
+line 2082
+;2082:    return;
+ADDRGP4 $929
+JUMPV
+LABELV $930
+line 2085
+;2083:  }
+;2084:
+;2085:  pers = &ent->client->pers;
+ADDRLP4 0
+ADDRFP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+CNSTI4 472
+ADDP4
+ASGNP4
+line 2088
+;2086:
+;2087:  // save a copy of certain playerState values in case of SPECTATOR_FOLLOW 
+;2088:  pers->score = ent->client->ps.persistant[PERS_SCORE];
+ADDRLP4 0
+INDIRP4
+CNSTI4 180
+ADDP4
+ADDRFP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+CNSTI4 248
+ADDP4
+INDIRI4
+ASGNI4
+line 2089
+;2089:  pers->credit = ent->client->ps.persistant[PERS_CREDIT];
+ADDRLP4 0
+INDIRP4
+CNSTI4 184
+ADDP4
+ADDRFP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+CNSTI4 280
+ADDP4
+INDIRI4
+ASGNI4
+line 2095
+;2090:
+;2091:  //
+;2092:  // If the end of unit layout is displayed, don't give
+;2093:  // the player any normal movement attributes
+;2094:  //
+;2095:  if (level.intermissiontime)
+ADDRGP4 level+185040
+INDIRI4
+CNSTI4 0
+EQI4 $932
+line 2096
+;2096:    return;
+ADDRGP4 $929
+JUMPV
+LABELV $932
+line 2099
+;2097:
+;2098:  // burn from lava, etc
+;2099:  P_WorldEffects(ent);
+ADDRFP4 0
+INDIRP4
+ARGP4
+ADDRGP4 P_WorldEffects
+CALLV
+pop
+line 2102
+;2100:
+;2101:  // apply all the damage taken this frame
+;2102:  P_DamageFeedback(ent);
+ADDRFP4 0
+INDIRP4
+ARGP4
+ADDRGP4 P_DamageFeedback
+CALLV
+pop
+line 2105
+;2103:
+;2104:  // add the EF_CONNECTION flag if we haven't gotten commands recently
+;2105:  if (level.time - ent->client->lastCmdTime > 1000)
+ADDRGP4 level+28
+INDIRI4
+ADDRFP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+CNSTI4 1168
+ADDP4
+INDIRI4
+SUBI4
+CNSTI4 1000
+LEI4 $935
+line 2106
+;2106:    ent->s.eFlags |= EF_CONNECTION;
+ADDRLP4 4
+ADDRFP4 0
+INDIRP4
+CNSTI4 8
+ADDP4
+ASGNP4
+ADDRLP4 4
+INDIRP4
+ADDRLP4 4
+INDIRP4
+INDIRI4
+CNSTI4 16384
+BORI4
+ASGNI4
+ADDRGP4 $936
+JUMPV
+LABELV $935
+line 2108
+;2107:  else
+;2108:    ent->s.eFlags &= ~EF_CONNECTION;
+ADDRLP4 8
+ADDRFP4 0
+INDIRP4
+CNSTI4 8
+ADDP4
+ASGNP4
+ADDRLP4 8
+INDIRP4
+ADDRLP4 8
+INDIRP4
+INDIRI4
+CNSTI4 -16385
+BANDI4
+ASGNI4
+LABELV $936
+line 2110
+;2109:
+;2110:  ent->client->ps.stats[STAT_HEALTH] = ent->health; // FIXME: get rid of ent->health...
+ADDRLP4 12
+ADDRFP4 0
+INDIRP4
+ASGNP4
+ADDRLP4 12
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+CNSTI4 184
+ADDP4
+ADDRLP4 12
+INDIRP4
+CNSTI4 812
+ADDP4
+INDIRI4
+ASGNI4
+line 2113
+;2111:
+;2112:  // respawn if dead
+;2113:  if (ent->client->ps.stats[STAT_HEALTH] <= 0 && level.time >= ent->client->respawnTime)
+ADDRLP4 16
+ADDRFP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+ASGNP4
+ADDRLP4 16
+INDIRP4
+CNSTI4 184
+ADDP4
+INDIRI4
+CNSTI4 0
+GTI4 $938
+ADDRGP4 level+28
+INDIRI4
+ADDRLP4 16
+INDIRP4
+CNSTI4 1236
+ADDP4
+INDIRI4
+LTI4 $938
+line 2114
+;2114:    respawn(ent);
+ADDRFP4 0
+INDIRP4
+ARGP4
+ADDRGP4 respawn
+CALLV
+pop
+LABELV $938
+line 2116
+;2115:
+;2116:  G_SetClientSound(ent);
+ADDRFP4 0
+INDIRP4
+ARGP4
+ADDRGP4 G_SetClientSound
+CALLV
+pop
+line 2119
+;2117:
+;2118:  // set the latest infor
+;2119:  if (g_smoothClients.integer)
+ADDRGP4 g_smoothClients+12
+INDIRI4
+CNSTI4 0
+EQI4 $941
+line 2120
+;2120:    BG_PlayerStateToEntityStateExtraPolate(
+ADDRLP4 20
+ADDRFP4 0
+INDIRP4
+ASGNP4
+ADDRLP4 24
+ADDRLP4 20
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+ASGNP4
+ADDRLP4 24
+INDIRP4
+ARGP4
+ADDRLP4 20
+INDIRP4
+ARGP4
+ADDRLP4 24
+INDIRP4
+INDIRI4
+ARGI4
+CNSTI4 1
+ARGI4
+ADDRGP4 BG_PlayerStateToEntityStateExtraPolate
+CALLV
+pop
+ADDRGP4 $942
+JUMPV
+LABELV $941
+line 2123
+;2121:      &ent->client->ps, &ent->s, ent->client->ps.commandTime, qtrue);
+;2122:  else
+;2123:    BG_PlayerStateToEntityState(&ent->client->ps, &ent->s, qtrue);
+ADDRLP4 28
+ADDRFP4 0
+INDIRP4
+ASGNP4
+ADDRLP4 28
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+ARGP4
+ADDRLP4 28
+INDIRP4
+ARGP4
+CNSTI4 1
+ARGI4
+ADDRGP4 BG_PlayerStateToEntityState
+CALLV
+pop
+LABELV $942
+line 2125
+;2124:
+;2125:  SendPendingPredictableEvents(&ent->client->ps);
+ADDRFP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+ARGP4
+ADDRGP4 SendPendingPredictableEvents
+CALLV
+pop
+line 2126
+;2126:}
+LABELV $929
+endproc ClientEndFrame 32 16
+import ACEND_FindClosestSpawnNodeToEnemy
+import ACEND_nodeInUse
+import ACEND_setNextNode
+import ACEND_setCurrentNode
+import ACEND_pointVisibleFromEntity
+import ACEND_selectNextNode
+import ACESP_SetupBotState
+import ACESP_BotConnect
+import ACESP_RemoveBot
+import ACESP_SpawnBot
+import ACESP_SetName
+import ACESP_FindFreeClient
+import ACESP_Respawn
+import ACESP_PutClientInServer
+import ACESP_HoldSpawn
+import ACESP_InitBots
+import ACEND_CheckForDucking
+import ACEND_RemoveNodeEdge
+import ACEND_UpdateNodeEdge
+import ACEND_NodeTypeToString
+import ACEND_AddNode
+import ACEND_ShowPath
+import ACEND_DrawPath
+import ACEND_ShowNode
+import ACEND_InitNodes
+import ACEND_PathMap
+import ACEND_CheckForLadder
+import ACEND_GrapFired
+import ACEND_FollowPath
+import ACEND_SetGoal
+import ACEND_FindClosestReachableNode
+import ACEND_FindCloseReachableNode
+import ACEND_FindCost
+import ACEMV_Wander
+import ACEMV_Attack
+import ACEMV_Move
+import ACEMV_SpecialMove
+import ACEIT_BuildItemNodeTable
+import ACEIT_ItemNeed
+import ACEIT_ChangeWeapon
+import ACEIT_IsReachable
+import ACEIT_IsVisible
+import ACEIT_PlayerRemoved
+import ACEIT_PlayerAdded
+import ACECM_Commands
+import ACEAI_ChooseWeapon
+import ACEAI_FindEnemy
+import ACEAI_PickShortRangeGoal
+import ACEAI_PickLongRangeGoal
+import ACEAI_CheckServerCommands
+import ACEAI_Think
+import ACEAI_StartFrame
+import CopyToBodyQue
+import SelectSpawnPoint
+import LookAtKiller
+import nodes
+import numNodes
+import G_deleteWhite
+import G_adminWhitelistGlobal
+import G_adminGlobal
+import G_whitelistCheck
+import G_globalCheck
+import G_globalBanCheck
+import G_deleteGlobal
+import getGlobalTypeString
+import G_globalInit
+import G_globalAdd
+import G_getLongerWhiteName
+import G_isValidIpAddress
+import G_globalExit
+import G_isPlayerConnected
+import botSelectEnemy
+import botCanSeeEnemy
+import botForgetEnemy
+import G_healFriend
+import G_BotAimAt
+import G_printVector
+import G_doorInRange
+import G_itemInRange
+import G_playerInRange
+import g_comboPrint
+import g_comboClear
+import modString
+import director_debug
+import ace_botsFile
+import ace_spSkill
+import ace_attackEnemies
+import ace_pickShortRangeGoal
+import ace_pickLongRangeGoal
+import ace_showPath
+import ace_showLinks
+import ace_showNodes
+import ace_debug
+import AngleBetweenVectors
+import G_KillStructuresSurvival
+import spawnItem
+import G_itemUse
+import G_itemThink
+import syrinxSpawn
+import selectBetterWay
+import drawRedBall
+import G_FindRadius
+import G_ProjectSource
+import pointBehindWall
+import spawnGridNode
+import convertGridToWorld
+import convertWorldToGrid
+import fillGrid
+import WallInFront
+import trap_mysql_reconnect
+import trap_mysql_fetchfieldbyName
+import trap_mysql_fetchfieldbyID
+import trap_mysql_fetchrow
+import trap_mysql_finishquery
+import trap_mysql_runquery
+import trap_SendGameStat
+import trap_SnapVector
+import trap_GetEntityToken
+import trap_GetUsercmd
+import trap_BotFreeClient
+import trap_BotAllocateClient
+import trap_EntityContact
+import trap_EntitiesInBox
+import trap_UnlinkEntity
+import trap_LinkEntity
+import trap_AreasConnected
+import trap_AdjustAreaPortalState
+import trap_InPVSIgnorePortals
+import trap_InPVS
+import trap_PointContents
+import trap_Trace
+import trap_SetBrushModel
+import trap_GetServerinfo
+import trap_SetUserinfo
+import trap_GetUserinfo
+import trap_GetConfigstring
+import trap_SetConfigstring
+import trap_SendServerCommand
+import trap_DropClient
+import trap_LocateGameData
+import trap_Cvar_VariableStringBuffer
+import trap_Cvar_VariableValue
+import trap_Cvar_VariableIntegerValue
+import trap_Cvar_Set
+import trap_Cvar_Update
+import trap_Cvar_Register
+import trap_SendConsoleCommand
+import trap_FS_Seek
+import trap_FS_GetFileList
+import trap_FS_FCloseFile
+import trap_FS_Write
+import trap_FS_Read
+import trap_FS_FOpenFile
+import trap_Args
+import trap_Argv
+import trap_Argc
+import trap_RealTime
+import trap_Milliseconds
+import trap_Error
+import trap_Printf
+import g_antispawncamp
+import mega_wave
+import ROTACAK_ambush_kills
+import ROTACAK_ambush_stage
+import ROTACAK_ambush_rebuild_time_temp
+import g_bot_lcannon
+import g_bot_flamer
+import g_bot_prifle
+import g_bot_chaingun
+import g_bot_mdriver
+import g_bot_lasgun
+import g_bot_psaw
+import g_bot_shotgun
+import g_bot_mgun
+import g_bot
+import g_ambush_turnangle
+import g_ambush_range
+import g_ambush_att_buildables
+import g_ambush_kill_spawns
+import g_ambush
+import g_ambush_no_egg_ffoff
+import g_ambush_stage_suicide
+import g_ambush_sec_to_start
+import g_ambush_rebuild_time
+import g_ambush_dodge_random
+import g_ambush_dodge
+import g_ambush_tyrants_to_win
+import g_ambush_dragon2_s8
+import g_ambush_dragon_s7
+import g_ambush_marauder2_s6
+import g_ambush_marauder_s5
+import g_ambush_basilisk2_s4
+import g_ambush_basilisk_s3
+import g_ambush_dretch_s2
+import g_ambush_granger_s1
+import g_buildLogMaxLength
+import g_survival
+import g_ctncapturetime
+import g_ctnbuildlimit
+import g_ctn
+import g_msgTime
+import g_msg
+import g_mapvoteMaxTime
+import g_voteMinTime
+import g_devmapNoStructDmg
+import g_devmapNoGod
+import g_dretchPunt
+import g_antiSpawnBlock
+import g_myStats
+import g_publicSayadmins
+import g_decolourLogfiles
+import g_privateMessages
+import g_devmapKillerHP
+import g_banNotice
+import g_minLevelToSpecMM1
+import g_forceAutoSelect
+import g_minLevelToJoinTeam
+import g_adminMapLog
+import g_adminMaxBan
+import g_adminTempBan
+import g_adminNameProtect
+import g_adminSayFilter
+import g_adminParseSay
+import g_adminLog
+import g_admin
+import g_layoutAuto
+import g_layouts
+import g_mapConfigs
+import g_shove
+import g_floodMinTime
+import g_floodMaxDemerits
+import g_actionPrefix
+import g_chatTeamPrefix
+import g_initialMapRotation
+import g_nextMap
+import g_currentMap
+import g_currentMapRotation
+import g_debugMapRotation
+import g_deconDead
+import g_markDeconstruct
+import g_disabledBuildables
+import g_disabledClasses
+import g_disabledEquipment
+import g_unlagged
+import g_teamImbalanceWarnings
+import g_alienStage3Threshold
+import g_alienStage2Threshold
+import g_alienMaxStage
+import g_alienKills
+import g_alienStage
+import g_humanStage3Threshold
+import g_humanStage2Threshold
+import g_humanMaxStage
+import g_humanKills
+import g_humanStage
+import g_alienBuildPoints
+import g_humanBuildPoints
+import g_singlePlayer
+import g_enableBreath
+import g_enableDust
+import g_allowShare
+import g_rankings
+import pmove_msec
+import pmove_fixed
+import g_clientUpgradeNotice
+import g_smoothClients
+import g_filterBan
+import g_banIPs
+import g_teamForceBalance
+import g_teamAutoJoin
+import g_designateVotes
+import g_mapVotesPercent
+import g_suddenDeathVoteDelay
+import g_suddenDeathVotePercent
+import g_voteLimit
+import g_requireVoteReasons
+import g_allowVote
+import g_blood
+import g_doWarmup
+import g_warmupMode
+import g_warmup
+import g_motd
+import g_synchronousClients
+import g_weaponTeamRespawn
+import g_weaponRespawn
+import g_debugDamage
+import g_debugAlloc
+import g_debugMove
+import g_inactivity
+import g_quadfactor
+import g_knockback
+import g_speed
+import g_gravity
+import g_needpass
+import g_password
+import g_friendlyBuildableFire
+import g_friendlyFireMovementAttacks
+import g_retribution
+import g_friendlyFireAliens
+import g_friendlyFireHumans
+import g_friendlyFire
+import g_layoutmaking
+import g_suddenDeathMode
+import g_suddenDeath
+import g_suddenDeathTime
+import g_timelimit
+import g_enterString
+import g_newbieNamePrefix
+import g_newbieNumbering
+import g_maxNameChanges
+import g_minNameChangePeriod
+import g_minCommandPeriod
+import g_lockTeamsAtStart
+import g_restarted
+import g_maxGameClients
+import g_maxclients
+import g_cheats
+import g_dedicated
+import g_entities
+import level
+import G_FindConnectionForCode
+import G_ResetPTRConnections
+import G_GenerateNewConnection
+import G_UpdatePTRConnection
+import G_GetCurrentMap
+import G_MapExists
+import G_InitMapRotations
+import G_MapRotationActive
+import G_StopMapRotation
+import G_StartMapRotation
+import G_AdvanceMapRotation
+import G_PrintRotations
+import G_WinBadge
+import G_WriteSessionData
+import G_InitSessionData
+import G_ReadSessionData
+import Svcmd_GameMem_f
+import G_DefragmentMemory
+import G_Free
+import G_InitMemory
+import G_Alloc
+import CheckTeamStatus
+import TeamplayInfoMessage
+import Team_GetLocationMsg
+import Team_GetLocation
+import OnSameTeam
+import ClientCommand
+import ClientBegin
+import ClientDisconnect
+import ClientUserinfoChanged
+import ClientConnect
+import G_Flood_Limited
+import CheckMsgTimer
+import G_TimeTilSuddenDeath
+import LogExit
+import CheckTeamVote
+import CheckVote
+import G_Error
+import G_Printf
+import SendScoreboardMessageToAllClients
+import G_AdminsPrintf
+import G_LogOnlyPrintf
+import G_LogPrintfColoured
+import G_LogPrintf
+import G_RunThink
+import FindIntermissionPoint
+import CalculateRanks
+import G_MapConfigs
+import MoveClientToIntermission
+import ScoreboardMessage
+import FireWeapon3
+import FireWeapon2
+import FireWeapon
+import G_FilterPacket
+import G_ProcessIPBans
+import ConsoleCommand
+import G_NextNewbieName
+import SpotWouldTelefrag
+import player_die
+import ClientSpawn
+import BeginIntermission
+import respawn
+import SpawnCorpse
+import G_SelectHumanLockSpawnPoint
+import G_SelectAlienLockSpawnPoint
+import G_SelectSpawnPoint
+import G_SelectTremulousSpawnPoint
+import G_SetClientViewAngle
+import TeamCount
+import G_AddCreditToClient
+import G_UpdateZaps
+import ChargeAttack
+import CheckPounceAttack
+import CheckGrabAttack
+import CheckVenomAttack
+import SnapVectorTowards
+import CalcMuzzlePoint
+import G_GiveClientMaxAmmo
+import G_ForceWeaponChange
+import ShineTorch
+import TeleportPlayer
+import TeleportZombie
+import G_Checktrigger_stages
+import trigger_teleporter_touch
+import manualTriggerSpectator
+import Touch_DoorTrigger
+import G_RunMover
+import fire_dome
+import fire_rocket
+import massDriverFire2
+import fire_axe
+import plant_mine
+import launch_grenade_primary
+import launch_grenade_secondary
+import launch_bomb
+import launch_grenade
+import fire_hive
+import fire_bounceBall
+import fire_slowBlob
+import fire_paraLockBlob
+import fire_lockblob
+import fire_luciferCannon
+import fire_pulseRifle
+import fire_flamer
+import G_RunMissile
+import G_InitDamageLocations
+import AddScore
+import body_die
+import G_SelectiveRadiusDamage
+import G_RadiusDamage
+import G_SelectiveDamage
+import G_Damage
+import CanDamage
+import G_ClosestEnt
+import G_Visible
+import Distance2d
+import G_CloseMenus
+import G_TriggerMenu
+import G_ClientIsLagging
+import BuildShaderStateConfig
+import AddRemap
+import G_SetOrigin
+import G_BroadcastEvent
+import G_AddEvent
+import G_AddPredictableEvent
+import vectoyaw
+import vtos
+import tv
+import G_TouchSolids
+import G_EntitiesFree
+import G_FreeEntity
+import G_Sound
+import G_TempEntity
+import G_Spawn
+import G_InitGentity
+import G_SetMovedir
+import G_UseTargets
+import G_PickTarget
+import G_Find
+import G_KillBox
+import G_TeamCommand
+import G_SoundIndex
+import G_ModelIndex
+import G_ShaderIndex
+import G_ParticleSystemIndex
+import G_FindBuildLogName
+import G_CountBuildLog
+import G_LogBuild
+import G_RevertCanFit
+import G_CommitRevertedBuildable
+import G_SpawnRevertedBuildable
+import G_InstantBuild
+import G_BaseSelfDestruct
+import G_LayoutLoad
+import G_LayoutSelect
+import G_LayoutList
+import G_LayoutSave
+import G_CheckDBProtection
+import FinishSpawningBuildable
+import G_SpawnBuildable
+import G_SetIdleBuildableAnim
+import G_SetBuildableAnim
+import G_BuildIfValid
+import G_BuildingExists
+import G_CanBuild
+import G_ArmoryRange
+import G_BuildableRange
+import G_BuildableThink
+import G_IsOvermindBuilt
+import G_IsDCCBuilt
+import G_IsPowered
+import G_CheckSpawnPoint
+import AHovel_Blocked
+import G_Physics
+import G_CP
+import G_WordWrap
+import Cmd_Builder_f
+import Cmd_TeamVote_f
+import Cmd_Donate_f
+import Cmd_Share_f
+import G_statsString
+import G_PrivateMessage
+import G_SanitiseString
+import G_ChangeTeam
+import G_LeaveTeam
+import G_ParseEscapedString
+import G_DecolorString
+import G_SayConcatArgs
+import G_SayArgv
+import G_SayArgc
+import G_Say
+import G_ClientNumbersFromString
+import G_MatchOnePlayer
+import G_ToggleFollow
+import G_FollowNewClient
+import G_StopFollowing
+import G_StopFromFollowing
+import Cmd_Score_f
+import botJump
+import botCrouch
+import botWalk
+import botShootIfTargetInRange
+import botGetDistanceBetweenPlayer
+import botTargetInRange
+import botFindClosestEnemy
+import botAimAtTarget
+import G_BotSpectatorThink
+import G_BotThink
+import G_BotCmd
+import G_BotDel
+import G_BotAdd
+import G_NewString
+import G_SpawnEntitiesFromString
+import G_SpawnVector
+import G_SpawnInt
+import G_SpawnFloat
+import G_SpawnString
+import G_GetPosInSpawnQueue
+import G_RemoveFromSpawnQueue
+import G_PushSpawnQueue
+import G_SearchSpawnQueue
+import G_PeekSpawnQueue
+import G_PopSpawnQueue
+import G_GetSpawnQueueLength
+import G_InitSpawnQueue
+import G_admin_namelog_cleanup
+import G_admin_cleanup
+import G_admin_duration
+import G_admin_buffer_end
+import G_admin_buffer_begin
+import G_admin_buffer_print
+import G_admin_print
+import G_admin_mystats
+import G_admin_message
+import G_badgelist
+import G_badges
+import G_adminWhiteAdd
+import G_adminWhiteDelete
+import G_adminWhiteList
+import G_adminGlobalSync
+import G_adminGlobalBan
+import G_adminGlobalHandicap
+import G_adminGlobalDenyBuild
+import G_adminGlobalForcespec
+import G_adminGlobalMute
+import G_adminListGlobals
+import G_adminDeleteGlobal
+import G_setnextnode
+import G_drawnodes
+import G_reconnectdb
+import G_switchnodes
+import G_admin_botcmd
+import G_admin_bot
+import G_set_survival_stage
+import G_admin_findpath
+import G_admin_printpath
+import G_admin_printgrid
+import G_admin_switch
+import G_admin_cp
+import G_admin_designate
+import G_admin_warn
+import G_admin_putmespec
+import G_admin_L1
+import G_admin_L0
+import G_admin_pause
+import G_admin_revert
+import G_admin_buildlog
+import G_admin_info
+import G_admin_unlock
+import G_admin_lock
+import G_admin_namelog
+import G_admin_nextmap
+import G_admin_restart
+import G_admin_rename
+import G_admin_register
+import G_admin_spec999
+import G_admin_passvote
+import G_admin_cancelvote
+import G_admin_allready
+import G_admin_admintest
+import G_admin_help
+import G_admin_showbans
+import G_admin_denybuild
+import G_admin_mute
+import G_admin_layoutsave
+import G_admin_maplog
+import G_admin_maplog_update
+import G_admin_devmap
+import G_admin_map
+import G_admin_listrotation
+import G_admin_listmaps
+import G_admin_listplayers
+import G_admin_listlayouts
+import G_admin_listadmins
+import G_admin_putteam
+import G_admin_unban
+import G_admin_ban
+import G_admin_subnetban
+import G_admin_adjustban
+import G_admin_kick
+import G_admin_setlevel
+import G_admin_time
+import G_admin_adminPrintName
+import G_admin_set_adminname
+import G_admin_level
+import G_admin_maplog_result
+import G_admin_namelog_update
+import G_admin_name_check
+import G_admin_permission
+import G_admin_readconfig
+import G_admin_cmd_check
+import G_admin_ban_check
+import BG_ClientListParse
+import BG_ClientListString
+import BG_ClientListRemove
+import BG_ClientListAdd
+import BG_ClientListTest
+import BG_UpgradeClassAvailable
+import BG_BuildableIsAllowed
+import BG_ClassIsAllowed
+import BG_UpgradeIsAllowed
+import BG_WeaponIsAllowed
+import BG_InitAllowedGameElements
+import BG_ParseCSVBuildableList
+import BG_ParseCSVClassList
+import BG_ParseCSVEquipmentList
+import atoi_neg
+import atof_neg
+import BG_PlayerTouchesItem
+import BG_PlayerStateToEntityStateExtraPolate
+import BG_PlayerStateToEntityState
+import BG_AddPredictableEventToPlayerstate
+import BG_EvaluateTrajectoryDelta
+import BG_EvaluateTrajectory
+import BG_FindTeamForUpgrade
+import BG_FindUsableForUpgrade
+import BG_FindPurchasableForUpgrade
+import BG_FindIconForUpgrade
+import BG_FindHumanNameForUpgrade
+import BG_FindUpgradeNumForName
+import BG_FindNameForUpgrade
+import BG_FindSlotsForUpgrade
+import BG_FindStagesForUpgrade
+import BG_FindPriceForUpgrade
+import BG_FindTeamForWeapon
+import BG_FindBuildDelayForWeapon
+import BG_FindLongRangedForWeapon
+import BG_FindPurchasableForWeapon
+import BG_FindZoomFovForWeapon
+import BG_WeaponCanZoom
+import BG_WeaponHasThirdMode
+import BG_WeaponHasAltMode
+import BG_FindKnockbackScaleForWeapon
+import BG_FindReloadTimeForWeapon
+import BG_FindRepeatRate3ForWeapon
+import BG_FindRepeatRate2ForWeapon
+import BG_FindRepeatRate1ForWeapon
+import BG_FindUsesEnergyForWeapon
+import BG_FindInfinteAmmoForWeapon
+import BG_FindAmmoForWeapon
+import BG_FindCrosshairSizeForWeapon
+import BG_FindCrosshairForWeapon
+import BG_FindIconForWeapon
+import BG_FindModelsForWeapon
+import BG_FindHumanNameForWeapon
+import BG_FindWeaponNumForName
+import BG_FindNameForWeapon
+import BG_FindSlotsForWeapon
+import BG_FindStagesForWeapon
+import BG_FindPriceForWeapon
+import BG_InitClassOverrides
+import BG_FindValueOfClass
+import BG_FindCostOfClass
+import BG_ClassCanEvolveFromTo
+import BG_FindBuildDistForClass
+import BG_FindStartWeaponForClass
+import BG_ClassHasAbility
+import BG_FindSteptimeForClass
+import BG_FindKnockbackScaleForClass
+import BG_FindJumpMagnitudeForClass
+import BG_FindStopSpeedForClass
+import BG_FindFrictionForClass
+import BG_FindAirAccelerationForClass
+import BG_FindAccelerationForClass
+import BG_FindSpeedForClass
+import BG_FindBobCycleForClass
+import BG_FindBobForClass
+import BG_FindFovForClass
+import BG_FindRegenRateForClass
+import BG_FindFallDamageForClass
+import BG_FindHealthForClass
+import BG_FindViewheightForClass
+import BG_FindZOffsetForClass
+import BG_FindBBoxForClass
+import BG_FindSpriteHeightForClass
+import BG_FindStagesForClass
+import BG_FindHudNameForClass
+import BG_FindShadowScaleForClass
+import BG_FindSkinNameForClass
+import BG_FindModelScaleForClass
+import BG_FindModelNameForClass
+import BG_FindHumanNameForClassNum
+import BG_FindNameForClassNum
+import BG_FindClassNumForName
+import BG_InitBuildableOverrides
+import BG_FindTransparentTestForBuildable
+import BG_FindReplaceableTestForBuildable
+import BG_FindUniqueTestForBuildable
+import BG_FindDCCTestForBuildable
+import BG_FindCreepSizeForBuildable
+import BG_FindCreepTestForBuildable
+import BG_FindInvertNormalForBuildable
+import BG_FindMinNormalForBuildable
+import BG_FindProjTypeForBuildable
+import BG_FindFireSpeedForBuildable
+import BG_FindRangeForBuildable
+import BG_FindUsableForBuildable
+import BG_FindBuildTimeForBuildable
+import BG_FindNextThinkForBuildable
+import BG_FindAnimForBuildable
+import BG_FindBuildWeaponForBuildable
+import BG_FindTeamForBuildable
+import BG_FindMODForBuildable
+import BG_FindSplashRadiusForBuildable
+import BG_FindSplashDamageForBuildable
+import BG_FindStagesForBuildable
+import BG_FindBuildPointsForBuildable
+import BG_FindBounceForBuildable
+import BG_FindTrajectoryForBuildable
+import BG_FindRegenRateForBuildable
+import BG_FindHealthForBuildable
+import BG_FindZOffsetForBuildable
+import BG_FindBBoxForBuildable
+import BG_FindModelScaleForBuildable
+import BG_FindModelsForBuildable
+import BG_FindEntityNameForBuildable
+import BG_FindHumanNameForBuildable
+import BG_FindNameForBuildable
+import BG_FindBuildNumForEntityName
+import BG_FindBuildNumForName
+import BG_GetValueOfEquipment
+import BG_GetValueOfHuman
+import BG_PositionBuildableRelativeToPlayer
+import BG_RotateAxis
+import BG_UpgradeIsActive
+import BG_DeactivateUpgrade
+import BG_ActivateUpgrade
+import BG_InventoryContainsUpgrade
+import BG_RemoveUpgradeFromInventory
+import BG_AddUpgradeToInventory
+import BG_InventoryContainsWeapon
+import BG_RemoveWeaponFromInventory
+import BG_AddWeaponToInventory
+import BG_WeaponIsFull
+import BG_PackAmmoArray
+import BG_UnpackAmmoArray
+import Pmove
+import PM_UpdateViewAngles
+import Com_Printf
+import Com_Error
+import Info_NextPair
+import Info_Validate
+import Info_SetValueForKey_Big
+import Info_SetValueForKey
+import Info_RemoveKey_big
+import Info_RemoveKey
+import Info_ValueForKey
+import Com_TruncateLongString
+import va
+import Q_CountChar
+import Q_CleanStr
+import Q_PrintStrlen
+import Q_strcat
+import Q_strncpyz
+import Q_stristr
+import Q_strrchr
+import Q_strupr
+import Q_strlwr
+import Q_stricmpn
+import Q_strncmp
+import Q_stricmp
+import Q_isintegral
+import Q_isanumber
+import Q_isdigit
+import Q_isalpha
+import Q_isupper
+import Q_islower
+import Q_isprint
+import Com_RandomBytes
+import Com_SkipCharset
+import Com_SkipTokens
+import Com_sprintf
+import Com_HexStrToInt
+import Parse3DMatrix
+import Parse2DMatrix
+import Parse1DMatrix
+import SkipRestOfLine
+import SkipBracedSection
+import COM_MatchToken
+import COM_ParseWarning
+import COM_ParseError
+import COM_Compress
+import COM_ParseExt
+import COM_Parse
+import COM_GetCurrentParseLine
+import COM_BeginParseSession
+import COM_DefaultExtension
+import COM_StripExtension
+import COM_GetExtension
+import COM_SkipPath
+import Com_Clamp
+import DistanceBetweenLineSegments
+import DistanceBetweenLineSegmentsSquared
+import VectorMaxComponent
+import VectorMinComponent
+import pointToLineDistance
+import VectorDistance
+import ProjectPointOntoVector
+import GetPerpendicularViewVector
+import Q_isnan
+import PerpendicularVector
+import AngleVectors
+import VectorMatrixMultiply
+import MatrixMultiply
+import MakeNormalVectors
+import RotateAroundAxe
+import RotateAroundDirection
+import RotatePointAroundVector
+import ProjectPointOnPlane
+import PlaneFromPoints
+import AngleDelta
+import AngleNormalize180
+import AngleNormalize360
+import AnglesSubtract
+import AngleSubtract
+import LerpAngle
+import AngleMod
+import BoundsIntersectPoint
+import BoundsIntersectSphere
+import BoundsIntersect
+import BoxOnPlaneSide
+import SetPlaneSignbits
+import AxisCopy
+import AxisClear
+import AxisToAngles
+import AnglesToAxis
+import vectoangles
+import Q_crandom
+import Q_random
+import Q_rand
+import Q_acos
+import Q_log2
+import VectorRotate
+import Vector4Scale
+import VectorNormalize2
+import VectorNormalize
+import CrossProduct
+import VectorInverse
+import VectorNormalizeFast
+import DistanceSquared
+import Distance
+import VectorLengthSquared
+import VectorLength
+import VectorCompare
+import AddPointToBounds
+import ClearBounds
+import RadiusFromBounds
+import NormalizeColor
+import ColorBytes4
+import ColorBytes3
+import _VectorMA
+import _VectorScale
+import _VectorCopy
+import _VectorAdd
+import _VectorSubtract
+import _DotProduct
+import ByteToDir
+import DirToByte
+import ClampShort
+import ClampChar
+import Q_rsqrt
+import Q_fabs
+import axisDefault
+import vec3_origin
+import g_color_table
+import colorDkGrey
+import colorMdGrey
+import colorLtGrey
+import colorWhite
+import colorCyan
+import colorMagenta
+import colorYellow
+import colorBlue
+import colorGreen
+import colorRed
+import colorBlack
+import bytedirs
+import Hunk_Alloc
+import FloatSwap
+import LongSwap
+import ShortSwap
+import rint
+import pow
+import acos
+import fabs
+import abs
+import tan
+import atan2
+import cos
+import sin
+import sqrt
+import floor
+import ceil
+import memcpy
+import memset
+import memmove
+import sscanf
+import vsprintf
+import _atoi
+import atoi
+import _atof
+import atof
+import toupper
+import tolower
+import strncpy
+import strstr
+import strrchr
+import strchr
+import strcmp
+import strcpy
+import strcat
+import strlen
+import rand
+import srand
+import qsort
+lit
+align 1
+LABELV $720
+byte 1 51
+byte 1 51
+byte 1 0
+align 1
+LABELV $716
+byte 1 56
+byte 1 0
+align 1
+LABELV $715
+byte 1 112
+byte 1 109
+byte 1 111
+byte 1 118
+byte 1 101
+byte 1 95
+byte 1 109
+byte 1 115
+byte 1 101
+byte 1 99
+byte 1 0
+align 1
+LABELV $323
+byte 1 99
+byte 1 112
+byte 1 32
+byte 1 34
+byte 1 84
+byte 1 101
+byte 1 110
+byte 1 32
+byte 1 115
+byte 1 101
+byte 1 99
+byte 1 111
+byte 1 110
+byte 1 100
+byte 1 115
+byte 1 32
+byte 1 117
+byte 1 110
+byte 1 116
+byte 1 105
+byte 1 108
+byte 1 32
+byte 1 105
+byte 1 110
+byte 1 97
+byte 1 99
+byte 1 116
+byte 1 105
+byte 1 118
+byte 1 105
+byte 1 116
+byte 1 121
+byte 1 32
+byte 1 100
+byte 1 114
+byte 1 111
+byte 1 112
+byte 1 33
+byte 1 10
+byte 1 34
+byte 1 0
+align 1
+LABELV $319
+byte 1 68
+byte 1 114
+byte 1 111
+byte 1 112
+byte 1 112
+byte 1 101
+byte 1 100
+byte 1 32
+byte 1 100
+byte 1 117
+byte 1 101
+byte 1 32
+byte 1 116
+byte 1 111
+byte 1 32
+byte 1 105
+byte 1 110
+byte 1 97
+byte 1 99
+byte 1 116
+byte 1 105
+byte 1 118
+byte 1 105
+byte 1 116
+byte 1 121
+byte 1 0
+align 1
+LABELV $123
+byte 1 115
+byte 1 111
+byte 1 117
+byte 1 110
+byte 1 100
+byte 1 47
+byte 1 112
+byte 1 108
+byte 1 97
+byte 1 121
+byte 1 101
+byte 1 114
+byte 1 47
+byte 1 103
+byte 1 117
+byte 1 114
+byte 1 112
+byte 1 50
+byte 1 46
+byte 1 119
+byte 1 97
+byte 1 118
+byte 1 0
+align 1
+LABELV $122
+byte 1 115
+byte 1 111
+byte 1 117
+byte 1 110
+byte 1 100
+byte 1 47
+byte 1 112
+byte 1 108
+byte 1 97
+byte 1 121
+byte 1 101
+byte 1 114
+byte 1 47
+byte 1 103
+byte 1 117
+byte 1 114
+byte 1 112
+byte 1 49
+byte 1 46
+byte 1 119
+byte 1 97
+byte 1 118
+byte 1 0
+align 1
+LABELV $119
+byte 1 42
+byte 1 100
+byte 1 114
+byte 1 111
+byte 1 119
+byte 1 110
+byte 1 46
+byte 1 119
+byte 1 97
+byte 1 118
+byte 1 0

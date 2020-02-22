@@ -1,0 +1,11556 @@
+code
+proc CG_ParseScores 116 12
+file "..\..\..\..\src/cgame/cg_servercmds.c"
+line 38
+;1:/*
+;2:===========================================================================
+;3:Copyright (C) 1999-2005 Id Software, Inc.
+;4:Copyright (C) 2000-2006 Tim Angus
+;5:
+;6:This file is part of Tremulous.
+;7:
+;8:Tremulous is free software; you can redistribute it
+;9:and/or modify it under the terms of the GNU General Public License as
+;10:published by the Free Software Foundation; either version 2 of the License,
+;11:or (at your option) any later version.
+;12:
+;13:Tremulous is distributed in the hope that it will be
+;14:useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+;15:MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;16:GNU General Public License for more details.
+;17:
+;18:You should have received a copy of the GNU General Public License
+;19:along with Tremulous; if not, write to the Free Software
+;20:Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+;21:===========================================================================
+;22:*/
+;23:
+;24:// cg_servercmds.c -- reliably sequenced text commands sent by the server
+;25:// these are processed at snapshot transition time, so there will definately
+;26:// be a valid snapshot this frame
+;27:
+;28:
+;29:#include "cg_local.h"
+;30:
+;31:/*
+;32:=================
+;33:CG_ParseScores
+;34:
+;35:=================
+;36:*/
+;37:static void CG_ParseScores( void )
+;38:{
+line 41
+;39:  int   i;
+;40:
+;41:  cg.numScores = atoi( CG_Argv( 1 ) );
+CNSTI4 1
+ARGI4
+ADDRLP4 4
+ADDRGP4 CG_Argv
+CALLP4
+ASGNP4
+ADDRLP4 4
+INDIRP4
+ARGP4
+ADDRLP4 8
+ADDRGP4 atoi
+CALLI4
+ASGNI4
+ADDRGP4 cg+111460
+ADDRLP4 8
+INDIRI4
+ASGNI4
+line 43
+;42:
+;43:  if( cg.numScores > MAX_CLIENTS )
+ADDRGP4 cg+111460
+INDIRI4
+CNSTI4 64
+LEI4 $101
+line 44
+;44:    cg.numScores = MAX_CLIENTS;
+ADDRGP4 cg+111460
+CNSTI4 64
+ASGNI4
+LABELV $101
+line 46
+;45:
+;46:  cg.teamScores[ 0 ] = atoi( CG_Argv( 2 ) );
+CNSTI4 2
+ARGI4
+ADDRLP4 12
+ADDRGP4 CG_Argv
+CALLP4
+ASGNP4
+ADDRLP4 12
+INDIRP4
+ARGP4
+ADDRLP4 16
+ADDRGP4 atoi
+CALLI4
+ASGNI4
+ADDRGP4 cg+111468
+ADDRLP4 16
+INDIRI4
+ASGNI4
+line 47
+;47:  cg.teamScores[ 1 ] = atoi( CG_Argv( 3 ) );
+CNSTI4 3
+ARGI4
+ADDRLP4 20
+ADDRGP4 CG_Argv
+CALLP4
+ASGNP4
+ADDRLP4 20
+INDIRP4
+ARGP4
+ADDRLP4 24
+ADDRGP4 atoi
+CALLI4
+ASGNI4
+ADDRGP4 cg+111468+4
+ADDRLP4 24
+INDIRI4
+ASGNI4
+line 49
+;48:
+;49:  memset( cg.scores, 0, sizeof( cg.scores ) );
+ADDRGP4 cg+111476
+ARGP4
+CNSTI4 0
+ARGI4
+CNSTI4 1792
+ARGI4
+ADDRGP4 memset
+CALLP4
+pop
+line 51
+;50:
+;51:  if( cg_debugRandom.integer )
+ADDRGP4 cg_debugRandom+12
+INDIRI4
+CNSTI4 0
+EQI4 $110
+line 52
+;52:    CG_Printf( "cg.numScores: %d\n", cg.numScores );
+ADDRGP4 $113
+ARGP4
+ADDRGP4 cg+111460
+INDIRI4
+ARGI4
+ADDRGP4 CG_Printf
+CALLV
+pop
+LABELV $110
+line 54
+;53:
+;54:  for( i = 0; i < cg.numScores; i++ )
+ADDRLP4 0
+CNSTI4 0
+ASGNI4
+ADDRGP4 $118
+JUMPV
+LABELV $115
+line 55
+;55:  {
+line 57
+;56:    //
+;57:    cg.scores[ i ].client = atoi( CG_Argv( i * 6 + 4 ) );
+CNSTI4 6
+ADDRLP4 0
+INDIRI4
+MULI4
+CNSTI4 4
+ADDI4
+ARGI4
+ADDRLP4 32
+ADDRGP4 CG_Argv
+CALLP4
+ASGNP4
+ADDRLP4 32
+INDIRP4
+ARGP4
+ADDRLP4 36
+ADDRGP4 atoi
+CALLI4
+ASGNI4
+CNSTI4 28
+ADDRLP4 0
+INDIRI4
+MULI4
+ADDRGP4 cg+111476
+ADDP4
+ADDRLP4 36
+INDIRI4
+ASGNI4
+line 58
+;58:    cg.scores[ i ].score = atoi( CG_Argv( i * 6 + 5 ) );
+CNSTI4 6
+ADDRLP4 0
+INDIRI4
+MULI4
+CNSTI4 5
+ADDI4
+ARGI4
+ADDRLP4 44
+ADDRGP4 CG_Argv
+CALLP4
+ASGNP4
+ADDRLP4 44
+INDIRP4
+ARGP4
+ADDRLP4 48
+ADDRGP4 atoi
+CALLI4
+ASGNI4
+CNSTI4 28
+ADDRLP4 0
+INDIRI4
+MULI4
+ADDRGP4 cg+111476+4
+ADDP4
+ADDRLP4 48
+INDIRI4
+ASGNI4
+line 59
+;59:    cg.scores[ i ].ping = atoi( CG_Argv( i * 6 + 6 ) );
+ADDRLP4 52
+CNSTI4 6
+ASGNI4
+ADDRLP4 52
+INDIRI4
+ADDRLP4 0
+INDIRI4
+MULI4
+ADDRLP4 52
+INDIRI4
+ADDI4
+ARGI4
+ADDRLP4 60
+ADDRGP4 CG_Argv
+CALLP4
+ASGNP4
+ADDRLP4 60
+INDIRP4
+ARGP4
+ADDRLP4 64
+ADDRGP4 atoi
+CALLI4
+ASGNI4
+CNSTI4 28
+ADDRLP4 0
+INDIRI4
+MULI4
+ADDRGP4 cg+111476+8
+ADDP4
+ADDRLP4 64
+INDIRI4
+ASGNI4
+line 60
+;60:    cg.scores[ i ].time = atoi( CG_Argv( i * 6 + 7 ) );
+CNSTI4 6
+ADDRLP4 0
+INDIRI4
+MULI4
+CNSTI4 7
+ADDI4
+ARGI4
+ADDRLP4 72
+ADDRGP4 CG_Argv
+CALLP4
+ASGNP4
+ADDRLP4 72
+INDIRP4
+ARGP4
+ADDRLP4 76
+ADDRGP4 atoi
+CALLI4
+ASGNI4
+CNSTI4 28
+ADDRLP4 0
+INDIRI4
+MULI4
+ADDRGP4 cg+111476+12
+ADDP4
+ADDRLP4 76
+INDIRI4
+ASGNI4
+line 61
+;61:    cg.scores[ i ].weapon = atoi( CG_Argv( i * 6 + 8 ) );
+CNSTI4 6
+ADDRLP4 0
+INDIRI4
+MULI4
+CNSTI4 8
+ADDI4
+ARGI4
+ADDRLP4 84
+ADDRGP4 CG_Argv
+CALLP4
+ASGNP4
+ADDRLP4 84
+INDIRP4
+ARGP4
+ADDRLP4 88
+ADDRGP4 atoi
+CALLI4
+ASGNI4
+CNSTI4 28
+ADDRLP4 0
+INDIRI4
+MULI4
+ADDRGP4 cg+111476+20
+ADDP4
+ADDRLP4 88
+INDIRI4
+ASGNI4
+line 62
+;62:    cg.scores[ i ].upgrade = atoi( CG_Argv( i * 6 + 9 ) );
+CNSTI4 6
+ADDRLP4 0
+INDIRI4
+MULI4
+CNSTI4 9
+ADDI4
+ARGI4
+ADDRLP4 96
+ADDRGP4 CG_Argv
+CALLP4
+ASGNP4
+ADDRLP4 96
+INDIRP4
+ARGP4
+ADDRLP4 100
+ADDRGP4 atoi
+CALLI4
+ASGNI4
+CNSTI4 28
+ADDRLP4 0
+INDIRI4
+MULI4
+ADDRGP4 cg+111476+24
+ADDP4
+ADDRLP4 100
+INDIRI4
+ASGNI4
+line 64
+;63:
+;64:    if( cg.scores[ i ].client < 0 || cg.scores[ i ].client >= MAX_CLIENTS )
+ADDRLP4 104
+CNSTI4 28
+ADDRLP4 0
+INDIRI4
+MULI4
+ASGNI4
+ADDRLP4 104
+INDIRI4
+ADDRGP4 cg+111476
+ADDP4
+INDIRI4
+CNSTI4 0
+LTI4 $135
+ADDRLP4 104
+INDIRI4
+ADDRGP4 cg+111476
+ADDP4
+INDIRI4
+CNSTI4 64
+LTI4 $131
+LABELV $135
+line 65
+;65:      cg.scores[ i ].client = 0;
+CNSTI4 28
+ADDRLP4 0
+INDIRI4
+MULI4
+ADDRGP4 cg+111476
+ADDP4
+CNSTI4 0
+ASGNI4
+LABELV $131
+line 67
+;66:
+;67:    cgs.clientinfo[ cg.scores[ i ].client ].score = cg.scores[ i ].score;
+ADDRLP4 108
+CNSTI4 28
+ADDRLP4 0
+INDIRI4
+MULI4
+ASGNI4
+CNSTI4 1760
+ADDRLP4 108
+INDIRI4
+ADDRGP4 cg+111476
+ADDP4
+INDIRI4
+MULI4
+ADDRGP4 cgs+41408+100
+ADDP4
+ADDRLP4 108
+INDIRI4
+ADDRGP4 cg+111476+4
+ADDP4
+INDIRI4
+ASGNI4
+line 68
+;68:    cgs.clientinfo[ cg.scores[ i ].client ].powerups = 0;
+CNSTI4 1760
+CNSTI4 28
+ADDRLP4 0
+INDIRI4
+MULI4
+ADDRGP4 cg+111476
+ADDP4
+INDIRI4
+MULI4
+ADDRGP4 cgs+41408+140
+ADDP4
+CNSTI4 0
+ASGNI4
+line 70
+;69:
+;70:    cg.scores[ i ].team = cgs.clientinfo[ cg.scores[ i ].client ].team;
+ADDRLP4 112
+CNSTI4 28
+ADDRLP4 0
+INDIRI4
+MULI4
+ASGNI4
+ADDRLP4 112
+INDIRI4
+ADDRGP4 cg+111476+16
+ADDP4
+CNSTI4 1760
+ADDRLP4 112
+INDIRI4
+ADDRGP4 cg+111476
+ADDP4
+INDIRI4
+MULI4
+ADDRGP4 cgs+41408+68
+ADDP4
+INDIRI4
+ASGNI4
+line 71
+;71:  }
+LABELV $116
+line 54
+ADDRLP4 0
+ADDRLP4 0
+INDIRI4
+CNSTI4 1
+ADDI4
+ASGNI4
+LABELV $118
+ADDRLP4 0
+INDIRI4
+ADDRGP4 cg+111460
+INDIRI4
+LTI4 $115
+line 72
+;72:}
+LABELV $99
+endproc CG_ParseScores 116 12
+proc CG_ParseTeamInfo 68 4
+line 81
+;73:
+;74:/*
+;75:=================
+;76:CG_ParseTeamInfo
+;77:
+;78:=================
+;79:*/
+;80:static void CG_ParseTeamInfo( void )
+;81:{
+line 85
+;82:  int   i;
+;83:  int   client;
+;84:
+;85:  numSortedTeamPlayers = atoi( CG_Argv( 1 ) );
+CNSTI4 1
+ARGI4
+ADDRLP4 8
+ADDRGP4 CG_Argv
+CALLP4
+ASGNP4
+ADDRLP4 8
+INDIRP4
+ARGP4
+ADDRLP4 12
+ADDRGP4 atoi
+CALLI4
+ASGNI4
+ADDRGP4 numSortedTeamPlayers
+ADDRLP4 12
+INDIRI4
+ASGNI4
+line 87
+;86:
+;87:  for( i = 0; i < numSortedTeamPlayers; i++ )
+ADDRLP4 0
+CNSTI4 0
+ASGNI4
+ADDRGP4 $154
+JUMPV
+LABELV $151
+line 88
+;88:  {
+line 89
+;89:    client = atoi( CG_Argv( i * 6 + 2 ) );
+CNSTI4 6
+ADDRLP4 0
+INDIRI4
+MULI4
+CNSTI4 2
+ADDI4
+ARGI4
+ADDRLP4 16
+ADDRGP4 CG_Argv
+CALLP4
+ASGNP4
+ADDRLP4 16
+INDIRP4
+ARGP4
+ADDRLP4 20
+ADDRGP4 atoi
+CALLI4
+ASGNI4
+ADDRLP4 4
+ADDRLP4 20
+INDIRI4
+ASGNI4
+line 91
+;90:
+;91:    sortedTeamPlayers[ i ] = client;
+ADDRLP4 0
+INDIRI4
+CNSTI4 2
+LSHI4
+ADDRGP4 sortedTeamPlayers
+ADDP4
+ADDRLP4 4
+INDIRI4
+ASGNI4
+line 93
+;92:
+;93:    cgs.clientinfo[ client ].location = atoi( CG_Argv( i * 6 + 3 ) );
+CNSTI4 6
+ADDRLP4 0
+INDIRI4
+MULI4
+CNSTI4 3
+ADDI4
+ARGI4
+ADDRLP4 24
+ADDRGP4 CG_Argv
+CALLP4
+ASGNP4
+ADDRLP4 24
+INDIRP4
+ARGP4
+ADDRLP4 28
+ADDRGP4 atoi
+CALLI4
+ASGNI4
+CNSTI4 1760
+ADDRLP4 4
+INDIRI4
+MULI4
+ADDRGP4 cgs+41408+104
+ADDP4
+ADDRLP4 28
+INDIRI4
+ASGNI4
+line 94
+;94:    cgs.clientinfo[ client ].health = atoi( CG_Argv( i * 6 + 4 ) );
+CNSTI4 6
+ADDRLP4 0
+INDIRI4
+MULI4
+CNSTI4 4
+ADDI4
+ARGI4
+ADDRLP4 32
+ADDRGP4 CG_Argv
+CALLP4
+ASGNP4
+ADDRLP4 32
+INDIRP4
+ARGP4
+ADDRLP4 36
+ADDRGP4 atoi
+CALLI4
+ASGNI4
+CNSTI4 1760
+ADDRLP4 4
+INDIRI4
+MULI4
+ADDRGP4 cgs+41408+108
+ADDP4
+ADDRLP4 36
+INDIRI4
+ASGNI4
+line 95
+;95:    cgs.clientinfo[ client ].armor = atoi( CG_Argv( i * 6 + 5 ) );
+CNSTI4 6
+ADDRLP4 0
+INDIRI4
+MULI4
+CNSTI4 5
+ADDI4
+ARGI4
+ADDRLP4 40
+ADDRGP4 CG_Argv
+CALLP4
+ASGNP4
+ADDRLP4 40
+INDIRP4
+ARGP4
+ADDRLP4 44
+ADDRGP4 atoi
+CALLI4
+ASGNI4
+CNSTI4 1760
+ADDRLP4 4
+INDIRI4
+MULI4
+ADDRGP4 cgs+41408+112
+ADDP4
+ADDRLP4 44
+INDIRI4
+ASGNI4
+line 96
+;96:    cgs.clientinfo[ client ].curWeapon = atoi( CG_Argv( i * 6 + 6 ) );
+ADDRLP4 48
+CNSTI4 6
+ASGNI4
+ADDRLP4 48
+INDIRI4
+ADDRLP4 0
+INDIRI4
+MULI4
+ADDRLP4 48
+INDIRI4
+ADDI4
+ARGI4
+ADDRLP4 52
+ADDRGP4 CG_Argv
+CALLP4
+ASGNP4
+ADDRLP4 52
+INDIRP4
+ARGP4
+ADDRLP4 56
+ADDRGP4 atoi
+CALLI4
+ASGNI4
+CNSTI4 1760
+ADDRLP4 4
+INDIRI4
+MULI4
+ADDRGP4 cgs+41408+116
+ADDP4
+ADDRLP4 56
+INDIRI4
+ASGNI4
+line 97
+;97:    cgs.clientinfo[ client ].powerups = atoi( CG_Argv( i * 6 + 7 ) );
+CNSTI4 6
+ADDRLP4 0
+INDIRI4
+MULI4
+CNSTI4 7
+ADDI4
+ARGI4
+ADDRLP4 60
+ADDRGP4 CG_Argv
+CALLP4
+ASGNP4
+ADDRLP4 60
+INDIRP4
+ARGP4
+ADDRLP4 64
+ADDRGP4 atoi
+CALLI4
+ASGNI4
+CNSTI4 1760
+ADDRLP4 4
+INDIRI4
+MULI4
+ADDRGP4 cgs+41408+140
+ADDP4
+ADDRLP4 64
+INDIRI4
+ASGNI4
+line 98
+;98:  }
+LABELV $152
+line 87
+ADDRLP4 0
+ADDRLP4 0
+INDIRI4
+CNSTI4 1
+ADDI4
+ASGNI4
+LABELV $154
+ADDRLP4 0
+INDIRI4
+ADDRGP4 numSortedTeamPlayers
+INDIRI4
+LTI4 $151
+line 99
+;99:}
+LABELV $150
+endproc CG_ParseTeamInfo 68 4
+export CG_ParseServerinfo
+proc CG_ParseServerinfo 48 16
+line 111
+;100:
+;101:
+;102:/*
+;103:================
+;104:CG_ParseServerinfo
+;105:
+;106:This is called explicitly when the gamestate is first received,
+;107:and whenever the server updates any serverinfo flagged cvars
+;108:================
+;109:*/
+;110:void CG_ParseServerinfo( void )
+;111:{
+line 115
+;112:  const char  *info;
+;113:  char  *mapname;
+;114:
+;115:  info = CG_ConfigString( CS_SERVERINFO );
+CNSTI4 0
+ARGI4
+ADDRLP4 8
+ADDRGP4 CG_ConfigString
+CALLP4
+ASGNP4
+ADDRLP4 0
+ADDRLP4 8
+INDIRP4
+ASGNP4
+line 116
+;116:  cgs.dmflags = atoi( Info_ValueForKey( info, "dmflags" ) );
+ADDRLP4 0
+INDIRP4
+ARGP4
+ADDRGP4 $167
+ARGP4
+ADDRLP4 12
+ADDRGP4 Info_ValueForKey
+CALLP4
+ASGNP4
+ADDRLP4 12
+INDIRP4
+ARGP4
+ADDRLP4 16
+ADDRGP4 atoi
+CALLI4
+ASGNI4
+ADDRGP4 cgs+31468
+ADDRLP4 16
+INDIRI4
+ASGNI4
+line 117
+;117:  cgs.teamflags = atoi( Info_ValueForKey( info, "teamflags" ) );
+ADDRLP4 0
+INDIRP4
+ARGP4
+ADDRGP4 $169
+ARGP4
+ADDRLP4 20
+ADDRGP4 Info_ValueForKey
+CALLP4
+ASGNP4
+ADDRLP4 20
+INDIRP4
+ARGP4
+ADDRLP4 24
+ADDRGP4 atoi
+CALLI4
+ASGNI4
+ADDRGP4 cgs+31472
+ADDRLP4 24
+INDIRI4
+ASGNI4
+line 118
+;118:  cgs.timelimit = atoi( Info_ValueForKey( info, "timelimit" ) );
+ADDRLP4 0
+INDIRP4
+ARGP4
+ADDRGP4 $171
+ARGP4
+ADDRLP4 28
+ADDRGP4 Info_ValueForKey
+CALLP4
+ASGNP4
+ADDRLP4 28
+INDIRP4
+ARGP4
+ADDRLP4 32
+ADDRGP4 atoi
+CALLI4
+ASGNI4
+ADDRGP4 cgs+31476
+ADDRLP4 32
+INDIRI4
+ASGNI4
+line 119
+;119:  cgs.maxclients = atoi( Info_ValueForKey( info, "sv_maxclients" ) );
+ADDRLP4 0
+INDIRP4
+ARGP4
+ADDRGP4 $173
+ARGP4
+ADDRLP4 36
+ADDRGP4 Info_ValueForKey
+CALLP4
+ASGNP4
+ADDRLP4 36
+INDIRP4
+ARGP4
+ADDRLP4 40
+ADDRGP4 atoi
+CALLI4
+ASGNI4
+ADDRGP4 cgs+31480
+ADDRLP4 40
+INDIRI4
+ASGNI4
+line 120
+;120:  mapname = Info_ValueForKey( info, "mapname" );
+ADDRLP4 0
+INDIRP4
+ARGP4
+ADDRGP4 $174
+ARGP4
+ADDRLP4 44
+ADDRGP4 Info_ValueForKey
+CALLP4
+ASGNP4
+ADDRLP4 4
+ADDRLP4 44
+INDIRP4
+ASGNP4
+line 121
+;121:  Com_sprintf( cgs.mapname, sizeof( cgs.mapname ), "maps/%s.bsp", mapname );
+ADDRGP4 cgs+31484
+ARGP4
+CNSTI4 64
+ARGI4
+ADDRGP4 $177
+ARGP4
+ADDRLP4 4
+INDIRP4
+ARGP4
+ADDRGP4 Com_sprintf
+CALLV
+pop
+line 122
+;122:}
+LABELV $165
+endproc CG_ParseServerinfo 48 16
+proc CG_ParseWarmup 20 4
+line 130
+;123:
+;124:/*
+;125:==================
+;126:CG_ParseWarmup
+;127:==================
+;128:*/
+;129:static void CG_ParseWarmup( void )
+;130:{
+line 134
+;131:  const char  *info;
+;132:  int         warmup;
+;133:
+;134:  info = CG_ConfigString( CS_WARMUP );
+CNSTI4 5
+ARGI4
+ADDRLP4 8
+ADDRGP4 CG_ConfigString
+CALLP4
+ASGNP4
+ADDRLP4 4
+ADDRLP4 8
+INDIRP4
+ASGNP4
+line 136
+;135:
+;136:  warmup = atoi( info );
+ADDRLP4 4
+INDIRP4
+ARGP4
+ADDRLP4 12
+ADDRGP4 atoi
+CALLI4
+ASGNI4
+ADDRLP4 0
+ADDRLP4 12
+INDIRI4
+ASGNI4
+line 137
+;137:  cg.warmupCount = -1;
+ADDRGP4 cg+115676
+CNSTI4 -1
+ASGNI4
+line 139
+;138:
+;139:  if( warmup == 0 && cg.warmup )
+ADDRLP4 16
+CNSTI4 0
+ASGNI4
+ADDRLP4 0
+INDIRI4
+ADDRLP4 16
+INDIRI4
+NEI4 $180
+ADDRGP4 cg+115672
+INDIRI4
+ADDRLP4 16
+INDIRI4
+EQI4 $180
+line 140
+;140:  {
+line 141
+;141:  }
+LABELV $180
+line 143
+;142:
+;143:  cg.warmup = warmup;
+ADDRGP4 cg+115672
+ADDRLP4 0
+INDIRI4
+ASGNI4
+line 144
+;144:}
+LABELV $178
+endproc CG_ParseWarmup 20 4
+export CG_SetConfigValues
+proc CG_SetConfigValues 48 32
+line 154
+;145:
+;146:/*
+;147:================
+;148:CG_SetConfigValues
+;149:
+;150:Called on load to set the initial values from configure strings
+;151:================
+;152:*/
+;153:void CG_SetConfigValues( void )
+;154:{
+line 155
+;155:  cgs.scores1 = atoi( CG_ConfigString( CS_SCORES1 ) );
+CNSTI4 6
+ARGI4
+ADDRLP4 0
+ADDRGP4 CG_ConfigString
+CALLP4
+ASGNP4
+ADDRLP4 0
+INDIRP4
+ARGP4
+ADDRLP4 4
+ADDRGP4 atoi
+CALLI4
+ASGNI4
+ADDRGP4 cgs+34684
+ADDRLP4 4
+INDIRI4
+ASGNI4
+line 156
+;156:  cgs.scores2 = atoi( CG_ConfigString( CS_SCORES2 ) );
+CNSTI4 7
+ARGI4
+ADDRLP4 8
+ADDRGP4 CG_ConfigString
+CALLP4
+ASGNP4
+ADDRLP4 8
+INDIRP4
+ARGP4
+ADDRLP4 12
+ADDRGP4 atoi
+CALLI4
+ASGNI4
+ADDRGP4 cgs+34688
+ADDRLP4 12
+INDIRI4
+ASGNI4
+line 158
+;157:
+;158:  sscanf( CG_ConfigString( CS_BUILDPOINTS ),
+CNSTI4 28
+ARGI4
+ADDRLP4 16
+ADDRGP4 CG_ConfigString
+CALLP4
+ASGNP4
+ADDRLP4 16
+INDIRP4
+ARGP4
+ADDRGP4 $187
+ARGP4
+ADDRGP4 cgs+34696
+ARGP4
+ADDRGP4 cgs+34700
+ARGP4
+ADDRGP4 cgs+34704
+ARGP4
+ADDRGP4 cgs+34708
+ARGP4
+ADDRGP4 cgs+34712
+ARGP4
+ADDRGP4 sscanf
+CALLI4
+pop
+line 165
+;159:          "%d %d %d %d %d", &cgs.alienBuildPoints,
+;160:                            &cgs.alienBuildPointsTotal,
+;161:                            &cgs.humanBuildPoints,
+;162:                            &cgs.humanBuildPointsTotal,
+;163:                            &cgs.humanBuildPointsPowered );
+;164:
+;165:  sscanf( CG_ConfigString( CS_STAGES ), "%d %d %d %d %d %d", &cgs.alienStage, &cgs.humanStage,
+CNSTI4 29
+ARGI4
+ADDRLP4 20
+ADDRGP4 CG_ConfigString
+CALLP4
+ASGNP4
+ADDRLP4 20
+INDIRP4
+ARGP4
+ADDRGP4 $193
+ARGP4
+ADDRGP4 cgs+34716
+ARGP4
+ADDRGP4 cgs+34720
+ARGP4
+ADDRGP4 cgs+34724
+ARGP4
+ADDRGP4 cgs+34728
+ARGP4
+ADDRGP4 cgs+34732
+ARGP4
+ADDRGP4 cgs+34736
+ARGP4
+ADDRGP4 sscanf
+CALLI4
+pop
+line 167
+;166:      &cgs.alienKills, &cgs.humanKills, &cgs.alienNextStageThreshold, &cgs.humanNextStageThreshold );
+;167:  sscanf( CG_ConfigString( CS_SPAWNS ), "%d %d", &cgs.numAlienSpawns, &cgs.numHumanSpawns );
+CNSTI4 30
+ARGI4
+ADDRLP4 24
+ADDRGP4 CG_ConfigString
+CALLP4
+ASGNP4
+ADDRLP4 24
+INDIRP4
+ARGP4
+ADDRGP4 $200
+ARGP4
+ADDRGP4 cgs+34740
+ARGP4
+ADDRGP4 cgs+34744
+ARGP4
+ADDRGP4 sscanf
+CALLI4
+pop
+line 169
+;168:
+;169:  cgs.levelStartTime = atoi( CG_ConfigString( CS_LEVEL_START_TIME ) );
+CNSTI4 21
+ARGI4
+ADDRLP4 28
+ADDRGP4 CG_ConfigString
+CALLP4
+ASGNP4
+ADDRLP4 28
+INDIRP4
+ARGP4
+ADDRLP4 32
+ADDRGP4 atoi
+CALLI4
+ASGNI4
+ADDRGP4 cgs+34668
+ADDRLP4 32
+INDIRI4
+ASGNI4
+line 171
+;170:  
+;171:  sscanf( CG_ConfigString( CS_ZOMBIERECORDS ),
+CNSTI4 31
+ARGI4
+ADDRLP4 36
+ADDRGP4 CG_ConfigString
+CALLP4
+ASGNP4
+ADDRLP4 36
+INDIRP4
+ARGP4
+ADDRGP4 $204
+ARGP4
+ADDRGP4 cgs+34672
+ARGP4
+ADDRGP4 cgs+34672+4
+ARGP4
+ADDRGP4 cgs+34672+8
+ARGP4
+ADDRGP4 sscanf
+CALLI4
+pop
+line 174
+;172:  "%d %d %d", &cgs.survivalRecords[0], &cgs.survivalRecords[1], &cgs.survivalRecords[2]);
+;173:  
+;174:  cg.warmup = atoi( CG_ConfigString( CS_WARMUP ) );
+CNSTI4 5
+ARGI4
+ADDRLP4 40
+ADDRGP4 CG_ConfigString
+CALLP4
+ASGNP4
+ADDRLP4 40
+INDIRP4
+ARGP4
+ADDRLP4 44
+ADDRGP4 atoi
+CALLI4
+ASGNI4
+ADDRGP4 cg+115672
+ADDRLP4 44
+INDIRI4
+ASGNI4
+line 175
+;175:}
+LABELV $184
+endproc CG_SetConfigValues 48 32
+export CG_ShaderStateChanged
+proc CG_ShaderStateChanged 188 12
+line 184
+;176:
+;177:
+;178:/*
+;179:=====================
+;180:CG_ShaderStateChanged
+;181:=====================
+;182:*/
+;183:void CG_ShaderStateChanged( void )
+;184:{
+line 191
+;185:  char        originalShader[ MAX_QPATH ];
+;186:  char        newShader[ MAX_QPATH ];
+;187:  char        timeOffset[ 16 ];
+;188:  const char  *o;
+;189:  char        *n, *t;
+;190:
+;191:  o = CG_ConfigString( CS_SHADERSTATE );
+CNSTI4 24
+ARGI4
+ADDRLP4 156
+ADDRGP4 CG_ConfigString
+CALLP4
+ASGNP4
+ADDRLP4 0
+ADDRLP4 156
+INDIRP4
+ASGNP4
+ADDRGP4 $213
+JUMPV
+LABELV $212
+line 194
+;192:
+;193:  while( o && *o )
+;194:  {
+line 195
+;195:    n = strstr( o, "=" );
+ADDRLP4 0
+INDIRP4
+ARGP4
+ADDRGP4 $215
+ARGP4
+ADDRLP4 160
+ADDRGP4 strstr
+CALLP4
+ASGNP4
+ADDRLP4 4
+ADDRLP4 160
+INDIRP4
+ASGNP4
+line 197
+;196:
+;197:    if( n && *n )
+ADDRLP4 4
+INDIRP4
+CVPU4 4
+CNSTU4 0
+EQU4 $214
+ADDRLP4 4
+INDIRP4
+INDIRI1
+CVII4 1
+CNSTI4 0
+EQI4 $214
+line 198
+;198:    {
+line 199
+;199:      strncpy( originalShader, o, n - o );
+ADDRLP4 12
+ARGP4
+ADDRLP4 0
+INDIRP4
+ARGP4
+ADDRLP4 4
+INDIRP4
+CVPU4 4
+ADDRLP4 0
+INDIRP4
+CVPU4 4
+SUBU4
+CVUI4 4
+ARGI4
+ADDRGP4 strncpy
+CALLP4
+pop
+line 200
+;200:      originalShader[ n - o ] = 0;
+ADDRLP4 4
+INDIRP4
+CVPU4 4
+ADDRLP4 0
+INDIRP4
+CVPU4 4
+SUBU4
+CVUI4 4
+ADDRLP4 12
+ADDP4
+CNSTI1 0
+ASGNI1
+line 201
+;201:      n++;
+ADDRLP4 4
+ADDRLP4 4
+INDIRP4
+CNSTI4 1
+ADDP4
+ASGNP4
+line 202
+;202:      t = strstr( n, ":" );
+ADDRLP4 4
+INDIRP4
+ARGP4
+ADDRGP4 $218
+ARGP4
+ADDRLP4 172
+ADDRGP4 strstr
+CALLP4
+ASGNP4
+ADDRLP4 8
+ADDRLP4 172
+INDIRP4
+ASGNP4
+line 204
+;203:
+;204:      if( t && *t )
+ADDRLP4 8
+INDIRP4
+CVPU4 4
+CNSTU4 0
+EQU4 $214
+ADDRLP4 8
+INDIRP4
+INDIRI1
+CVII4 1
+CNSTI4 0
+EQI4 $214
+line 205
+;205:      {
+line 206
+;206:        strncpy( newShader, n, t - n );
+ADDRLP4 76
+ARGP4
+ADDRLP4 4
+INDIRP4
+ARGP4
+ADDRLP4 8
+INDIRP4
+CVPU4 4
+ADDRLP4 4
+INDIRP4
+CVPU4 4
+SUBU4
+CVUI4 4
+ARGI4
+ADDRGP4 strncpy
+CALLP4
+pop
+line 207
+;207:        newShader[ t - n ] = 0;
+ADDRLP4 8
+INDIRP4
+CVPU4 4
+ADDRLP4 4
+INDIRP4
+CVPU4 4
+SUBU4
+CVUI4 4
+ADDRLP4 76
+ADDP4
+CNSTI1 0
+ASGNI1
+line 208
+;208:      }
+line 210
+;209:      else
+;210:        break;
+LABELV $220
+line 212
+;211:
+;212:      t++;
+ADDRLP4 8
+ADDRLP4 8
+INDIRP4
+CNSTI4 1
+ADDP4
+ASGNP4
+line 213
+;213:      o = strstr( t, "@" );
+ADDRLP4 8
+INDIRP4
+ARGP4
+ADDRGP4 $221
+ARGP4
+ADDRLP4 180
+ADDRGP4 strstr
+CALLP4
+ASGNP4
+ADDRLP4 0
+ADDRLP4 180
+INDIRP4
+ASGNP4
+line 215
+;214:
+;215:      if( o )
+ADDRLP4 0
+INDIRP4
+CVPU4 4
+CNSTU4 0
+EQU4 $217
+line 216
+;216:      {
+line 217
+;217:        strncpy( timeOffset, t, o - t );
+ADDRLP4 140
+ARGP4
+ADDRLP4 8
+INDIRP4
+ARGP4
+ADDRLP4 0
+INDIRP4
+CVPU4 4
+ADDRLP4 8
+INDIRP4
+CVPU4 4
+SUBU4
+CVUI4 4
+ARGI4
+ADDRGP4 strncpy
+CALLP4
+pop
+line 218
+;218:        timeOffset[ o - t ] = 0;
+ADDRLP4 0
+INDIRP4
+CVPU4 4
+ADDRLP4 8
+INDIRP4
+CVPU4 4
+SUBU4
+CVUI4 4
+ADDRLP4 140
+ADDP4
+CNSTI1 0
+ASGNI1
+line 219
+;219:        o++;
+ADDRLP4 0
+ADDRLP4 0
+INDIRP4
+CNSTI4 1
+ADDP4
+ASGNP4
+line 220
+;220:        trap_R_RemapShader( originalShader, newShader, timeOffset );
+ADDRLP4 12
+ARGP4
+ADDRLP4 76
+ARGP4
+ADDRLP4 140
+ARGP4
+ADDRGP4 trap_R_RemapShader
+CALLV
+pop
+line 221
+;221:      }
+line 222
+;222:    }
+line 224
+;223:    else
+;224:      break;
+LABELV $217
+line 225
+;225:  }
+LABELV $213
+line 193
+ADDRLP4 0
+INDIRP4
+CVPU4 4
+CNSTU4 0
+EQU4 $224
+ADDRLP4 0
+INDIRP4
+INDIRI1
+CVII4 1
+CNSTI4 0
+NEI4 $212
+LABELV $224
+LABELV $214
+line 226
+;226:}
+LABELV $211
+endproc CG_ShaderStateChanged 188 12
+proc CG_AnnounceAlienStageTransistion 0 12
+line 234
+;227:
+;228:/*
+;229:================
+;230:CG_AnnounceAlienStageTransistion
+;231:================
+;232:*/
+;233:static void CG_AnnounceAlienStageTransistion( stage_t from, stage_t to )
+;234:{
+line 235
+;235:  if( cg.predictedPlayerState.stats[ STAT_PTEAM ] != PTE_ALIENS )
+ADDRGP4 cg+107636+184+32
+INDIRI4
+CNSTI4 1
+EQI4 $226
+line 236
+;236:    return;
+ADDRGP4 $225
+JUMPV
+LABELV $226
+line 238
+;237:
+;238:  trap_S_StartLocalSound( cgs.media.alienStageTransition, CHAN_ANNOUNCER );
+ADDRGP4 cgs+268684+440
+INDIRI4
+ARGI4
+CNSTI4 7
+ARGI4
+ADDRGP4 trap_S_StartLocalSound
+CALLV
+pop
+line 239
+;239:  CG_CenterPrint( "We have evolved!", 200, GIANTCHAR_WIDTH * 4 );
+ADDRGP4 $233
+ARGP4
+CNSTI4 200
+ARGI4
+CNSTI4 128
+ARGI4
+ADDRGP4 CG_CenterPrint
+CALLV
+pop
+line 240
+;240:}
+LABELV $225
+endproc CG_AnnounceAlienStageTransistion 0 12
+proc CG_AnnounceHumanStageTransistion 0 12
+line 248
+;241:
+;242:/*
+;243:================
+;244:CG_AnnounceHumanStageTransistion
+;245:================
+;246:*/
+;247:static void CG_AnnounceHumanStageTransistion( stage_t from, stage_t to )
+;248:{
+line 249
+;249:  if( cg.predictedPlayerState.stats[ STAT_PTEAM ] != PTE_HUMANS )
+ADDRGP4 cg+107636+184+32
+INDIRI4
+CNSTI4 2
+EQI4 $235
+line 250
+;250:    return;
+ADDRGP4 $234
+JUMPV
+LABELV $235
+line 252
+;251:
+;252:  trap_S_StartLocalSound( cgs.media.humanStageTransition, CHAN_ANNOUNCER );
+ADDRGP4 cgs+268684+444
+INDIRI4
+ARGI4
+CNSTI4 7
+ARGI4
+ADDRGP4 trap_S_StartLocalSound
+CALLV
+pop
+line 253
+;253:  CG_CenterPrint( "Reinforcements have arrived!", 200, GIANTCHAR_WIDTH * 4 );
+ADDRGP4 $242
+ARGP4
+CNSTI4 200
+ARGI4
+CNSTI4 128
+ARGI4
+ADDRGP4 CG_CenterPrint
+CALLV
+pop
+line 254
+;254:}
+LABELV $234
+endproc CG_AnnounceHumanStageTransistion 0 12
+proc CG_ConfigStringModified 84 32
+line 263
+;255:
+;256:/*
+;257:================
+;258:CG_ConfigStringModified
+;259:
+;260:================
+;261:*/
+;262:static void CG_ConfigStringModified( void )
+;263:{
+line 267
+;264:  const char  *str;
+;265:  int         num;
+;266:
+;267:  num = atoi( CG_Argv( 1 ) );
+CNSTI4 1
+ARGI4
+ADDRLP4 8
+ADDRGP4 CG_Argv
+CALLP4
+ASGNP4
+ADDRLP4 8
+INDIRP4
+ARGP4
+ADDRLP4 12
+ADDRGP4 atoi
+CALLI4
+ASGNI4
+ADDRLP4 0
+ADDRLP4 12
+INDIRI4
+ASGNI4
+line 271
+;268:
+;269:  // get the gamestate from the client system, which will have the
+;270:  // new configstring already integrated
+;271:  trap_GetGameState( &cgs.gameState );
+ADDRGP4 cgs
+ARGP4
+ADDRGP4 trap_GetGameState
+CALLV
+pop
+line 274
+;272:
+;273:  // look up the individual string that was modified
+;274:  str = CG_ConfigString( num );
+ADDRLP4 0
+INDIRI4
+ARGI4
+ADDRLP4 16
+ADDRGP4 CG_ConfigString
+CALLP4
+ASGNP4
+ADDRLP4 4
+ADDRLP4 16
+INDIRP4
+ASGNP4
+line 277
+;275:
+;276:  // do something with it if necessary
+;277:  if( num == CS_MUSIC )
+ADDRLP4 0
+INDIRI4
+CNSTI4 2
+NEI4 $244
+line 278
+;278:    CG_StartMusic( );
+ADDRGP4 CG_StartMusic
+CALLV
+pop
+ADDRGP4 $245
+JUMPV
+LABELV $244
+line 279
+;279:  else if( num == CS_SERVERINFO )
+ADDRLP4 0
+INDIRI4
+CNSTI4 0
+NEI4 $246
+line 280
+;280:    CG_ParseServerinfo( );
+ADDRGP4 CG_ParseServerinfo
+CALLV
+pop
+ADDRGP4 $247
+JUMPV
+LABELV $246
+line 281
+;281:  else if( num == CS_WARMUP )
+ADDRLP4 0
+INDIRI4
+CNSTI4 5
+NEI4 $248
+line 282
+;282:    CG_ParseWarmup( );
+ADDRGP4 CG_ParseWarmup
+CALLV
+pop
+ADDRGP4 $249
+JUMPV
+LABELV $248
+line 283
+;283:  else if( num == CS_SCORES1 )
+ADDRLP4 0
+INDIRI4
+CNSTI4 6
+NEI4 $250
+line 284
+;284:    cgs.scores1 = atoi( str );
+ADDRLP4 4
+INDIRP4
+ARGP4
+ADDRLP4 20
+ADDRGP4 atoi
+CALLI4
+ASGNI4
+ADDRGP4 cgs+34684
+ADDRLP4 20
+INDIRI4
+ASGNI4
+ADDRGP4 $251
+JUMPV
+LABELV $250
+line 285
+;285:  else if( num == CS_SCORES2 )
+ADDRLP4 0
+INDIRI4
+CNSTI4 7
+NEI4 $253
+line 286
+;286:    cgs.scores2 = atoi( str );
+ADDRLP4 4
+INDIRP4
+ARGP4
+ADDRLP4 24
+ADDRGP4 atoi
+CALLI4
+ASGNI4
+ADDRGP4 cgs+34688
+ADDRLP4 24
+INDIRI4
+ASGNI4
+ADDRGP4 $254
+JUMPV
+LABELV $253
+line 287
+;287:  else if( num == CS_BUILDPOINTS )
+ADDRLP4 0
+INDIRI4
+CNSTI4 28
+NEI4 $256
+line 288
+;288:    sscanf( str, "%d %d %d %d %d", &cgs.alienBuildPoints,
+ADDRLP4 4
+INDIRP4
+ARGP4
+ADDRGP4 $187
+ARGP4
+ADDRGP4 cgs+34696
+ARGP4
+ADDRGP4 cgs+34700
+ARGP4
+ADDRGP4 cgs+34704
+ARGP4
+ADDRGP4 cgs+34708
+ARGP4
+ADDRGP4 cgs+34712
+ARGP4
+ADDRGP4 sscanf
+CALLI4
+pop
+ADDRGP4 $257
+JUMPV
+LABELV $256
+line 293
+;289:                                   &cgs.alienBuildPointsTotal,
+;290:                                   &cgs.humanBuildPoints,
+;291:                                   &cgs.humanBuildPointsTotal,
+;292:                                   &cgs.humanBuildPointsPowered );
+;293:  else if( num == CS_STAGES )
+ADDRLP4 0
+INDIRI4
+CNSTI4 29
+NEI4 $263
+line 294
+;294:  {
+line 295
+;295:    stage_t oldAlienStage = cgs.alienStage;
+ADDRLP4 28
+ADDRGP4 cgs+34716
+INDIRI4
+ASGNI4
+line 296
+;296:    stage_t oldHumanStage = cgs.humanStage;
+ADDRLP4 32
+ADDRGP4 cgs+34720
+INDIRI4
+ASGNI4
+line 298
+;297:
+;298:    sscanf( str, "%d %d %d %d %d %d",
+ADDRLP4 4
+INDIRP4
+ARGP4
+ADDRGP4 $193
+ARGP4
+ADDRGP4 cgs+34716
+ARGP4
+ADDRGP4 cgs+34720
+ARGP4
+ADDRGP4 cgs+34724
+ARGP4
+ADDRGP4 cgs+34728
+ARGP4
+ADDRGP4 cgs+34732
+ARGP4
+ADDRGP4 cgs+34736
+ARGP4
+ADDRGP4 sscanf
+CALLI4
+pop
+line 303
+;299:        &cgs.alienStage, &cgs.humanStage,
+;300:        &cgs.alienKills, &cgs.humanKills,
+;301:        &cgs.alienNextStageThreshold, &cgs.humanNextStageThreshold );
+;302:
+;303:    if( cgs.alienStage != oldAlienStage )
+ADDRGP4 cgs+34716
+INDIRI4
+ADDRLP4 28
+INDIRI4
+EQI4 $273
+line 304
+;304:      CG_AnnounceAlienStageTransistion( oldAlienStage, cgs.alienStage );
+ADDRLP4 28
+INDIRI4
+ARGI4
+ADDRGP4 cgs+34716
+INDIRI4
+ARGI4
+ADDRGP4 CG_AnnounceAlienStageTransistion
+CALLV
+pop
+LABELV $273
+line 306
+;305:
+;306:    if( cgs.humanStage != oldHumanStage )
+ADDRGP4 cgs+34720
+INDIRI4
+ADDRLP4 32
+INDIRI4
+EQI4 $264
+line 307
+;307:      CG_AnnounceHumanStageTransistion( oldHumanStage, cgs.humanStage );
+ADDRLP4 32
+INDIRI4
+ARGI4
+ADDRGP4 cgs+34720
+INDIRI4
+ARGI4
+ADDRGP4 CG_AnnounceHumanStageTransistion
+CALLV
+pop
+line 308
+;308:  }
+ADDRGP4 $264
+JUMPV
+LABELV $263
+line 309
+;309:  else if( num == CS_SPAWNS )
+ADDRLP4 0
+INDIRI4
+CNSTI4 30
+NEI4 $281
+line 310
+;310:    sscanf( str, "%d %d", &cgs.numAlienSpawns, &cgs.numHumanSpawns );
+ADDRLP4 4
+INDIRP4
+ARGP4
+ADDRGP4 $200
+ARGP4
+ADDRGP4 cgs+34740
+ARGP4
+ADDRGP4 cgs+34744
+ARGP4
+ADDRGP4 sscanf
+CALLI4
+pop
+ADDRGP4 $282
+JUMPV
+LABELV $281
+line 311
+;311:  else if( num == CS_ZOMBIERECORDS )
+ADDRLP4 0
+INDIRI4
+CNSTI4 31
+NEI4 $285
+line 312
+;312:    sscanf( str, "%d %d %d", &cgs.survivalRecords[0], &cgs.survivalRecords[1], &cgs.survivalRecords[2] );
+ADDRLP4 4
+INDIRP4
+ARGP4
+ADDRGP4 $204
+ARGP4
+ADDRGP4 cgs+34672
+ARGP4
+ADDRGP4 cgs+34672+4
+ARGP4
+ADDRGP4 cgs+34672+8
+ARGP4
+ADDRGP4 sscanf
+CALLI4
+pop
+ADDRGP4 $286
+JUMPV
+LABELV $285
+line 313
+;313:  else if( num == CS_LEVEL_START_TIME )
+ADDRLP4 0
+INDIRI4
+CNSTI4 21
+NEI4 $292
+line 314
+;314:    cgs.levelStartTime = atoi( str );
+ADDRLP4 4
+INDIRP4
+ARGP4
+ADDRLP4 28
+ADDRGP4 atoi
+CALLI4
+ASGNI4
+ADDRGP4 cgs+34668
+ADDRLP4 28
+INDIRI4
+ASGNI4
+ADDRGP4 $293
+JUMPV
+LABELV $292
+line 315
+;315:  else if( num == CS_VOTE_TIME )
+ADDRLP4 0
+INDIRI4
+CNSTI4 8
+NEI4 $295
+line 316
+;316:  {
+line 317
+;317:    cgs.voteTime = atoi( str );
+ADDRLP4 4
+INDIRP4
+ARGP4
+ADDRLP4 32
+ADDRGP4 atoi
+CALLI4
+ASGNI4
+ADDRGP4 cgs+31548
+ADDRLP4 32
+INDIRI4
+ASGNI4
+line 318
+;318:    cgs.voteModified = qtrue;
+ADDRGP4 cgs+31560
+CNSTI4 1
+ASGNI4
+line 320
+;319:
+;320:    if( cgs.voteTime )
+ADDRGP4 cgs+31548
+INDIRI4
+CNSTI4 0
+EQI4 $299
+line 321
+;321:      trap_Cvar_Set( "ui_voteActive", "1" );
+ADDRGP4 $302
+ARGP4
+ADDRGP4 $303
+ARGP4
+ADDRGP4 trap_Cvar_Set
+CALLV
+pop
+ADDRGP4 $296
+JUMPV
+LABELV $299
+line 323
+;322:    else
+;323:      trap_Cvar_Set( "ui_voteActive", "0" );
+ADDRGP4 $302
+ARGP4
+ADDRGP4 $304
+ARGP4
+ADDRGP4 trap_Cvar_Set
+CALLV
+pop
+line 324
+;324:  }
+ADDRGP4 $296
+JUMPV
+LABELV $295
+line 325
+;325:  else if( num == CS_VOTE_YES )
+ADDRLP4 0
+INDIRI4
+CNSTI4 10
+NEI4 $305
+line 326
+;326:  {
+line 327
+;327:    cgs.voteYes = atoi( str );
+ADDRLP4 4
+INDIRP4
+ARGP4
+ADDRLP4 32
+ADDRGP4 atoi
+CALLI4
+ASGNI4
+ADDRGP4 cgs+31552
+ADDRLP4 32
+INDIRI4
+ASGNI4
+line 328
+;328:    cgs.voteModified = qtrue;
+ADDRGP4 cgs+31560
+CNSTI4 1
+ASGNI4
+line 329
+;329:  }
+ADDRGP4 $306
+JUMPV
+LABELV $305
+line 330
+;330:  else if( num == CS_VOTE_NO )
+ADDRLP4 0
+INDIRI4
+CNSTI4 11
+NEI4 $309
+line 331
+;331:  {
+line 332
+;332:    cgs.voteNo = atoi( str );
+ADDRLP4 4
+INDIRP4
+ARGP4
+ADDRLP4 32
+ADDRGP4 atoi
+CALLI4
+ASGNI4
+ADDRGP4 cgs+31556
+ADDRLP4 32
+INDIRI4
+ASGNI4
+line 333
+;333:    cgs.voteModified = qtrue;
+ADDRGP4 cgs+31560
+CNSTI4 1
+ASGNI4
+line 334
+;334:  }
+ADDRGP4 $310
+JUMPV
+LABELV $309
+line 335
+;335:  else if( num == CS_VOTE_STRING )
+ADDRLP4 0
+INDIRI4
+CNSTI4 9
+NEI4 $313
+line 336
+;336:    Q_strncpyz( cgs.voteString, str, sizeof( cgs.voteString ) );
+ADDRGP4 cgs+31564
+ARGP4
+ADDRLP4 4
+INDIRP4
+ARGP4
+CNSTI4 1024
+ARGI4
+ADDRGP4 Q_strncpyz
+CALLV
+pop
+ADDRGP4 $314
+JUMPV
+LABELV $313
+line 337
+;337:  else if( num >= CS_TEAMVOTE_TIME && num <= CS_TEAMVOTE_TIME + 1 )
+ADDRLP4 0
+INDIRI4
+CNSTI4 12
+LTI4 $317
+ADDRLP4 0
+INDIRI4
+CNSTI4 13
+GTI4 $317
+line 338
+;338:  {
+line 339
+;339:    int cs_offset = num - CS_TEAMVOTE_TIME;
+ADDRLP4 36
+ADDRLP4 0
+INDIRI4
+CNSTI4 12
+SUBI4
+ASGNI4
+line 341
+;340:
+;341:    cgs.teamVoteTime[ cs_offset ] = atoi( str );
+ADDRLP4 4
+INDIRP4
+ARGP4
+ADDRLP4 40
+ADDRGP4 atoi
+CALLI4
+ASGNI4
+ADDRLP4 36
+INDIRI4
+CNSTI4 2
+LSHI4
+ADDRGP4 cgs+32588
+ADDP4
+ADDRLP4 40
+INDIRI4
+ASGNI4
+line 342
+;342:    cgs.teamVoteModified[ cs_offset ] = qtrue;
+ADDRLP4 36
+INDIRI4
+CNSTI4 2
+LSHI4
+ADDRGP4 cgs+32612
+ADDP4
+CNSTI4 1
+ASGNI4
+line 344
+;343:
+;344:    if( cs_offset == 0 )
+ADDRLP4 36
+INDIRI4
+CNSTI4 0
+NEI4 $321
+line 345
+;345:    {
+line 346
+;346:      if( cgs.teamVoteTime[ cs_offset ] )
+ADDRLP4 36
+INDIRI4
+CNSTI4 2
+LSHI4
+ADDRGP4 cgs+32588
+ADDP4
+INDIRI4
+CNSTI4 0
+EQI4 $323
+line 347
+;347:        trap_Cvar_Set( "ui_humanTeamVoteActive", "1" );
+ADDRGP4 $326
+ARGP4
+ADDRGP4 $303
+ARGP4
+ADDRGP4 trap_Cvar_Set
+CALLV
+pop
+ADDRGP4 $318
+JUMPV
+LABELV $323
+line 349
+;348:      else
+;349:        trap_Cvar_Set( "ui_humanTeamVoteActive", "0" );
+ADDRGP4 $326
+ARGP4
+ADDRGP4 $304
+ARGP4
+ADDRGP4 trap_Cvar_Set
+CALLV
+pop
+line 350
+;350:    }
+ADDRGP4 $318
+JUMPV
+LABELV $321
+line 351
+;351:    else if( cs_offset == 1 )
+ADDRLP4 36
+INDIRI4
+CNSTI4 1
+NEI4 $318
+line 352
+;352:    {
+line 353
+;353:      if( cgs.teamVoteTime[ cs_offset ] )
+ADDRLP4 36
+INDIRI4
+CNSTI4 2
+LSHI4
+ADDRGP4 cgs+32588
+ADDP4
+INDIRI4
+CNSTI4 0
+EQI4 $329
+line 354
+;354:        trap_Cvar_Set( "ui_alienTeamVoteActive", "1" );
+ADDRGP4 $332
+ARGP4
+ADDRGP4 $303
+ARGP4
+ADDRGP4 trap_Cvar_Set
+CALLV
+pop
+ADDRGP4 $318
+JUMPV
+LABELV $329
+line 356
+;355:      else
+;356:        trap_Cvar_Set( "ui_alienTeamVoteActive", "0" );
+ADDRGP4 $332
+ARGP4
+ADDRGP4 $304
+ARGP4
+ADDRGP4 trap_Cvar_Set
+CALLV
+pop
+line 357
+;357:    }
+line 358
+;358:  }
+ADDRGP4 $318
+JUMPV
+LABELV $317
+line 359
+;359:  else if( num >= CS_TEAMVOTE_YES && num <= CS_TEAMVOTE_YES + 1 )
+ADDRLP4 0
+INDIRI4
+CNSTI4 16
+LTI4 $333
+ADDRLP4 0
+INDIRI4
+CNSTI4 17
+GTI4 $333
+line 360
+;360:  {
+line 361
+;361:    cgs.teamVoteYes[ num - CS_TEAMVOTE_YES ] = atoi( str );
+ADDRLP4 4
+INDIRP4
+ARGP4
+ADDRLP4 40
+ADDRGP4 atoi
+CALLI4
+ASGNI4
+ADDRLP4 0
+INDIRI4
+CNSTI4 2
+LSHI4
+ADDRGP4 cgs+32596-64
+ADDP4
+ADDRLP4 40
+INDIRI4
+ASGNI4
+line 362
+;362:    cgs.teamVoteModified[ num - CS_TEAMVOTE_YES ] = qtrue;
+ADDRLP4 0
+INDIRI4
+CNSTI4 2
+LSHI4
+ADDRGP4 cgs+32612-64
+ADDP4
+CNSTI4 1
+ASGNI4
+line 363
+;363:  }
+ADDRGP4 $334
+JUMPV
+LABELV $333
+line 364
+;364:  else if( num >= CS_TEAMVOTE_NO && num <= CS_TEAMVOTE_NO + 1 )
+ADDRLP4 0
+INDIRI4
+CNSTI4 18
+LTI4 $339
+ADDRLP4 0
+INDIRI4
+CNSTI4 19
+GTI4 $339
+line 365
+;365:  {
+line 366
+;366:    cgs.teamVoteNo[ num - CS_TEAMVOTE_NO ] = atoi( str );
+ADDRLP4 4
+INDIRP4
+ARGP4
+ADDRLP4 44
+ADDRGP4 atoi
+CALLI4
+ASGNI4
+ADDRLP4 0
+INDIRI4
+CNSTI4 2
+LSHI4
+ADDRGP4 cgs+32604-72
+ADDP4
+ADDRLP4 44
+INDIRI4
+ASGNI4
+line 367
+;367:    cgs.teamVoteModified[ num - CS_TEAMVOTE_NO ] = qtrue;
+ADDRLP4 0
+INDIRI4
+CNSTI4 2
+LSHI4
+ADDRGP4 cgs+32612-72
+ADDP4
+CNSTI4 1
+ASGNI4
+line 368
+;368:  }
+ADDRGP4 $340
+JUMPV
+LABELV $339
+line 369
+;369:  else if( num >= CS_TEAMVOTE_STRING && num <= CS_TEAMVOTE_STRING + 1 )
+ADDRLP4 0
+INDIRI4
+CNSTI4 14
+LTI4 $345
+ADDRLP4 0
+INDIRI4
+CNSTI4 15
+GTI4 $345
+line 370
+;370:    Q_strncpyz( cgs.teamVoteString[ num - CS_TEAMVOTE_STRING ], str, sizeof( cgs.teamVoteString ) );
+ADDRLP4 0
+INDIRI4
+CNSTI4 10
+LSHI4
+ADDRGP4 cgs+32620-14336
+ADDP4
+ARGP4
+ADDRLP4 4
+INDIRP4
+ARGP4
+CNSTI4 2048
+ARGI4
+ADDRGP4 Q_strncpyz
+CALLV
+pop
+ADDRGP4 $346
+JUMPV
+LABELV $345
+line 371
+;371:  else if( num == CS_INTERMISSION )
+ADDRLP4 0
+INDIRI4
+CNSTI4 22
+NEI4 $350
+line 372
+;372:    cg.intermissionStarted = atoi( str );
+ADDRLP4 4
+INDIRP4
+ARGP4
+ADDRLP4 48
+ADDRGP4 atoi
+CALLI4
+ASGNI4
+ADDRGP4 cg+24
+ADDRLP4 48
+INDIRI4
+ASGNI4
+ADDRGP4 $351
+JUMPV
+LABELV $350
+line 373
+;373:  else if( num >= CS_MODELS && num < CS_MODELS+MAX_MODELS )
+ADDRLP4 0
+INDIRI4
+CNSTI4 33
+LTI4 $353
+ADDRLP4 0
+INDIRI4
+CNSTI4 289
+GEI4 $353
+line 374
+;374:    cgs.gameModels[ num - CS_MODELS ] = trap_R_RegisterModel( str );
+ADDRLP4 4
+INDIRP4
+ARGP4
+ADDRLP4 56
+ADDRGP4 trap_R_RegisterModel
+CALLI4
+ASGNI4
+ADDRLP4 0
+INDIRI4
+CNSTI4 2
+LSHI4
+ADDRGP4 cgs+34748-132
+ADDP4
+ADDRLP4 56
+INDIRI4
+ASGNI4
+ADDRGP4 $354
+JUMPV
+LABELV $353
+line 375
+;375:  else if( num >= CS_SHADERS && num < CS_SHADERS+MAX_GAME_SHADERS )
+ADDRLP4 0
+INDIRI4
+CNSTI4 545
+LTI4 $357
+ADDRLP4 0
+INDIRI4
+CNSTI4 609
+GEI4 $357
+line 376
+;376:    cgs.gameShaders[ num - CS_SHADERS ] = trap_R_RegisterShader( str );
+ADDRLP4 4
+INDIRP4
+ARGP4
+ADDRLP4 64
+ADDRGP4 trap_R_RegisterShader
+CALLI4
+ASGNI4
+ADDRLP4 0
+INDIRI4
+CNSTI4 2
+LSHI4
+ADDRGP4 cgs+35772-2180
+ADDP4
+ADDRLP4 64
+INDIRI4
+ASGNI4
+ADDRGP4 $358
+JUMPV
+LABELV $357
+line 377
+;377:  else if( num >= CS_PARTICLE_SYSTEMS && num < CS_PARTICLE_SYSTEMS+MAX_GAME_PARTICLE_SYSTEMS )
+ADDRLP4 0
+INDIRI4
+CNSTI4 609
+LTI4 $361
+ADDRLP4 0
+INDIRI4
+CNSTI4 673
+GEI4 $361
+line 378
+;378:    cgs.gameParticleSystems[ num - CS_PARTICLE_SYSTEMS ] = CG_RegisterParticleSystem( (char *)str );
+ADDRLP4 4
+INDIRP4
+ARGP4
+ADDRLP4 72
+ADDRGP4 CG_RegisterParticleSystem
+CALLI4
+ASGNI4
+ADDRLP4 0
+INDIRI4
+CNSTI4 2
+LSHI4
+ADDRGP4 cgs+36028-2436
+ADDP4
+ADDRLP4 72
+INDIRI4
+ASGNI4
+ADDRGP4 $362
+JUMPV
+LABELV $361
+line 379
+;379:  else if( num >= CS_SOUNDS && num < CS_SOUNDS+MAX_SOUNDS )
+ADDRLP4 0
+INDIRI4
+CNSTI4 289
+LTI4 $365
+ADDRLP4 0
+INDIRI4
+CNSTI4 545
+GEI4 $365
+line 380
+;380:  {
+line 381
+;381:    if( str[ 0 ] != '*' )
+ADDRLP4 4
+INDIRP4
+INDIRI1
+CVII4 1
+CNSTI4 42
+EQI4 $366
+line 382
+;382:    {  // player specific sounds don't register here
+line 383
+;383:      cgs.gameSounds[ num - CS_SOUNDS ] = trap_S_RegisterSound( str, qfalse );
+ADDRLP4 4
+INDIRP4
+ARGP4
+CNSTI4 0
+ARGI4
+ADDRLP4 80
+ADDRGP4 trap_S_RegisterSound
+CALLI4
+ASGNI4
+ADDRLP4 0
+INDIRI4
+CNSTI4 2
+LSHI4
+ADDRGP4 cgs+36284-1156
+ADDP4
+ADDRLP4 80
+INDIRI4
+ASGNI4
+line 384
+;384:    }
+line 385
+;385:  }
+ADDRGP4 $366
+JUMPV
+LABELV $365
+line 386
+;386:  else if( num >= CS_PLAYERS && num < CS_PLAYERS+MAX_CLIENTS )
+ADDRLP4 0
+INDIRI4
+CNSTI4 673
+LTI4 $371
+ADDRLP4 0
+INDIRI4
+CNSTI4 737
+GEI4 $371
+line 387
+;387:  {
+line 388
+;388:    CG_NewClientInfo( num - CS_PLAYERS );
+ADDRLP4 0
+INDIRI4
+CNSTI4 673
+SUBI4
+ARGI4
+ADDRGP4 CG_NewClientInfo
+CALLV
+pop
+line 389
+;389:    CG_BuildSpectatorString( );
+ADDRGP4 CG_BuildSpectatorString
+CALLV
+pop
+line 390
+;390:  }
+ADDRGP4 $372
+JUMPV
+LABELV $371
+line 391
+;391:  else if( num == CS_FLAGSTATUS )
+ADDRLP4 0
+INDIRI4
+CNSTI4 23
+NEI4 $373
+line 392
+;392:  {
+line 393
+;393:  }
+ADDRGP4 $374
+JUMPV
+LABELV $373
+line 394
+;394:  else if( num == CS_SHADERSTATE )
+ADDRLP4 0
+INDIRI4
+CNSTI4 24
+NEI4 $375
+line 395
+;395:  {
+line 396
+;396:    CG_ShaderStateChanged( );
+ADDRGP4 CG_ShaderStateChanged
+CALLV
+pop
+line 397
+;397:  }
+LABELV $375
+LABELV $374
+LABELV $372
+LABELV $366
+LABELV $362
+LABELV $358
+LABELV $354
+LABELV $351
+LABELV $346
+LABELV $340
+LABELV $334
+LABELV $318
+LABELV $314
+LABELV $310
+LABELV $306
+LABELV $296
+LABELV $293
+LABELV $286
+LABELV $282
+LABELV $264
+LABELV $257
+LABELV $254
+LABELV $251
+LABELV $249
+LABELV $247
+LABELV $245
+line 398
+;398:}
+LABELV $243
+endproc CG_ConfigStringModified 84 32
+proc CG_AddToTeamChat 64 0
+line 408
+;399:
+;400:
+;401:/*
+;402:=======================
+;403:CG_AddToTeamChat
+;404:
+;405:=======================
+;406:*/
+;407:static void CG_AddToTeamChat( const char *str )
+;408:{
+line 414
+;409:  int   len;
+;410:  char  *p, *ls;
+;411:  int   lastcolor;
+;412:  int   chatHeight;
+;413:
+;414:  if( cg_teamChatHeight.integer < TEAMCHAT_HEIGHT )
+ADDRGP4 cg_teamChatHeight+12
+INDIRI4
+CNSTI4 8
+GEI4 $378
+line 415
+;415:    chatHeight = cg_teamChatHeight.integer;
+ADDRLP4 12
+ADDRGP4 cg_teamChatHeight+12
+INDIRI4
+ASGNI4
+ADDRGP4 $379
+JUMPV
+LABELV $378
+line 417
+;416:  else
+;417:    chatHeight = TEAMCHAT_HEIGHT;
+ADDRLP4 12
+CNSTI4 8
+ASGNI4
+LABELV $379
+line 419
+;418:
+;419:  if( chatHeight <= 0 || cg_teamChatTime.integer <= 0 )
+ADDRLP4 20
+CNSTI4 0
+ASGNI4
+ADDRLP4 12
+INDIRI4
+ADDRLP4 20
+INDIRI4
+LEI4 $385
+ADDRGP4 cg_teamChatTime+12
+INDIRI4
+ADDRLP4 20
+INDIRI4
+GTI4 $382
+LABELV $385
+line 420
+;420:  {
+line 422
+;421:    // team chat disabled, dump into normal chat
+;422:    cgs.teamChatPos = cgs.teamLastChatPos = 0;
+ADDRLP4 24
+CNSTI4 0
+ASGNI4
+ADDRGP4 cgs+268652
+ADDRLP4 24
+INDIRI4
+ASGNI4
+ADDRGP4 cgs+268648
+ADDRLP4 24
+INDIRI4
+ASGNI4
+line 423
+;423:    return;
+ADDRGP4 $377
+JUMPV
+LABELV $382
+line 426
+;424:  }
+;425:
+;426:  len = 0;
+ADDRLP4 4
+CNSTI4 0
+ASGNI4
+line 428
+;427:
+;428:  p = cgs.teamChatMsgs[cgs.teamChatPos % chatHeight];
+ADDRLP4 0
+CNSTI4 241
+ADDRGP4 cgs+268648
+INDIRI4
+ADDRLP4 12
+INDIRI4
+MODI4
+MULI4
+ADDRGP4 cgs+266688
+ADDP4
+ASGNP4
+line 429
+;429:  *p = 0;
+ADDRLP4 0
+INDIRP4
+CNSTI1 0
+ASGNI1
+line 431
+;430:
+;431:  lastcolor = '7';
+ADDRLP4 16
+CNSTI4 55
+ASGNI4
+line 433
+;432:
+;433:  ls = NULL;
+ADDRLP4 8
+CNSTP4 0
+ASGNP4
+ADDRGP4 $391
+JUMPV
+LABELV $390
+line 435
+;434:  while( *str )
+;435:  {
+line 436
+;436:    if( len > TEAMCHAT_WIDTH - 1 )
+ADDRLP4 4
+INDIRI4
+CNSTI4 79
+LEI4 $393
+line 437
+;437:    {
+line 438
+;438:      if( ls )
+ADDRLP4 8
+INDIRP4
+CVPU4 4
+CNSTU4 0
+EQU4 $395
+line 439
+;439:      {
+line 440
+;440:        str -= ( p - ls );
+ADDRFP4 0
+ADDRFP4 0
+INDIRP4
+ADDRLP4 0
+INDIRP4
+CVPU4 4
+ADDRLP4 8
+INDIRP4
+CVPU4 4
+SUBU4
+CVUI4 4
+SUBP4
+ASGNP4
+line 441
+;441:        str++;
+ADDRFP4 0
+ADDRFP4 0
+INDIRP4
+CNSTI4 1
+ADDP4
+ASGNP4
+line 442
+;442:        p -= ( p - ls );
+ADDRLP4 0
+ADDRLP4 0
+INDIRP4
+ADDRLP4 0
+INDIRP4
+CVPU4 4
+ADDRLP4 8
+INDIRP4
+CVPU4 4
+SUBU4
+CVUI4 4
+SUBP4
+ASGNP4
+line 443
+;443:      }
+LABELV $395
+line 445
+;444:
+;445:      *p = 0;
+ADDRLP4 0
+INDIRP4
+CNSTI1 0
+ASGNI1
+line 447
+;446:
+;447:      cgs.teamChatMsgTimes[ cgs.teamChatPos % chatHeight ] = cg.time;
+ADDRGP4 cgs+268648
+INDIRI4
+ADDRLP4 12
+INDIRI4
+MODI4
+CNSTI4 2
+LSHI4
+ADDRGP4 cgs+268616
+ADDP4
+ADDRGP4 cg+107604
+INDIRI4
+ASGNI4
+line 449
+;448:
+;449:      cgs.teamChatPos++;
+ADDRLP4 24
+ADDRGP4 cgs+268648
+ASGNP4
+ADDRLP4 24
+INDIRP4
+ADDRLP4 24
+INDIRP4
+INDIRI4
+CNSTI4 1
+ADDI4
+ASGNI4
+line 450
+;450:      p = cgs.teamChatMsgs[ cgs.teamChatPos % chatHeight ];
+ADDRLP4 0
+CNSTI4 241
+ADDRGP4 cgs+268648
+INDIRI4
+ADDRLP4 12
+INDIRI4
+MODI4
+MULI4
+ADDRGP4 cgs+266688
+ADDP4
+ASGNP4
+line 451
+;451:      *p = 0;
+ADDRLP4 0
+INDIRP4
+CNSTI1 0
+ASGNI1
+line 452
+;452:      *p++ = Q_COLOR_ESCAPE;
+ADDRLP4 28
+ADDRLP4 0
+INDIRP4
+ASGNP4
+ADDRLP4 0
+ADDRLP4 28
+INDIRP4
+CNSTI4 1
+ADDP4
+ASGNP4
+ADDRLP4 28
+INDIRP4
+CNSTI1 94
+ASGNI1
+line 453
+;453:      *p++ = lastcolor;
+ADDRLP4 32
+ADDRLP4 0
+INDIRP4
+ASGNP4
+ADDRLP4 0
+ADDRLP4 32
+INDIRP4
+CNSTI4 1
+ADDP4
+ASGNP4
+ADDRLP4 32
+INDIRP4
+ADDRLP4 16
+INDIRI4
+CVII1 4
+ASGNI1
+line 454
+;454:      len = 0;
+ADDRLP4 4
+CNSTI4 0
+ASGNI4
+line 455
+;455:      ls = NULL;
+ADDRLP4 8
+CNSTP4 0
+ASGNP4
+line 456
+;456:    }
+LABELV $393
+line 458
+;457:
+;458:    if( Q_IsColorString( str ) )
+ADDRLP4 24
+ADDRFP4 0
+INDIRP4
+ASGNP4
+ADDRLP4 24
+INDIRP4
+CVPU4 4
+CNSTU4 0
+EQU4 $403
+ADDRLP4 24
+INDIRP4
+INDIRI1
+CVII4 1
+CNSTI4 94
+NEI4 $403
+ADDRLP4 28
+ADDRLP4 24
+INDIRP4
+CNSTI4 1
+ADDP4
+INDIRI1
+CVII4 1
+ASGNI4
+ADDRLP4 28
+INDIRI4
+CNSTI4 0
+EQI4 $403
+ADDRLP4 28
+INDIRI4
+CNSTI4 65
+LTI4 $406
+ADDRLP4 28
+INDIRI4
+CNSTI4 90
+LEI4 $405
+LABELV $406
+ADDRLP4 32
+ADDRFP4 0
+INDIRP4
+CNSTI4 1
+ADDP4
+INDIRI1
+CVII4 1
+ASGNI4
+ADDRLP4 32
+INDIRI4
+CNSTI4 97
+LTI4 $407
+ADDRLP4 32
+INDIRI4
+CNSTI4 122
+LEI4 $405
+LABELV $407
+ADDRLP4 36
+ADDRFP4 0
+INDIRP4
+CNSTI4 1
+ADDP4
+INDIRI1
+CVII4 1
+ASGNI4
+ADDRLP4 36
+INDIRI4
+CNSTI4 48
+LTI4 $403
+ADDRLP4 36
+INDIRI4
+CNSTI4 57
+GTI4 $403
+LABELV $405
+line 459
+;459:    {
+line 460
+;460:      *p++ = *str++;
+ADDRLP4 40
+ADDRLP4 0
+INDIRP4
+ASGNP4
+ADDRLP4 48
+CNSTI4 1
+ASGNI4
+ADDRLP4 0
+ADDRLP4 40
+INDIRP4
+ADDRLP4 48
+INDIRI4
+ADDP4
+ASGNP4
+ADDRLP4 44
+ADDRFP4 0
+INDIRP4
+ASGNP4
+ADDRFP4 0
+ADDRLP4 44
+INDIRP4
+ADDRLP4 48
+INDIRI4
+ADDP4
+ASGNP4
+ADDRLP4 40
+INDIRP4
+ADDRLP4 44
+INDIRP4
+INDIRI1
+ASGNI1
+line 461
+;461:      lastcolor = *str;
+ADDRLP4 16
+ADDRFP4 0
+INDIRP4
+INDIRI1
+CVII4 1
+ASGNI4
+line 462
+;462:      *p++ = *str++;
+ADDRLP4 52
+ADDRLP4 0
+INDIRP4
+ASGNP4
+ADDRLP4 60
+CNSTI4 1
+ASGNI4
+ADDRLP4 0
+ADDRLP4 52
+INDIRP4
+ADDRLP4 60
+INDIRI4
+ADDP4
+ASGNP4
+ADDRLP4 56
+ADDRFP4 0
+INDIRP4
+ASGNP4
+ADDRFP4 0
+ADDRLP4 56
+INDIRP4
+ADDRLP4 60
+INDIRI4
+ADDP4
+ASGNP4
+ADDRLP4 52
+INDIRP4
+ADDRLP4 56
+INDIRP4
+INDIRI1
+ASGNI1
+line 463
+;463:      continue;
+ADDRGP4 $391
+JUMPV
+LABELV $403
+line 466
+;464:    }
+;465:
+;466:    if( *str == ' ' )
+ADDRFP4 0
+INDIRP4
+INDIRI1
+CVII4 1
+CNSTI4 32
+NEI4 $408
+line 467
+;467:      ls = p;
+ADDRLP4 8
+ADDRLP4 0
+INDIRP4
+ASGNP4
+LABELV $408
+line 469
+;468:
+;469:    *p++ = *str++;
+ADDRLP4 40
+ADDRLP4 0
+INDIRP4
+ASGNP4
+ADDRLP4 48
+CNSTI4 1
+ASGNI4
+ADDRLP4 0
+ADDRLP4 40
+INDIRP4
+ADDRLP4 48
+INDIRI4
+ADDP4
+ASGNP4
+ADDRLP4 44
+ADDRFP4 0
+INDIRP4
+ASGNP4
+ADDRFP4 0
+ADDRLP4 44
+INDIRP4
+ADDRLP4 48
+INDIRI4
+ADDP4
+ASGNP4
+ADDRLP4 40
+INDIRP4
+ADDRLP4 44
+INDIRP4
+INDIRI1
+ASGNI1
+line 470
+;470:    len++;
+ADDRLP4 4
+ADDRLP4 4
+INDIRI4
+CNSTI4 1
+ADDI4
+ASGNI4
+line 471
+;471:  }
+LABELV $391
+line 434
+ADDRFP4 0
+INDIRP4
+INDIRI1
+CVII4 1
+CNSTI4 0
+NEI4 $390
+line 472
+;472:  *p = 0;
+ADDRLP4 0
+INDIRP4
+CNSTI1 0
+ASGNI1
+line 474
+;473:
+;474:  cgs.teamChatMsgTimes[ cgs.teamChatPos % chatHeight ] = cg.time;
+ADDRGP4 cgs+268648
+INDIRI4
+ADDRLP4 12
+INDIRI4
+MODI4
+CNSTI4 2
+LSHI4
+ADDRGP4 cgs+268616
+ADDP4
+ADDRGP4 cg+107604
+INDIRI4
+ASGNI4
+line 475
+;475:  cgs.teamChatPos++;
+ADDRLP4 24
+ADDRGP4 cgs+268648
+ASGNP4
+ADDRLP4 24
+INDIRP4
+ADDRLP4 24
+INDIRP4
+INDIRI4
+CNSTI4 1
+ADDI4
+ASGNI4
+line 477
+;476:
+;477:  if( cgs.teamChatPos - cgs.teamLastChatPos > chatHeight )
+ADDRGP4 cgs+268648
+INDIRI4
+ADDRGP4 cgs+268652
+INDIRI4
+SUBI4
+ADDRLP4 12
+INDIRI4
+LEI4 $414
+line 478
+;478:    cgs.teamLastChatPos = cgs.teamChatPos - chatHeight;
+ADDRGP4 cgs+268652
+ADDRGP4 cgs+268648
+INDIRI4
+ADDRLP4 12
+INDIRI4
+SUBI4
+ASGNI4
+LABELV $414
+line 479
+;479:}
+LABELV $377
+endproc CG_AddToTeamChat 64 0
+proc CG_MapRestart 0 12
+line 495
+;480:
+;481:
+;482:
+;483:/*
+;484:===============
+;485:CG_MapRestart
+;486:
+;487:The server has issued a map_restart, so the next snapshot
+;488:is completely new and should not be interpolated to.
+;489:
+;490:A tournement restart will clear everything, but doesn't
+;491:require a reload of all the media
+;492:===============
+;493:*/
+;494:static void CG_MapRestart( void )
+;495:{
+line 496
+;496:  if( cg_showmiss.integer )
+ADDRGP4 cg_showmiss+12
+INDIRI4
+CNSTI4 0
+EQI4 $421
+line 497
+;497:    CG_Printf( "CG_MapRestart\n" );
+ADDRGP4 $424
+ARGP4
+ADDRGP4 CG_Printf
+CALLV
+pop
+LABELV $421
+line 499
+;498:
+;499:  CG_InitMarkPolys( );
+ADDRGP4 CG_InitMarkPolys
+CALLV
+pop
+line 502
+;500:
+;501:  // make sure the "3 frags left" warnings play again
+;502:  cg.fraglimitWarnings = 0;
+ADDRGP4 cg+107620
+CNSTI4 0
+ASGNI4
+line 504
+;503:
+;504:  cg.timelimitWarnings = 0;
+ADDRGP4 cg+107616
+CNSTI4 0
+ASGNI4
+line 506
+;505:
+;506:  cg.intermissionStarted = qfalse;
+ADDRGP4 cg+24
+CNSTI4 0
+ASGNI4
+line 508
+;507:
+;508:  cgs.voteTime = 0;
+ADDRGP4 cgs+31548
+CNSTI4 0
+ASGNI4
+line 510
+;509:
+;510:  cg.mapRestart = qtrue;
+ADDRGP4 cg+107624
+CNSTI4 1
+ASGNI4
+line 512
+;511:
+;512:  CG_StartMusic( );
+ADDRGP4 CG_StartMusic
+CALLV
+pop
+line 514
+;513:
+;514:  trap_S_ClearLoopingSounds( qtrue );
+CNSTI4 1
+ARGI4
+ADDRGP4 trap_S_ClearLoopingSounds
+CALLV
+pop
+line 519
+;515:
+;516:  // we really should clear more parts of cg here and stop sounds
+;517:
+;518:  // play the "fight" sound if this is a restart without warmup
+;519:  if( cg.warmup == 0 )
+ADDRGP4 cg+115672
+INDIRI4
+CNSTI4 0
+NEI4 $430
+line 520
+;520:    CG_CenterPrint( "FIGHT!", 120, GIANTCHAR_WIDTH * 2 );
+ADDRGP4 $433
+ARGP4
+CNSTI4 120
+ARGI4
+CNSTI4 64
+ARGI4
+ADDRGP4 CG_CenterPrint
+CALLV
+pop
+LABELV $430
+line 522
+;521:
+;522:  trap_Cvar_Set( "cg_thirdPerson", "0" );
+ADDRGP4 $434
+ARGP4
+ADDRGP4 $304
+ARGP4
+ADDRGP4 trap_Cvar_Set
+CALLV
+pop
+line 523
+;523:}
+LABELV $420
+endproc CG_MapRestart 0 12
+proc CG_RemoveChatEscapeChar 16 0
+line 531
+;524:
+;525:/*
+;526:=================
+;527:CG_RemoveChatEscapeChar
+;528:=================
+;529:*/
+;530:static void CG_RemoveChatEscapeChar( char *text )
+;531:{
+line 534
+;532:  int i, l;
+;533:
+;534:  l = 0;
+ADDRLP4 4
+CNSTI4 0
+ASGNI4
+line 535
+;535:  for( i = 0; text[ i ]; i++ )
+ADDRLP4 0
+CNSTI4 0
+ASGNI4
+ADDRGP4 $439
+JUMPV
+LABELV $436
+line 536
+;536:  {
+line 537
+;537:    if( text[ i ] == '\x19' )
+ADDRLP4 0
+INDIRI4
+ADDRFP4 0
+INDIRP4
+ADDP4
+INDIRI1
+CVII4 1
+CNSTI4 25
+NEI4 $440
+line 538
+;538:      continue;
+ADDRGP4 $437
+JUMPV
+LABELV $440
+line 540
+;539:
+;540:    text[ l++ ] = text[ i ];
+ADDRLP4 8
+ADDRLP4 4
+INDIRI4
+ASGNI4
+ADDRLP4 4
+ADDRLP4 8
+INDIRI4
+CNSTI4 1
+ADDI4
+ASGNI4
+ADDRLP4 12
+ADDRFP4 0
+INDIRP4
+ASGNP4
+ADDRLP4 8
+INDIRI4
+ADDRLP4 12
+INDIRP4
+ADDP4
+ADDRLP4 0
+INDIRI4
+ADDRLP4 12
+INDIRP4
+ADDP4
+INDIRI1
+ASGNI1
+line 541
+;541:  }
+LABELV $437
+line 535
+ADDRLP4 0
+ADDRLP4 0
+INDIRI4
+CNSTI4 1
+ADDI4
+ASGNI4
+LABELV $439
+ADDRLP4 0
+INDIRI4
+ADDRFP4 0
+INDIRP4
+ADDP4
+INDIRI1
+CVII4 1
+CNSTI4 0
+NEI4 $436
+line 543
+;542:
+;543:  text[ l ] = '\0';
+ADDRLP4 4
+INDIRI4
+ADDRFP4 0
+INDIRP4
+ADDP4
+CNSTI1 0
+ASGNI1
+line 544
+;544:}
+LABELV $435
+endproc CG_RemoveChatEscapeChar 16 0
+proc CG_SetUIVars 1040 12
+line 554
+;545:
+;546:/*
+;547:===============
+;548:CG_SetUIVars
+;549:
+;550:Set some cvars used by the UI
+;551:===============
+;552:*/
+;553:static void CG_SetUIVars( void )
+;554:{
+line 558
+;555:  int   i;
+;556:  char  carriageCvar[ MAX_TOKEN_CHARS ];
+;557:
+;558:  *carriageCvar = 0;
+ADDRLP4 4
+CNSTI1 0
+ASGNI1
+line 561
+;559:
+;560:  //determine what the player is carrying
+;561:  for( i = WP_NONE + 1; i < WP_NUM_WEAPONS; i++ )
+ADDRLP4 0
+CNSTI4 1
+ASGNI4
+LABELV $443
+line 562
+;562:  {
+line 563
+;563:    if( BG_InventoryContainsWeapon( i, cg.snap->ps.stats ) &&
+ADDRLP4 0
+INDIRI4
+ARGI4
+ADDRGP4 cg+36
+INDIRP4
+CNSTI4 228
+ADDP4
+ARGP4
+ADDRLP4 1028
+ADDRGP4 BG_InventoryContainsWeapon
+CALLI4
+ASGNI4
+ADDRLP4 1028
+INDIRI4
+CNSTI4 0
+EQI4 $447
+ADDRLP4 0
+INDIRI4
+ARGI4
+ADDRLP4 1032
+ADDRGP4 BG_FindPurchasableForWeapon
+CALLI4
+ASGNI4
+ADDRLP4 1032
+INDIRI4
+CNSTI4 0
+EQI4 $447
+line 565
+;564:        BG_FindPurchasableForWeapon( i ) )
+;565:      strcat( carriageCvar, va( "W%d ", i ) );
+ADDRGP4 $450
+ARGP4
+ADDRLP4 0
+INDIRI4
+ARGI4
+ADDRLP4 1036
+ADDRGP4 va
+CALLP4
+ASGNP4
+ADDRLP4 4
+ARGP4
+ADDRLP4 1036
+INDIRP4
+ARGP4
+ADDRGP4 strcat
+CALLP4
+pop
+LABELV $447
+line 566
+;566:  }
+LABELV $444
+line 561
+ADDRLP4 0
+ADDRLP4 0
+INDIRI4
+CNSTI4 1
+ADDI4
+ASGNI4
+ADDRLP4 0
+INDIRI4
+CNSTI4 30
+LTI4 $443
+line 567
+;567:  for( i = UP_NONE + 1; i < UP_NUM_UPGRADES; i++ )
+ADDRLP4 0
+CNSTI4 1
+ASGNI4
+LABELV $451
+line 568
+;568:  {
+line 569
+;569:    if( BG_InventoryContainsUpgrade( i, cg.snap->ps.stats ) &&
+ADDRLP4 0
+INDIRI4
+ARGI4
+ADDRGP4 cg+36
+INDIRP4
+CNSTI4 228
+ADDP4
+ARGP4
+ADDRLP4 1028
+ADDRGP4 BG_InventoryContainsUpgrade
+CALLI4
+ASGNI4
+ADDRLP4 1028
+INDIRI4
+CNSTI4 0
+EQI4 $455
+ADDRLP4 0
+INDIRI4
+ARGI4
+ADDRLP4 1032
+ADDRGP4 BG_FindPurchasableForUpgrade
+CALLI4
+ASGNI4
+ADDRLP4 1032
+INDIRI4
+CNSTI4 0
+EQI4 $455
+line 571
+;570:        BG_FindPurchasableForUpgrade( i ) )
+;571:      strcat( carriageCvar, va( "U%d ", i ) );
+ADDRGP4 $458
+ARGP4
+ADDRLP4 0
+INDIRI4
+ARGI4
+ADDRLP4 1036
+ADDRGP4 va
+CALLP4
+ASGNP4
+ADDRLP4 4
+ARGP4
+ADDRLP4 1036
+INDIRP4
+ARGP4
+ADDRGP4 strcat
+CALLP4
+pop
+LABELV $455
+line 572
+;572:  }
+LABELV $452
+line 567
+ADDRLP4 0
+ADDRLP4 0
+INDIRI4
+CNSTI4 1
+ADDI4
+ASGNI4
+ADDRLP4 0
+INDIRI4
+CNSTI4 8
+LTI4 $451
+line 573
+;573:  strcat( carriageCvar, "$" );
+ADDRLP4 4
+ARGP4
+ADDRGP4 $459
+ARGP4
+ADDRGP4 strcat
+CALLP4
+pop
+line 575
+;574:
+;575:  trap_Cvar_Set( "ui_carriage", carriageCvar );
+ADDRGP4 $460
+ARGP4
+ADDRLP4 4
+ARGP4
+ADDRGP4 trap_Cvar_Set
+CALLV
+pop
+line 577
+;576:
+;577:  trap_Cvar_Set( "ui_stages", va( "%d %d", cgs.alienStage, cgs.humanStage ) );
+ADDRGP4 $200
+ARGP4
+ADDRGP4 cgs+34716
+INDIRI4
+ARGI4
+ADDRGP4 cgs+34720
+INDIRI4
+ARGI4
+ADDRLP4 1028
+ADDRGP4 va
+CALLP4
+ASGNP4
+ADDRGP4 $461
+ARGP4
+ADDRLP4 1028
+INDIRP4
+ARGP4
+ADDRGP4 trap_Cvar_Set
+CALLV
+pop
+line 578
+;578:}
+LABELV $442
+endproc CG_SetUIVars 1040 12
+export CG_Menu
+proc CG_Menu 8 12
+line 587
+;579:
+;580:
+;581:/*
+;582:==============
+;583:CG_Menu
+;584:==============
+;585:*/
+;586:void CG_Menu( int menu )
+;587:{
+line 588
+;588:  CG_SetUIVars( );
+ADDRGP4 CG_SetUIVars
+CALLV
+pop
+line 590
+;589:
+;590:  switch( menu )
+ADDRLP4 0
+ADDRFP4 0
+INDIRI4
+ASGNI4
+ADDRLP4 0
+INDIRI4
+CNSTI4 0
+LTI4 $465
+ADDRLP4 0
+INDIRI4
+CNSTI4 35
+GTI4 $465
+ADDRLP4 0
+INDIRI4
+CNSTI4 2
+LSHI4
+ADDRGP4 $651
+ADDP4
+INDIRP4
+JUMPV
+lit
+align 4
+LABELV $651
+address $467
+address $479
+address $483
+address $469
+address $473
+address $645
+address $627
+address $633
+address $610
+address $616
+address $622
+address $599
+address $581
+address $593
+address $569
+address $575
+address $564
+address $605
+address $587
+address $639
+address $471
+address $475
+address $477
+address $546
+address $552
+address $558
+address $516
+address $492
+address $498
+address $522
+address $510
+address $486
+address $504
+address $528
+address $534
+address $540
+code
+line 591
+;591:  {
+LABELV $467
+line 592
+;592:    case MN_TEAM:       trap_SendConsoleCommand( "menu tremulous_teamselect\n" );   break;
+ADDRGP4 $468
+ARGP4
+ADDRGP4 trap_SendConsoleCommand
+CALLV
+pop
+ADDRGP4 $466
+JUMPV
+LABELV $469
+line 593
+;593:    case MN_A_CLASS:    trap_SendConsoleCommand( "menu tremulous_alienclass\n" );   break;
+ADDRGP4 $470
+ARGP4
+ADDRGP4 trap_SendConsoleCommand
+CALLV
+pop
+ADDRGP4 $466
+JUMPV
+LABELV $471
+line 594
+;594:    case MN_H_SPAWN:    trap_SendConsoleCommand( "menu tremulous_humanitem\n" );    break;
+ADDRGP4 $472
+ARGP4
+ADDRGP4 trap_SendConsoleCommand
+CALLV
+pop
+ADDRGP4 $466
+JUMPV
+LABELV $473
+line 595
+;595:    case MN_A_BUILD:    trap_SendConsoleCommand( "menu tremulous_alienbuild\n" );   break;
+ADDRGP4 $474
+ARGP4
+ADDRGP4 trap_SendConsoleCommand
+CALLV
+pop
+ADDRGP4 $466
+JUMPV
+LABELV $475
+line 596
+;596:    case MN_H_BUILD:    trap_SendConsoleCommand( "menu tremulous_humanbuild\n" );   break;
+ADDRGP4 $476
+ARGP4
+ADDRGP4 trap_SendConsoleCommand
+CALLV
+pop
+ADDRGP4 $466
+JUMPV
+LABELV $477
+line 597
+;597:    case MN_H_ARMOURY:  trap_SendConsoleCommand( "menu tremulous_humanarmoury\n" ); break;
+ADDRGP4 $478
+ARGP4
+ADDRGP4 trap_SendConsoleCommand
+CALLV
+pop
+ADDRGP4 $466
+JUMPV
+LABELV $479
+line 600
+;598:
+;599:    case MN_A_TEAMFULL:
+;600:      trap_Cvar_Set( "ui_dialog", "The alien team has too many players. Please wait until "
+ADDRGP4 $480
+ARGP4
+ADDRGP4 $481
+ARGP4
+ADDRGP4 trap_Cvar_Set
+CALLV
+pop
+line 602
+;601:                                  "slots become available or join the human team." );
+;602:      trap_SendConsoleCommand( "menu tremulous_alien_dialog\n" );
+ADDRGP4 $482
+ARGP4
+ADDRGP4 trap_SendConsoleCommand
+CALLV
+pop
+line 603
+;603:      break;
+ADDRGP4 $466
+JUMPV
+LABELV $483
+line 606
+;604:
+;605:    case MN_H_TEAMFULL:
+;606:      trap_Cvar_Set( "ui_dialog", "The human team has too many players. Please wait until "
+ADDRGP4 $480
+ARGP4
+ADDRGP4 $484
+ARGP4
+ADDRGP4 trap_Cvar_Set
+CALLV
+pop
+line 608
+;607:                                  "slots become available or join the alien team." );
+;608:      trap_SendConsoleCommand( "menu tremulous_human_dialog\n" );
+ADDRGP4 $485
+ARGP4
+ADDRGP4 trap_SendConsoleCommand
+CALLV
+pop
+line 609
+;609:      break;
+ADDRGP4 $466
+JUMPV
+LABELV $486
+line 612
+;610:
+;611:    case MN_H_NOROOM:
+;612:      if( !cg_disableWarningDialogs.integer )
+ADDRGP4 cg_disableWarningDialogs+12
+INDIRI4
+CNSTI4 0
+NEI4 $487
+line 613
+;613:      {
+line 614
+;614:        trap_Cvar_Set( "ui_dialog", "There is no room to build here. Move until the buildable turns "
+ADDRGP4 $480
+ARGP4
+ADDRGP4 $490
+ARGP4
+ADDRGP4 trap_Cvar_Set
+CALLV
+pop
+line 616
+;615:                                    "translucent green indicating a valid build location." );
+;616:        trap_SendConsoleCommand( "menu tremulous_human_dialog\n" );
+ADDRGP4 $485
+ARGP4
+ADDRGP4 trap_SendConsoleCommand
+CALLV
+pop
+line 617
+;617:      }
+ADDRGP4 $466
+JUMPV
+LABELV $487
+line 619
+;618:      else
+;619:        CG_Printf( "There is no room to build here\n" );
+ADDRGP4 $491
+ARGP4
+ADDRGP4 CG_Printf
+CALLV
+pop
+line 621
+;620:
+;621:      break;
+ADDRGP4 $466
+JUMPV
+LABELV $492
+line 624
+;622:
+;623:    case MN_H_NOPOWER:
+;624:      if( !cg_disableWarningDialogs.integer )
+ADDRGP4 cg_disableWarningDialogs+12
+INDIRI4
+CNSTI4 0
+NEI4 $493
+line 625
+;625:      {
+line 626
+;626:        trap_Cvar_Set( "ui_dialog", "There is no power remaining. Free up power by destroying existing "
+ADDRGP4 $480
+ARGP4
+ADDRGP4 $496
+ARGP4
+ADDRGP4 trap_Cvar_Set
+CALLV
+pop
+line 628
+;627:                                    "buildable objects." );
+;628:        trap_SendConsoleCommand( "menu tremulous_human_dialog\n" );
+ADDRGP4 $485
+ARGP4
+ADDRGP4 trap_SendConsoleCommand
+CALLV
+pop
+line 629
+;629:      }
+ADDRGP4 $466
+JUMPV
+LABELV $493
+line 631
+;630:      else
+;631:        CG_Printf( "There is no power remaining\n" );
+ADDRGP4 $497
+ARGP4
+ADDRGP4 CG_Printf
+CALLV
+pop
+line 633
+;632:
+;633:      break;
+ADDRGP4 $466
+JUMPV
+LABELV $498
+line 636
+;634:
+;635:    case MN_H_NOTPOWERED:
+;636:      if( !cg_disableWarningDialogs.integer )
+ADDRGP4 cg_disableWarningDialogs+12
+INDIRI4
+CNSTI4 0
+NEI4 $499
+line 637
+;637:      {
+line 638
+;638:        trap_Cvar_Set( "ui_dialog", "This buildable is not powered. Build a Reactor and/or Repeater in "
+ADDRGP4 $480
+ARGP4
+ADDRGP4 $502
+ARGP4
+ADDRGP4 trap_Cvar_Set
+CALLV
+pop
+line 640
+;639:                                    "order to power it." );
+;640:        trap_SendConsoleCommand( "menu tremulous_human_dialog\n" );
+ADDRGP4 $485
+ARGP4
+ADDRGP4 trap_SendConsoleCommand
+CALLV
+pop
+line 641
+;641:      }
+ADDRGP4 $466
+JUMPV
+LABELV $499
+line 643
+;642:      else
+;643:        CG_Printf( "This buildable is not powered\n" );
+ADDRGP4 $503
+ARGP4
+ADDRGP4 CG_Printf
+CALLV
+pop
+line 645
+;644:
+;645:      break;
+ADDRGP4 $466
+JUMPV
+LABELV $504
+line 648
+;646:
+;647:    case MN_H_NORMAL:
+;648:      if( !cg_disableWarningDialogs.integer )
+ADDRGP4 cg_disableWarningDialogs+12
+INDIRI4
+CNSTI4 0
+NEI4 $505
+line 649
+;649:      {
+line 650
+;650:        trap_Cvar_Set( "ui_dialog", "Cannot build on this surface. The surface is too steep or unsuitable "
+ADDRGP4 $480
+ARGP4
+ADDRGP4 $508
+ARGP4
+ADDRGP4 trap_Cvar_Set
+CALLV
+pop
+line 652
+;651:                                    "to build on. Please choose another site for this structure." );
+;652:        trap_SendConsoleCommand( "menu tremulous_human_dialog\n" );
+ADDRGP4 $485
+ARGP4
+ADDRGP4 trap_SendConsoleCommand
+CALLV
+pop
+line 653
+;653:      }
+ADDRGP4 $466
+JUMPV
+LABELV $505
+line 655
+;654:      else
+;655:        CG_Printf( "Cannot build on this surface\n" );
+ADDRGP4 $509
+ARGP4
+ADDRGP4 CG_Printf
+CALLV
+pop
+line 657
+;656:
+;657:      break;
+ADDRGP4 $466
+JUMPV
+LABELV $510
+line 660
+;658:
+;659:    case MN_H_REACTOR:
+;660:      if( !cg_disableWarningDialogs.integer )
+ADDRGP4 cg_disableWarningDialogs+12
+INDIRI4
+CNSTI4 0
+NEI4 $511
+line 661
+;661:      {
+line 662
+;662:        trap_Cvar_Set( "ui_dialog", "There can only be one Reactor. Destroy the existing one if you "
+ADDRGP4 $480
+ARGP4
+ADDRGP4 $514
+ARGP4
+ADDRGP4 trap_Cvar_Set
+CALLV
+pop
+line 664
+;663:                                    "wish to move it." );
+;664:        trap_SendConsoleCommand( "menu tremulous_human_dialog\n" );
+ADDRGP4 $485
+ARGP4
+ADDRGP4 trap_SendConsoleCommand
+CALLV
+pop
+line 665
+;665:      }
+ADDRGP4 $466
+JUMPV
+LABELV $511
+line 667
+;666:      else
+;667:        CG_Printf( "There can only be one Reactor\n" );
+ADDRGP4 $515
+ARGP4
+ADDRGP4 CG_Printf
+CALLV
+pop
+line 669
+;668:
+;669:      break;
+ADDRGP4 $466
+JUMPV
+LABELV $516
+line 672
+;670:
+;671:    case MN_H_REPEATER:
+;672:      if( !cg_disableWarningDialogs.integer )
+ADDRGP4 cg_disableWarningDialogs+12
+INDIRI4
+CNSTI4 0
+NEI4 $517
+line 673
+;673:      {
+line 674
+;674:        trap_Cvar_Set( "ui_dialog", "There is no power here. If available, a Repeater may be used to "
+ADDRGP4 $480
+ARGP4
+ADDRGP4 $520
+ARGP4
+ADDRGP4 trap_Cvar_Set
+CALLV
+pop
+line 676
+;675:                                    "transmit power to this location." );
+;676:        trap_SendConsoleCommand( "menu tremulous_human_dialog\n" );
+ADDRGP4 $485
+ARGP4
+ADDRGP4 trap_SendConsoleCommand
+CALLV
+pop
+line 677
+;677:      }
+ADDRGP4 $466
+JUMPV
+LABELV $517
+line 679
+;678:      else
+;679:        CG_Printf( "There is no power here\n" );
+ADDRGP4 $521
+ARGP4
+ADDRGP4 CG_Printf
+CALLV
+pop
+line 681
+;680:
+;681:      break;
+ADDRGP4 $466
+JUMPV
+LABELV $522
+line 684
+;682:
+;683:    case MN_H_NODCC:
+;684:      if( !cg_disableWarningDialogs.integer )
+ADDRGP4 cg_disableWarningDialogs+12
+INDIRI4
+CNSTI4 0
+NEI4 $523
+line 685
+;685:      {
+line 686
+;686:        trap_Cvar_Set( "ui_dialog", "There is no Defense Computer. A Defense Computer is needed to build "
+ADDRGP4 $480
+ARGP4
+ADDRGP4 $526
+ARGP4
+ADDRGP4 trap_Cvar_Set
+CALLV
+pop
+line 688
+;687:                                    "this." );
+;688:        trap_SendConsoleCommand( "menu tremulous_human_dialog\n" );
+ADDRGP4 $485
+ARGP4
+ADDRGP4 trap_SendConsoleCommand
+CALLV
+pop
+line 689
+;689:      }
+ADDRGP4 $466
+JUMPV
+LABELV $523
+line 691
+;690:      else
+;691:        CG_Printf( "There is no Defense Computer\n" );
+ADDRGP4 $527
+ARGP4
+ADDRGP4 CG_Printf
+CALLV
+pop
+line 693
+;692:
+;693:      break;
+ADDRGP4 $466
+JUMPV
+LABELV $528
+line 696
+;694:
+;695:    case MN_H_TNODEWARN:
+;696:      if( !cg_disableWarningDialogs.integer )
+ADDRGP4 cg_disableWarningDialogs+12
+INDIRI4
+CNSTI4 0
+NEI4 $529
+line 697
+;697:      {
+line 698
+;698:        trap_Cvar_Set( "ui_dialog", "WARNING: This Telenode will not be powered. Build near a power "
+ADDRGP4 $480
+ARGP4
+ADDRGP4 $532
+ARGP4
+ADDRGP4 trap_Cvar_Set
+CALLV
+pop
+line 700
+;699:                                    "structure to prevent seeing this message again." );
+;700:        trap_SendConsoleCommand( "menu tremulous_human_dialog\n" );
+ADDRGP4 $485
+ARGP4
+ADDRGP4 trap_SendConsoleCommand
+CALLV
+pop
+line 701
+;701:      }
+ADDRGP4 $466
+JUMPV
+LABELV $529
+line 703
+;702:      else
+;703:        CG_Printf( "This Telenode will not be powered\n" );
+ADDRGP4 $533
+ARGP4
+ADDRGP4 CG_Printf
+CALLV
+pop
+line 705
+;704:
+;705:      break;
+ADDRGP4 $466
+JUMPV
+LABELV $534
+line 708
+;706:
+;707:    case MN_H_RPTWARN:
+;708:      if( !cg_disableWarningDialogs.integer )
+ADDRGP4 cg_disableWarningDialogs+12
+INDIRI4
+CNSTI4 0
+NEI4 $535
+line 709
+;709:      {
+line 710
+;710:        trap_Cvar_Set( "ui_dialog", "WARNING: This Repeater will not be powered as there is no parent "
+ADDRGP4 $480
+ARGP4
+ADDRGP4 $538
+ARGP4
+ADDRGP4 trap_Cvar_Set
+CALLV
+pop
+line 712
+;711:                                    "Reactor providing power. Build a Reactor." );
+;712:        trap_SendConsoleCommand( "menu tremulous_human_dialog\n" );
+ADDRGP4 $485
+ARGP4
+ADDRGP4 trap_SendConsoleCommand
+CALLV
+pop
+line 713
+;713:      }
+ADDRGP4 $466
+JUMPV
+LABELV $535
+line 715
+;714:      else
+;715:        CG_Printf( "This Repeater will not be powered\n" );
+ADDRGP4 $539
+ARGP4
+ADDRGP4 CG_Printf
+CALLV
+pop
+line 717
+;716:
+;717:      break;
+ADDRGP4 $466
+JUMPV
+LABELV $540
+line 720
+;718:
+;719:    case MN_H_RPTWARN2:
+;720:      if( !cg_disableWarningDialogs.integer )
+ADDRGP4 cg_disableWarningDialogs+12
+INDIRI4
+CNSTI4 0
+NEI4 $541
+line 721
+;721:      {
+line 722
+;722:        trap_Cvar_Set( "ui_dialog", "This area already has power. A Repeater is not required here." );
+ADDRGP4 $480
+ARGP4
+ADDRGP4 $544
+ARGP4
+ADDRGP4 trap_Cvar_Set
+CALLV
+pop
+line 723
+;723:        trap_SendConsoleCommand( "menu tremulous_human_dialog\n" );
+ADDRGP4 $485
+ARGP4
+ADDRGP4 trap_SendConsoleCommand
+CALLV
+pop
+line 724
+;724:      }
+ADDRGP4 $466
+JUMPV
+LABELV $541
+line 726
+;725:      else
+;726:        CG_Printf( "This area already has power\n" );
+ADDRGP4 $545
+ARGP4
+ADDRGP4 CG_Printf
+CALLV
+pop
+line 728
+;727:
+;728:      break;
+ADDRGP4 $466
+JUMPV
+LABELV $546
+line 731
+;729:
+;730:    case MN_H_NOSLOTS:
+;731:      if( !cg_disableWarningDialogs.integer )
+ADDRGP4 cg_disableWarningDialogs+12
+INDIRI4
+CNSTI4 0
+NEI4 $547
+line 732
+;732:      {
+line 733
+;733:        trap_Cvar_Set( "ui_dialog", "You have no room to carry this. Please sell any conflicting "
+ADDRGP4 $480
+ARGP4
+ADDRGP4 $550
+ARGP4
+ADDRGP4 trap_Cvar_Set
+CALLV
+pop
+line 735
+;734:                                    "upgrades before purchasing this item." );
+;735:        trap_SendConsoleCommand( "menu tremulous_human_dialog\n" );
+ADDRGP4 $485
+ARGP4
+ADDRGP4 trap_SendConsoleCommand
+CALLV
+pop
+line 736
+;736:      }
+ADDRGP4 $466
+JUMPV
+LABELV $547
+line 738
+;737:      else
+;738:        CG_Printf( "You have no room to carry this\n" );
+ADDRGP4 $551
+ARGP4
+ADDRGP4 CG_Printf
+CALLV
+pop
+line 740
+;739:
+;740:      break;
+ADDRGP4 $466
+JUMPV
+LABELV $552
+line 743
+;741:
+;742:    case MN_H_NOFUNDS:
+;743:      if( !cg_disableWarningDialogs.integer )
+ADDRGP4 cg_disableWarningDialogs+12
+INDIRI4
+CNSTI4 0
+NEI4 $553
+line 744
+;744:      {
+line 745
+;745:        trap_Cvar_Set( "ui_dialog", "Insufficient funds. You do not have enough credits to perform this "
+ADDRGP4 $480
+ARGP4
+ADDRGP4 $556
+ARGP4
+ADDRGP4 trap_Cvar_Set
+CALLV
+pop
+line 747
+;746:                                    "action." );
+;747:        trap_SendConsoleCommand( "menu tremulous_human_dialog\n" );
+ADDRGP4 $485
+ARGP4
+ADDRGP4 trap_SendConsoleCommand
+CALLV
+pop
+line 748
+;748:      }
+ADDRGP4 $466
+JUMPV
+LABELV $553
+line 750
+;749:      else
+;750:        CG_Printf( "Insufficient funds\n" );
+ADDRGP4 $557
+ARGP4
+ADDRGP4 CG_Printf
+CALLV
+pop
+line 752
+;751:
+;752:      break;
+ADDRGP4 $466
+JUMPV
+LABELV $558
+line 755
+;753:
+;754:    case MN_H_ITEMHELD:
+;755:      if( !cg_disableWarningDialogs.integer )
+ADDRGP4 cg_disableWarningDialogs+12
+INDIRI4
+CNSTI4 0
+NEI4 $559
+line 756
+;756:      {
+line 757
+;757:        trap_Cvar_Set( "ui_dialog", "You already hold this item. It is not possible to carry multiple items "
+ADDRGP4 $480
+ARGP4
+ADDRGP4 $562
+ARGP4
+ADDRGP4 trap_Cvar_Set
+CALLV
+pop
+line 759
+;758:                                    "of the same type." );
+;759:        trap_SendConsoleCommand( "menu tremulous_human_dialog\n" );
+ADDRGP4 $485
+ARGP4
+ADDRGP4 trap_SendConsoleCommand
+CALLV
+pop
+line 760
+;760:      }
+ADDRGP4 $466
+JUMPV
+LABELV $559
+line 762
+;761:      else
+;762:        CG_Printf( "You already hold this item\n" );
+ADDRGP4 $563
+ARGP4
+ADDRGP4 CG_Printf
+CALLV
+pop
+line 764
+;763:
+;764:      break;
+ADDRGP4 $466
+JUMPV
+LABELV $564
+line 771
+;765:
+;766:
+;767:    //===============================
+;768:
+;769:
+;770:    case MN_A_NOROOM:
+;771:      if( !cg_disableWarningDialogs.integer )
+ADDRGP4 cg_disableWarningDialogs+12
+INDIRI4
+CNSTI4 0
+NEI4 $565
+line 772
+;772:      {
+line 773
+;773:        trap_Cvar_Set( "ui_dialog", "There is no room to build here. Move until the structure turns "
+ADDRGP4 $480
+ARGP4
+ADDRGP4 $568
+ARGP4
+ADDRGP4 trap_Cvar_Set
+CALLV
+pop
+line 775
+;774:                                    "translucent green indicating a valid build location." );
+;775:        trap_SendConsoleCommand( "menu tremulous_alien_dialog\n" );
+ADDRGP4 $482
+ARGP4
+ADDRGP4 trap_SendConsoleCommand
+CALLV
+pop
+line 776
+;776:      }
+ADDRGP4 $466
+JUMPV
+LABELV $565
+line 778
+;777:      else
+;778:        CG_Printf( "There is no room to build here\n" );
+ADDRGP4 $491
+ARGP4
+ADDRGP4 CG_Printf
+CALLV
+pop
+line 780
+;779:
+;780:      break;
+ADDRGP4 $466
+JUMPV
+LABELV $569
+line 783
+;781:
+;782:    case MN_A_NOCREEP:
+;783:      if( !cg_disableWarningDialogs.integer )
+ADDRGP4 cg_disableWarningDialogs+12
+INDIRI4
+CNSTI4 0
+NEI4 $570
+line 784
+;784:      {
+line 785
+;785:        trap_Cvar_Set( "ui_dialog", "There is no creep here. You must build near existing Eggs or "
+ADDRGP4 $480
+ARGP4
+ADDRGP4 $573
+ARGP4
+ADDRGP4 trap_Cvar_Set
+CALLV
+pop
+line 787
+;786:                                    "the Overmind. Alien structures will not support themselves." );
+;787:        trap_SendConsoleCommand( "menu tremulous_alien_dialog\n" );
+ADDRGP4 $482
+ARGP4
+ADDRGP4 trap_SendConsoleCommand
+CALLV
+pop
+line 788
+;788:      }
+ADDRGP4 $466
+JUMPV
+LABELV $570
+line 790
+;789:      else
+;790:        CG_Printf( "There is no creep here\n" );
+ADDRGP4 $574
+ARGP4
+ADDRGP4 CG_Printf
+CALLV
+pop
+line 792
+;791:
+;792:      break;
+ADDRGP4 $466
+JUMPV
+LABELV $575
+line 795
+;793:
+;794:    case MN_A_NOOVMND:
+;795:      if( !cg_disableWarningDialogs.integer )
+ADDRGP4 cg_disableWarningDialogs+12
+INDIRI4
+CNSTI4 0
+NEI4 $576
+line 796
+;796:      {
+line 797
+;797:        trap_Cvar_Set( "ui_dialog", "There is no Overmind. An Overmind must be built to control "
+ADDRGP4 $480
+ARGP4
+ADDRGP4 $579
+ARGP4
+ADDRGP4 trap_Cvar_Set
+CALLV
+pop
+line 799
+;798:                                    "the structure you tried to place" );
+;799:        trap_SendConsoleCommand( "menu tremulous_alien_dialog\n" );
+ADDRGP4 $482
+ARGP4
+ADDRGP4 trap_SendConsoleCommand
+CALLV
+pop
+line 800
+;800:      }
+ADDRGP4 $466
+JUMPV
+LABELV $576
+line 802
+;801:      else
+;802:        CG_Printf( "There is no Overmind\n" );
+ADDRGP4 $580
+ARGP4
+ADDRGP4 CG_Printf
+CALLV
+pop
+line 804
+;803:
+;804:      break;
+ADDRGP4 $466
+JUMPV
+LABELV $581
+line 807
+;805:
+;806:    case MN_A_OVERMIND:
+;807:      if( !cg_disableWarningDialogs.integer )
+ADDRGP4 cg_disableWarningDialogs+12
+INDIRI4
+CNSTI4 0
+NEI4 $582
+line 808
+;808:      {
+line 809
+;809:        trap_Cvar_Set( "ui_dialog", "There can only be one Overmind. Destroy the existing one if you "
+ADDRGP4 $480
+ARGP4
+ADDRGP4 $585
+ARGP4
+ADDRGP4 trap_Cvar_Set
+CALLV
+pop
+line 811
+;810:                                    "wish to move it." );
+;811:        trap_SendConsoleCommand( "menu tremulous_alien_dialog\n" );
+ADDRGP4 $482
+ARGP4
+ADDRGP4 trap_SendConsoleCommand
+CALLV
+pop
+line 812
+;812:      }
+ADDRGP4 $466
+JUMPV
+LABELV $582
+line 814
+;813:      else
+;814:        CG_Printf( "There can only be one Overmind\n" );
+ADDRGP4 $586
+ARGP4
+ADDRGP4 CG_Printf
+CALLV
+pop
+line 816
+;815:
+;816:      break;
+ADDRGP4 $466
+JUMPV
+LABELV $587
+line 819
+;817:
+;818:    case MN_A_HOVEL:
+;819:      if( !cg_disableWarningDialogs.integer )
+ADDRGP4 cg_disableWarningDialogs+12
+INDIRI4
+CNSTI4 0
+NEI4 $588
+line 820
+;820:      {
+line 821
+;821:        trap_Cvar_Set( "ui_dialog", "There can only be one Hovel. Destroy the existing one if you "
+ADDRGP4 $480
+ARGP4
+ADDRGP4 $591
+ARGP4
+ADDRGP4 trap_Cvar_Set
+CALLV
+pop
+line 823
+;822:                                    "wish to move it." );
+;823:        trap_SendConsoleCommand( "menu tremulous_alien_dialog\n" );
+ADDRGP4 $482
+ARGP4
+ADDRGP4 trap_SendConsoleCommand
+CALLV
+pop
+line 824
+;824:      }
+ADDRGP4 $466
+JUMPV
+LABELV $588
+line 826
+;825:      else
+;826:        CG_Printf( "There can only be one Hovel\n" );
+ADDRGP4 $592
+ARGP4
+ADDRGP4 CG_Printf
+CALLV
+pop
+line 828
+;827:
+;828:      break;
+ADDRGP4 $466
+JUMPV
+LABELV $593
+line 831
+;829:
+;830:    case MN_A_NOASSERT:
+;831:      if( !cg_disableWarningDialogs.integer )
+ADDRGP4 cg_disableWarningDialogs+12
+INDIRI4
+CNSTI4 0
+NEI4 $594
+line 832
+;832:      {
+line 833
+;833:        trap_Cvar_Set( "ui_dialog", "The Overmind cannot control any more structures. Destroy existing "
+ADDRGP4 $480
+ARGP4
+ADDRGP4 $597
+ARGP4
+ADDRGP4 trap_Cvar_Set
+CALLV
+pop
+line 835
+;834:                                    "structures to build more." );
+;835:        trap_SendConsoleCommand( "menu tremulous_alien_dialog\n" );
+ADDRGP4 $482
+ARGP4
+ADDRGP4 trap_SendConsoleCommand
+CALLV
+pop
+line 836
+;836:      }
+ADDRGP4 $466
+JUMPV
+LABELV $594
+line 838
+;837:      else
+;838:        CG_Printf( "The Overmind cannot control any more structures\n" );
+ADDRGP4 $598
+ARGP4
+ADDRGP4 CG_Printf
+CALLV
+pop
+line 840
+;839:
+;840:      break;
+ADDRGP4 $466
+JUMPV
+LABELV $599
+line 843
+;841:
+;842:    case MN_A_SPWNWARN:
+;843:      if( !cg_disableWarningDialogs.integer )
+ADDRGP4 cg_disableWarningDialogs+12
+INDIRI4
+CNSTI4 0
+NEI4 $600
+line 844
+;844:      {
+line 845
+;845:        trap_Cvar_Set( "ui_dialog", "WARNING: This spawn will not be controlled by an Overmind. "
+ADDRGP4 $480
+ARGP4
+ADDRGP4 $603
+ARGP4
+ADDRGP4 trap_Cvar_Set
+CALLV
+pop
+line 847
+;846:                                    "Build an Overmind to prevent seeing this message again." );
+;847:        trap_SendConsoleCommand( "menu tremulous_alien_dialog\n" );
+ADDRGP4 $482
+ARGP4
+ADDRGP4 trap_SendConsoleCommand
+CALLV
+pop
+line 848
+;848:      }
+ADDRGP4 $466
+JUMPV
+LABELV $600
+line 850
+;849:      else
+;850:        CG_Printf( "This spawn will not be controlled by an Overmind\n" );
+ADDRGP4 $604
+ARGP4
+ADDRGP4 CG_Printf
+CALLV
+pop
+line 852
+;851:
+;852:      break;
+ADDRGP4 $466
+JUMPV
+LABELV $605
+line 855
+;853:
+;854:    case MN_A_NORMAL:
+;855:      if( !cg_disableWarningDialogs.integer )
+ADDRGP4 cg_disableWarningDialogs+12
+INDIRI4
+CNSTI4 0
+NEI4 $606
+line 856
+;856:      {
+line 857
+;857:        trap_Cvar_Set( "ui_dialog", "Cannot build on this surface. This surface is too steep or unsuitable "
+ADDRGP4 $480
+ARGP4
+ADDRGP4 $609
+ARGP4
+ADDRGP4 trap_Cvar_Set
+CALLV
+pop
+line 859
+;858:                                    "to build on. Please choose another site for this structure." );
+;859:        trap_SendConsoleCommand( "menu tremulous_alien_dialog\n" );
+ADDRGP4 $482
+ARGP4
+ADDRGP4 trap_SendConsoleCommand
+CALLV
+pop
+line 860
+;860:      }
+ADDRGP4 $466
+JUMPV
+LABELV $606
+line 862
+;861:      else
+;862:        CG_Printf( "Cannot build on this surface\n" );
+ADDRGP4 $509
+ARGP4
+ADDRGP4 CG_Printf
+CALLV
+pop
+line 864
+;863:
+;864:      break;
+ADDRGP4 $466
+JUMPV
+LABELV $610
+line 867
+;865:
+;866:    case MN_A_NOEROOM:
+;867:      if( !cg_disableWarningDialogs.integer )
+ADDRGP4 cg_disableWarningDialogs+12
+INDIRI4
+CNSTI4 0
+NEI4 $611
+line 868
+;868:      {
+line 869
+;869:        trap_Cvar_Set( "ui_dialog", "There is no room to evolve here. Move away from walls or other "
+ADDRGP4 $480
+ARGP4
+ADDRGP4 $614
+ARGP4
+ADDRGP4 trap_Cvar_Set
+CALLV
+pop
+line 871
+;870:                                    "nearby objects and try again." );
+;871:        trap_SendConsoleCommand( "menu tremulous_alien_dialog\n" );
+ADDRGP4 $482
+ARGP4
+ADDRGP4 trap_SendConsoleCommand
+CALLV
+pop
+line 872
+;872:      }
+ADDRGP4 $466
+JUMPV
+LABELV $611
+line 874
+;873:      else
+;874:        CG_Printf( "There is no room to evolve here\n" );
+ADDRGP4 $615
+ARGP4
+ADDRGP4 CG_Printf
+CALLV
+pop
+line 876
+;875:
+;876:      break;
+ADDRGP4 $466
+JUMPV
+LABELV $616
+line 879
+;877:
+;878:    case MN_A_TOOCLOSE:
+;879:      if( !cg_disableWarningDialogs.integer )
+ADDRGP4 cg_disableWarningDialogs+12
+INDIRI4
+CNSTI4 0
+NEI4 $617
+line 880
+;880:      {
+line 881
+;881:        trap_Cvar_Set( "ui_dialog", "This location is too close to the enemy to evolve. "
+ADDRGP4 $480
+ARGP4
+ADDRGP4 $620
+ARGP4
+ADDRGP4 trap_Cvar_Set
+CALLV
+pop
+line 884
+;882:                                    "Move away until you are no longer aware of the enemy's "
+;883:                                    "presence and try again." );
+;884:        trap_SendConsoleCommand( "menu tremulous_alien_dialog\n" );
+ADDRGP4 $482
+ARGP4
+ADDRGP4 trap_SendConsoleCommand
+CALLV
+pop
+line 885
+;885:      }
+ADDRGP4 $466
+JUMPV
+LABELV $617
+line 887
+;886:      else
+;887:        CG_Printf( "This location is too close to the enemy to evolve\n" );
+ADDRGP4 $621
+ARGP4
+ADDRGP4 CG_Printf
+CALLV
+pop
+line 889
+;888:
+;889:      break;
+ADDRGP4 $466
+JUMPV
+LABELV $622
+line 892
+;890:
+;891:    case MN_A_NOOVMND_EVOLVE:
+;892:      if( !cg_disableWarningDialogs.integer )
+ADDRGP4 cg_disableWarningDialogs+12
+INDIRI4
+CNSTI4 0
+NEI4 $623
+line 893
+;893:      {
+line 894
+;894:        trap_Cvar_Set( "ui_dialog", "There is no Overmind. An Overmind must be built to allow "
+ADDRGP4 $480
+ARGP4
+ADDRGP4 $626
+ARGP4
+ADDRGP4 trap_Cvar_Set
+CALLV
+pop
+line 896
+;895:                                    "you to upgrade." );
+;896:        trap_SendConsoleCommand( "menu tremulous_alien_dialog\n" );
+ADDRGP4 $482
+ARGP4
+ADDRGP4 trap_SendConsoleCommand
+CALLV
+pop
+line 897
+;897:      }
+ADDRGP4 $466
+JUMPV
+LABELV $623
+line 899
+;898:      else
+;899:        CG_Printf( "There is no Overmind\n" );
+ADDRGP4 $580
+ARGP4
+ADDRGP4 CG_Printf
+CALLV
+pop
+line 901
+;900:
+;901:      break;
+ADDRGP4 $466
+JUMPV
+LABELV $627
+line 904
+;902:
+;903:    case MN_A_HOVEL_OCCUPIED:
+;904:      if( !cg_disableWarningDialogs.integer )
+ADDRGP4 cg_disableWarningDialogs+12
+INDIRI4
+CNSTI4 0
+NEI4 $628
+line 905
+;905:      {
+line 906
+;906:        trap_Cvar_Set( "ui_dialog", "This Hovel is occupied by another builder. Please find or build "
+ADDRGP4 $480
+ARGP4
+ADDRGP4 $631
+ARGP4
+ADDRGP4 trap_Cvar_Set
+CALLV
+pop
+line 908
+;907:                                    "another." );
+;908:        trap_SendConsoleCommand( "menu tremulous_alien_dialog\n" );
+ADDRGP4 $482
+ARGP4
+ADDRGP4 trap_SendConsoleCommand
+CALLV
+pop
+line 909
+;909:      }
+ADDRGP4 $466
+JUMPV
+LABELV $628
+line 911
+;910:      else
+;911:        CG_Printf( "This Hovel is occupied by another builder\n" );
+ADDRGP4 $632
+ARGP4
+ADDRGP4 CG_Printf
+CALLV
+pop
+line 913
+;912:
+;913:      break;
+ADDRGP4 $466
+JUMPV
+LABELV $633
+line 916
+;914:
+;915:    case MN_A_HOVEL_BLOCKED:
+;916:      if( !cg_disableWarningDialogs.integer )
+ADDRGP4 cg_disableWarningDialogs+12
+INDIRI4
+CNSTI4 0
+NEI4 $634
+line 917
+;917:      {
+line 918
+;918:        trap_Cvar_Set( "ui_dialog", "The exit to this Hovel is currently blocked. Please wait until it "
+ADDRGP4 $480
+ARGP4
+ADDRGP4 $637
+ARGP4
+ADDRGP4 trap_Cvar_Set
+CALLV
+pop
+line 920
+;919:                                    "becomes clear then try again." );
+;920:        trap_SendConsoleCommand( "menu tremulous_alien_dialog\n" );
+ADDRGP4 $482
+ARGP4
+ADDRGP4 trap_SendConsoleCommand
+CALLV
+pop
+line 921
+;921:      }
+ADDRGP4 $466
+JUMPV
+LABELV $634
+line 923
+;922:      else
+;923:        CG_Printf( "The exit to this Hovel is currently blocked\n" );
+ADDRGP4 $638
+ARGP4
+ADDRGP4 CG_Printf
+CALLV
+pop
+line 925
+;924:
+;925:      break;
+ADDRGP4 $466
+JUMPV
+LABELV $639
+line 928
+;926:
+;927:    case MN_A_HOVEL_EXIT:
+;928:      if( !cg_disableWarningDialogs.integer )
+ADDRGP4 cg_disableWarningDialogs+12
+INDIRI4
+CNSTI4 0
+NEI4 $640
+line 929
+;929:      {
+line 930
+;930:        trap_Cvar_Set( "ui_dialog", "The exit to this Hovel would always be blocked. Please choose "
+ADDRGP4 $480
+ARGP4
+ADDRGP4 $643
+ARGP4
+ADDRGP4 trap_Cvar_Set
+CALLV
+pop
+line 932
+;931:                                    "a more suitable location." );
+;932:        trap_SendConsoleCommand( "menu tremulous_alien_dialog\n" );
+ADDRGP4 $482
+ARGP4
+ADDRGP4 trap_SendConsoleCommand
+CALLV
+pop
+line 933
+;933:      }
+ADDRGP4 $466
+JUMPV
+LABELV $640
+line 935
+;934:      else
+;935:        CG_Printf( "The exit to this Hovel would always be blocked\n" );
+ADDRGP4 $644
+ARGP4
+ADDRGP4 CG_Printf
+CALLV
+pop
+line 937
+;936:
+;937:      break;
+ADDRGP4 $466
+JUMPV
+LABELV $645
+line 940
+;938:
+;939:    case MN_A_INFEST:
+;940:      trap_Cvar_Set( "ui_currentClass", va( "%d %d",  cg.snap->ps.stats[ STAT_PCLASS ],
+ADDRGP4 $200
+ARGP4
+ADDRGP4 cg+36
+INDIRP4
+CNSTI4 256
+ADDP4
+INDIRI4
+ARGI4
+ADDRGP4 cg+36
+INDIRP4
+CNSTI4 324
+ADDP4
+INDIRI4
+ARGI4
+ADDRLP4 4
+ADDRGP4 va
+CALLP4
+ASGNP4
+ADDRGP4 $646
+ARGP4
+ADDRLP4 4
+INDIRP4
+ARGP4
+ADDRGP4 trap_Cvar_Set
+CALLV
+pop
+line 942
+;941:                                                      cg.snap->ps.persistant[ PERS_CREDIT ] ) );
+;942:      trap_SendConsoleCommand( "menu tremulous_alienupgrade\n" );
+ADDRGP4 $649
+ARGP4
+ADDRGP4 trap_SendConsoleCommand
+CALLV
+pop
+line 943
+;943:      break;
+ADDRGP4 $466
+JUMPV
+LABELV $465
+line 946
+;944:
+;945:    default:
+;946:      Com_Printf( "cgame: debug: no such menu %d\n", menu );
+ADDRGP4 $650
+ARGP4
+ADDRFP4 0
+INDIRI4
+ARGI4
+ADDRGP4 Com_Printf
+CALLV
+pop
+line 947
+;947:  }
+LABELV $466
+line 948
+;948:}
+LABELV $464
+endproc CG_Menu 8 12
+proc CG_ServerCommand 396 12
+line 959
+;949:
+;950:/*
+;951:=================
+;952:CG_ServerCommand
+;953:
+;954:The string has been tokenized and can be retrieved with
+;955:Cmd_Argc() / Cmd_Argv()
+;956:=================
+;957:*/
+;958:static void CG_ServerCommand( void )
+;959:{
+line 965
+;960:  const char  *cmd;
+;961:  char        text[ MAX_SAY_TEXT ];
+;962:  char        out[ MAX_SAY_TEXT ];
+;963:  int i,j;
+;964:
+;965:  cmd = CG_Argv( 0 );
+CNSTI4 0
+ARGI4
+ADDRLP4 312
+ADDRGP4 CG_Argv
+CALLP4
+ASGNP4
+ADDRLP4 0
+ADDRLP4 312
+INDIRP4
+ASGNP4
+line 967
+;966:
+;967:  if( !cmd[ 0 ] )
+ADDRLP4 0
+INDIRP4
+INDIRI1
+CVII4 1
+CNSTI4 0
+NEI4 $653
+line 968
+;968:  {
+line 970
+;969:    // server claimed the command
+;970:    return;
+ADDRGP4 $652
+JUMPV
+LABELV $653
+line 973
+;971:  }
+;972:
+;973:  if( !strcmp( cmd, "cp" ) )
+ADDRLP4 0
+INDIRP4
+ARGP4
+ADDRGP4 $657
+ARGP4
+ADDRLP4 316
+ADDRGP4 strcmp
+CALLI4
+ASGNI4
+ADDRLP4 316
+INDIRI4
+CNSTI4 0
+NEI4 $655
+line 974
+;974:  {
+line 975
+;975:    CG_CenterPrint( CG_Argv( 1 ), SCREEN_HEIGHT * 0.30, BIGCHAR_WIDTH );
+CNSTI4 1
+ARGI4
+ADDRLP4 320
+ADDRGP4 CG_Argv
+CALLP4
+ASGNP4
+ADDRLP4 320
+INDIRP4
+ARGP4
+CNSTI4 144
+ARGI4
+CNSTI4 16
+ARGI4
+ADDRGP4 CG_CenterPrint
+CALLV
+pop
+line 976
+;976:    return;
+ADDRGP4 $652
+JUMPV
+LABELV $655
+line 979
+;977:  }
+;978:
+;979:  if( !strcmp( cmd, "cs" ) )
+ADDRLP4 0
+INDIRP4
+ARGP4
+ADDRGP4 $660
+ARGP4
+ADDRLP4 320
+ADDRGP4 strcmp
+CALLI4
+ASGNI4
+ADDRLP4 320
+INDIRI4
+CNSTI4 0
+NEI4 $658
+line 980
+;980:  {
+line 981
+;981:    CG_ConfigStringModified( );
+ADDRGP4 CG_ConfigStringModified
+CALLV
+pop
+line 982
+;982:    return;
+ADDRGP4 $652
+JUMPV
+LABELV $658
+line 985
+;983:  }
+;984:
+;985:  if( !strcmp( cmd, "print" ) )
+ADDRLP4 0
+INDIRP4
+ARGP4
+ADDRGP4 $663
+ARGP4
+ADDRLP4 324
+ADDRGP4 strcmp
+CALLI4
+ASGNI4
+ADDRLP4 324
+INDIRI4
+CNSTI4 0
+NEI4 $661
+line 986
+;986:  {
+line 987
+;987:    CG_Printf( "%s", CG_Argv( 1 ) );
+CNSTI4 1
+ARGI4
+ADDRLP4 328
+ADDRGP4 CG_Argv
+CALLP4
+ASGNP4
+ADDRGP4 $664
+ARGP4
+ADDRLP4 328
+INDIRP4
+ARGP4
+ADDRGP4 CG_Printf
+CALLV
+pop
+line 988
+;988:    return;
+ADDRGP4 $652
+JUMPV
+LABELV $661
+line 991
+;989:  }
+;990:
+;991:  if( !strcmp( cmd, "chat" ) )
+ADDRLP4 0
+INDIRP4
+ARGP4
+ADDRGP4 $667
+ARGP4
+ADDRLP4 328
+ADDRGP4 strcmp
+CALLI4
+ASGNI4
+ADDRLP4 328
+INDIRI4
+CNSTI4 0
+NEI4 $665
+line 992
+;992:  {
+line 993
+;993:    if( !cg_teamChatsOnly.integer )
+ADDRGP4 cg_teamChatsOnly+12
+INDIRI4
+CNSTI4 0
+NEI4 $652
+line 994
+;994:    {
+line 995
+;995:      trap_S_StartLocalSound( cgs.media.talkSound, CHAN_LOCAL_SOUND );
+ADDRGP4 cgs+268684+360
+INDIRI4
+ARGI4
+CNSTI4 6
+ARGI4
+ADDRGP4 trap_S_StartLocalSound
+CALLV
+pop
+line 996
+;996:      Q_strncpyz( text, CG_Argv( 1 ), MAX_SAY_TEXT );
+CNSTI4 1
+ARGI4
+ADDRLP4 332
+ADDRGP4 CG_Argv
+CALLP4
+ASGNP4
+ADDRLP4 4
+ARGP4
+ADDRLP4 332
+INDIRP4
+ARGP4
+CNSTI4 150
+ARGI4
+ADDRGP4 Q_strncpyz
+CALLV
+pop
+line 997
+;997:      CG_RemoveChatEscapeChar( text );
+ADDRLP4 4
+ARGP4
+ADDRGP4 CG_RemoveChatEscapeChar
+CALLV
+pop
+line 998
+;998:      CG_Printf( "%s\n", text );
+ADDRGP4 $673
+ARGP4
+ADDRLP4 4
+ARGP4
+ADDRGP4 CG_Printf
+CALLV
+pop
+line 999
+;999:    }
+line 1001
+;1000:
+;1001:    return;
+ADDRGP4 $652
+JUMPV
+LABELV $665
+line 1004
+;1002:  }
+;1003:
+;1004:  if( !strcmp( cmd, "tchat" ) )
+ADDRLP4 0
+INDIRP4
+ARGP4
+ADDRGP4 $676
+ARGP4
+ADDRLP4 332
+ADDRGP4 strcmp
+CALLI4
+ASGNI4
+ADDRLP4 332
+INDIRI4
+CNSTI4 0
+NEI4 $674
+line 1005
+;1005:  {
+line 1006
+;1006:    if( cg.snap->ps.stats[ STAT_PTEAM ] == PTE_ALIENS )
+ADDRGP4 cg+36
+INDIRP4
+CNSTI4 260
+ADDP4
+INDIRI4
+CNSTI4 1
+NEI4 $677
+line 1007
+;1007:      trap_S_StartLocalSound( cgs.media.alienTalkSound, CHAN_LOCAL_SOUND );
+ADDRGP4 cgs+268684+364
+INDIRI4
+ARGI4
+CNSTI4 6
+ARGI4
+ADDRGP4 trap_S_StartLocalSound
+CALLV
+pop
+ADDRGP4 $678
+JUMPV
+LABELV $677
+line 1008
+;1008:    else if( cg.snap->ps.stats[ STAT_PTEAM ] == PTE_HUMANS )
+ADDRGP4 cg+36
+INDIRP4
+CNSTI4 260
+ADDP4
+INDIRI4
+CNSTI4 2
+NEI4 $682
+line 1009
+;1009:      trap_S_StartLocalSound( cgs.media.humanTalkSound, CHAN_LOCAL_SOUND );
+ADDRGP4 cgs+268684+368
+INDIRI4
+ARGI4
+CNSTI4 6
+ARGI4
+ADDRGP4 trap_S_StartLocalSound
+CALLV
+pop
+ADDRGP4 $683
+JUMPV
+LABELV $682
+line 1011
+;1010:    else
+;1011:      trap_S_StartLocalSound( cgs.media.talkSound, CHAN_LOCAL_SOUND );
+ADDRGP4 cgs+268684+360
+INDIRI4
+ARGI4
+CNSTI4 6
+ARGI4
+ADDRGP4 trap_S_StartLocalSound
+CALLV
+pop
+LABELV $683
+LABELV $678
+line 1013
+;1012:
+;1013:    Q_strncpyz( text, CG_Argv( 1 ), MAX_SAY_TEXT );
+CNSTI4 1
+ARGI4
+ADDRLP4 336
+ADDRGP4 CG_Argv
+CALLP4
+ASGNP4
+ADDRLP4 4
+ARGP4
+ADDRLP4 336
+INDIRP4
+ARGP4
+CNSTI4 150
+ARGI4
+ADDRGP4 Q_strncpyz
+CALLV
+pop
+line 1014
+;1014:    CG_RemoveChatEscapeChar( text );
+ADDRLP4 4
+ARGP4
+ADDRGP4 CG_RemoveChatEscapeChar
+CALLV
+pop
+line 1015
+;1015:    CG_AddToTeamChat( text );
+ADDRLP4 4
+ARGP4
+ADDRGP4 CG_AddToTeamChat
+CALLV
+pop
+line 1016
+;1016:    CG_Printf( "%s\n", text );
+ADDRGP4 $673
+ARGP4
+ADDRLP4 4
+ARGP4
+ADDRGP4 CG_Printf
+CALLV
+pop
+line 1017
+;1017:    return;
+ADDRGP4 $652
+JUMPV
+LABELV $674
+line 1020
+;1018:  }
+;1019:
+;1020:  if( !strcmp( cmd, "scores" ) )
+ADDRLP4 0
+INDIRP4
+ARGP4
+ADDRGP4 $691
+ARGP4
+ADDRLP4 336
+ADDRGP4 strcmp
+CALLI4
+ASGNI4
+ADDRLP4 336
+INDIRI4
+CNSTI4 0
+NEI4 $689
+line 1021
+;1021:  {
+line 1022
+;1022:    CG_ParseScores( );
+ADDRGP4 CG_ParseScores
+CALLV
+pop
+line 1023
+;1023:    return;
+ADDRGP4 $652
+JUMPV
+LABELV $689
+line 1026
+;1024:  }
+;1025:
+;1026:  if( !strcmp( cmd, "tinfo" ) )
+ADDRLP4 0
+INDIRP4
+ARGP4
+ADDRGP4 $694
+ARGP4
+ADDRLP4 340
+ADDRGP4 strcmp
+CALLI4
+ASGNI4
+ADDRLP4 340
+INDIRI4
+CNSTI4 0
+NEI4 $692
+line 1027
+;1027:  {
+line 1028
+;1028:    CG_ParseTeamInfo( );
+ADDRGP4 CG_ParseTeamInfo
+CALLV
+pop
+line 1029
+;1029:    return;
+ADDRGP4 $652
+JUMPV
+LABELV $692
+line 1032
+;1030:  }
+;1031:
+;1032:  if( !strcmp( cmd, "map_restart" ) )
+ADDRLP4 0
+INDIRP4
+ARGP4
+ADDRGP4 $697
+ARGP4
+ADDRLP4 344
+ADDRGP4 strcmp
+CALLI4
+ASGNI4
+ADDRLP4 344
+INDIRI4
+CNSTI4 0
+NEI4 $695
+line 1033
+;1033:  {
+line 1034
+;1034:    CG_MapRestart( );
+ADDRGP4 CG_MapRestart
+CALLV
+pop
+line 1035
+;1035:    return;
+ADDRGP4 $652
+JUMPV
+LABELV $695
+line 1038
+;1036:  }
+;1037:
+;1038:  if( Q_stricmp( cmd, "remapShader" ) == 0 )
+ADDRLP4 0
+INDIRP4
+ARGP4
+ADDRGP4 $700
+ARGP4
+ADDRLP4 348
+ADDRGP4 Q_stricmp
+CALLI4
+ASGNI4
+ADDRLP4 348
+INDIRI4
+CNSTI4 0
+NEI4 $698
+line 1039
+;1039:  {
+line 1040
+;1040:    if( trap_Argc( ) == 4 )
+ADDRLP4 352
+ADDRGP4 trap_Argc
+CALLI4
+ASGNI4
+ADDRLP4 352
+INDIRI4
+CNSTI4 4
+NEI4 $701
+line 1041
+;1041:      trap_R_RemapShader( CG_Argv( 1 ), CG_Argv( 2 ), CG_Argv( 3 ) );
+CNSTI4 1
+ARGI4
+ADDRLP4 356
+ADDRGP4 CG_Argv
+CALLP4
+ASGNP4
+CNSTI4 2
+ARGI4
+ADDRLP4 360
+ADDRGP4 CG_Argv
+CALLP4
+ASGNP4
+CNSTI4 3
+ARGI4
+ADDRLP4 364
+ADDRGP4 CG_Argv
+CALLP4
+ASGNP4
+ADDRLP4 356
+INDIRP4
+ARGP4
+ADDRLP4 360
+INDIRP4
+ARGP4
+ADDRLP4 364
+INDIRP4
+ARGP4
+ADDRGP4 trap_R_RemapShader
+CALLV
+pop
+LABELV $701
+line 1042
+;1042:  }
+LABELV $698
+line 1046
+;1043:
+;1044:  // clientLevelShot is sent before taking a special screenshot for
+;1045:  // the menu system during development
+;1046:  if( !strcmp( cmd, "clientLevelShot" ) )
+ADDRLP4 0
+INDIRP4
+ARGP4
+ADDRGP4 $705
+ARGP4
+ADDRLP4 352
+ADDRGP4 strcmp
+CALLI4
+ASGNI4
+ADDRLP4 352
+INDIRI4
+CNSTI4 0
+NEI4 $703
+line 1047
+;1047:  {
+line 1048
+;1048:    cg.levelShot = qtrue;
+ADDRGP4 cg+12
+CNSTI4 1
+ASGNI4
+line 1049
+;1049:    return;
+ADDRGP4 $652
+JUMPV
+LABELV $703
+line 1053
+;1050:  }
+;1051:
+;1052:  //the server has triggered a menu
+;1053:  if( !strcmp( cmd, "servermenu" ) )
+ADDRLP4 0
+INDIRP4
+ARGP4
+ADDRGP4 $709
+ARGP4
+ADDRLP4 356
+ADDRGP4 strcmp
+CALLI4
+ASGNI4
+ADDRLP4 356
+INDIRI4
+CNSTI4 0
+NEI4 $707
+line 1054
+;1054:  {
+line 1055
+;1055:    if( trap_Argc( ) == 2 && !cg.demoPlayback )
+ADDRLP4 360
+ADDRGP4 trap_Argc
+CALLI4
+ASGNI4
+ADDRLP4 360
+INDIRI4
+CNSTI4 2
+NEI4 $652
+ADDRGP4 cg+8
+INDIRI4
+CNSTI4 0
+NEI4 $652
+line 1056
+;1056:      CG_Menu( atoi( CG_Argv( 1 ) ) );
+CNSTI4 1
+ARGI4
+ADDRLP4 364
+ADDRGP4 CG_Argv
+CALLP4
+ASGNP4
+ADDRLP4 364
+INDIRP4
+ARGP4
+ADDRLP4 368
+ADDRGP4 atoi
+CALLI4
+ASGNI4
+ADDRLP4 368
+INDIRI4
+ARGI4
+ADDRGP4 CG_Menu
+CALLV
+pop
+line 1058
+;1057:
+;1058:    return;
+ADDRGP4 $652
+JUMPV
+LABELV $707
+line 1062
+;1059:  }
+;1060:
+;1061:  //the server thinks this client should close all menus
+;1062:  if( !strcmp( cmd, "serverclosemenus" ) )
+ADDRLP4 0
+INDIRP4
+ARGP4
+ADDRGP4 $715
+ARGP4
+ADDRLP4 360
+ADDRGP4 strcmp
+CALLI4
+ASGNI4
+ADDRLP4 360
+INDIRI4
+CNSTI4 0
+NEI4 $713
+line 1063
+;1063:  {
+line 1064
+;1064:    trap_SendConsoleCommand( "closemenus\n" );
+ADDRGP4 $716
+ARGP4
+ADDRGP4 trap_SendConsoleCommand
+CALLV
+pop
+line 1065
+;1065:    return;
+ADDRGP4 $652
+JUMPV
+LABELV $713
+line 1069
+;1066:  }
+;1067:
+;1068:  //poison cloud effect needs to be reliable
+;1069:  if( !strcmp( cmd, "poisoncloud" ) )
+ADDRLP4 0
+INDIRP4
+ARGP4
+ADDRGP4 $719
+ARGP4
+ADDRLP4 364
+ADDRGP4 strcmp
+CALLI4
+ASGNI4
+ADDRLP4 364
+INDIRI4
+CNSTI4 0
+NEI4 $717
+line 1070
+;1070:  {
+line 1071
+;1071:    cg.poisonedTime = cg.time;
+ADDRGP4 cg+116240
+ADDRGP4 cg+107604
+INDIRI4
+ASGNI4
+line 1073
+;1072:
+;1073:    if( CG_IsParticleSystemValid( &cg.poisonCloudPS ) )
+ADDRGP4 cg+125520
+ARGP4
+ADDRLP4 368
+ADDRGP4 CG_IsParticleSystemValid
+CALLI4
+ASGNI4
+ADDRLP4 368
+INDIRI4
+CNSTI4 0
+EQI4 $652
+line 1074
+;1074:    {
+line 1075
+;1075:      cg.poisonCloudPS = CG_SpawnNewParticleSystem( cgs.media.poisonCloudPS );
+ADDRGP4 cgs+268684+556
+INDIRI4
+ARGI4
+ADDRLP4 372
+ADDRGP4 CG_SpawnNewParticleSystem
+CALLP4
+ASGNP4
+ADDRGP4 cg+125520
+ADDRLP4 372
+INDIRP4
+ASGNP4
+line 1076
+;1076:      CG_SetAttachmentCent( &cg.poisonCloudPS->attachment, &cg.predictedPlayerEntity );
+ADDRGP4 cg+125520
+INDIRP4
+CNSTI4 4
+ADDP4
+ARGP4
+ADDRGP4 cg+108104
+ARGP4
+ADDRGP4 CG_SetAttachmentCent
+CALLV
+pop
+line 1077
+;1077:      CG_AttachToCent( &cg.poisonCloudPS->attachment );
+ADDRGP4 cg+125520
+INDIRP4
+CNSTI4 4
+ADDP4
+ARGP4
+ADDRGP4 CG_AttachToCent
+CALLV
+pop
+line 1078
+;1078:    }
+line 1080
+;1079:
+;1080:    return;
+ADDRGP4 $652
+JUMPV
+LABELV $717
+line 1083
+;1081:  }
+;1082:
+;1083:  if( !strcmp( cmd, "weaponswitch" ) )
+ADDRLP4 0
+INDIRP4
+ARGP4
+ADDRGP4 $733
+ARGP4
+ADDRLP4 368
+ADDRGP4 strcmp
+CALLI4
+ASGNI4
+ADDRLP4 368
+INDIRI4
+CNSTI4 0
+NEI4 $731
+line 1084
+;1084:  {
+line 1085
+;1085:    CG_Printf( "client weaponswitch\n" );
+ADDRGP4 $734
+ARGP4
+ADDRGP4 CG_Printf
+CALLV
+pop
+line 1086
+;1086:    if( trap_Argc( ) == 2 )
+ADDRLP4 372
+ADDRGP4 trap_Argc
+CALLI4
+ASGNI4
+ADDRLP4 372
+INDIRI4
+CNSTI4 2
+NEI4 $652
+line 1087
+;1087:    {
+line 1088
+;1088:      cg.weaponSelect = atoi( CG_Argv( 1 ) );
+CNSTI4 1
+ARGI4
+ADDRLP4 376
+ADDRGP4 CG_Argv
+CALLP4
+ASGNP4
+ADDRLP4 376
+INDIRP4
+ARGP4
+ADDRLP4 380
+ADDRGP4 atoi
+CALLI4
+ASGNI4
+ADDRGP4 cg+109940
+ADDRLP4 380
+INDIRI4
+ASGNI4
+line 1089
+;1089:      cg.weaponSelectTime = cg.time;
+ADDRGP4 cg+115692
+ADDRGP4 cg+107604
+INDIRI4
+ASGNI4
+line 1090
+;1090:    }
+line 1092
+;1091:
+;1092:    return;
+ADDRGP4 $652
+JUMPV
+LABELV $731
+line 1096
+;1093:  }
+;1094:
+;1095:  // server requests a ptrc
+;1096:  if( !strcmp( cmd, "ptrcrequest" ) )
+ADDRLP4 0
+INDIRP4
+ARGP4
+ADDRGP4 $742
+ARGP4
+ADDRLP4 372
+ADDRGP4 strcmp
+CALLI4
+ASGNI4
+ADDRLP4 372
+INDIRI4
+CNSTI4 0
+NEI4 $740
+line 1097
+;1097:  {
+line 1098
+;1098:    int   code = CG_ReadPTRCode( );
+ADDRLP4 380
+ADDRGP4 CG_ReadPTRCode
+CALLI4
+ASGNI4
+ADDRLP4 376
+ADDRLP4 380
+INDIRI4
+ASGNI4
+line 1100
+;1099:
+;1100:    trap_SendClientCommand( va( "ptrcverify %d", code ) );
+ADDRGP4 $743
+ARGP4
+ADDRLP4 376
+INDIRI4
+ARGI4
+ADDRLP4 384
+ADDRGP4 va
+CALLP4
+ASGNP4
+ADDRLP4 384
+INDIRP4
+ARGP4
+ADDRGP4 trap_SendClientCommand
+CALLV
+pop
+line 1101
+;1101:    return;
+ADDRGP4 $652
+JUMPV
+LABELV $740
+line 1105
+;1102:  }
+;1103:
+;1104:  // server issues a ptrc
+;1105:  if( !strcmp( cmd, "ptrcissue" ) )
+ADDRLP4 0
+INDIRP4
+ARGP4
+ADDRGP4 $746
+ARGP4
+ADDRLP4 376
+ADDRGP4 strcmp
+CALLI4
+ASGNI4
+ADDRLP4 376
+INDIRI4
+CNSTI4 0
+NEI4 $744
+line 1106
+;1106:  {
+line 1107
+;1107:    if( trap_Argc( ) == 2 )
+ADDRLP4 380
+ADDRGP4 trap_Argc
+CALLI4
+ASGNI4
+ADDRLP4 380
+INDIRI4
+CNSTI4 2
+NEI4 $652
+line 1108
+;1108:    {
+line 1109
+;1109:      int code = atoi( CG_Argv( 1 ) );
+CNSTI4 1
+ARGI4
+ADDRLP4 388
+ADDRGP4 CG_Argv
+CALLP4
+ASGNP4
+ADDRLP4 388
+INDIRP4
+ARGP4
+ADDRLP4 392
+ADDRGP4 atoi
+CALLI4
+ASGNI4
+ADDRLP4 384
+ADDRLP4 392
+INDIRI4
+ASGNI4
+line 1111
+;1110:
+;1111:      CG_WritePTRCode( code );
+ADDRLP4 384
+INDIRI4
+ARGI4
+ADDRGP4 CG_WritePTRCode
+CALLV
+pop
+line 1112
+;1112:    }
+line 1114
+;1113:
+;1114:    return;
+ADDRGP4 $652
+JUMPV
+LABELV $744
+line 1118
+;1115:  }
+;1116:
+;1117:  // reply to ptrcverify
+;1118:  if( !strcmp( cmd, "ptrcconfirm" ) )
+ADDRLP4 0
+INDIRP4
+ARGP4
+ADDRGP4 $751
+ARGP4
+ADDRLP4 380
+ADDRGP4 strcmp
+CALLI4
+ASGNI4
+ADDRLP4 380
+INDIRI4
+CNSTI4 0
+NEI4 $749
+line 1119
+;1119:  {
+line 1120
+;1120:    trap_SendConsoleCommand( "menu ptrc_popmenu\n" );
+ADDRGP4 $752
+ARGP4
+ADDRGP4 trap_SendConsoleCommand
+CALLV
+pop
+line 1122
+;1121:
+;1122:    return;
+ADDRGP4 $652
+JUMPV
+LABELV $749
+line 1125
+;1123:  }
+;1124:
+;1125:  CG_Printf( "Unknown client game command: %s\n", cmd );
+ADDRGP4 $753
+ARGP4
+ADDRLP4 0
+INDIRP4
+ARGP4
+ADDRGP4 CG_Printf
+CALLV
+pop
+line 1126
+;1126:}
+LABELV $652
+endproc CG_ServerCommand 396 12
+export CG_ExecuteNewServerCommands
+proc CG_ExecuteNewServerCommands 12 4
+line 1138
+;1127:
+;1128:
+;1129:/*
+;1130:====================
+;1131:CG_ExecuteNewServerCommands
+;1132:
+;1133:Execute all of the server commands that were received along
+;1134:with this this snapshot.
+;1135:====================
+;1136:*/
+;1137:void CG_ExecuteNewServerCommands( int latestSequence )
+;1138:{
+ADDRGP4 $756
+JUMPV
+LABELV $755
+line 1140
+;1139:  while( cgs.serverCommandSequence < latestSequence )
+;1140:  {
+line 1141
+;1141:    if( trap_GetServerCommand( ++cgs.serverCommandSequence ) )
+ADDRLP4 0
+ADDRGP4 cgs+31456
+ASGNP4
+ADDRLP4 4
+ADDRLP4 0
+INDIRP4
+INDIRI4
+CNSTI4 1
+ADDI4
+ASGNI4
+ADDRLP4 0
+INDIRP4
+ADDRLP4 4
+INDIRI4
+ASGNI4
+ADDRLP4 4
+INDIRI4
+ARGI4
+ADDRLP4 8
+ADDRGP4 trap_GetServerCommand
+CALLI4
+ASGNI4
+ADDRLP4 8
+INDIRI4
+CNSTI4 0
+EQI4 $759
+line 1142
+;1142:      CG_ServerCommand( );
+ADDRGP4 CG_ServerCommand
+CALLV
+pop
+LABELV $759
+line 1143
+;1143:  }
+LABELV $756
+line 1139
+ADDRGP4 cgs+31456
+INDIRI4
+ADDRFP4 0
+INDIRI4
+LTI4 $755
+line 1144
+;1144:}
+LABELV $754
+endproc CG_ExecuteNewServerCommands 12 4
+import trap_GetDemoName
+import trap_GetDemoPos
+import trap_GetDemoState
+import trap_GetEntityToken
+import trap_getCameraInfo
+import trap_startCamera
+import trap_loadCamera
+import trap_SnapVector
+import trap_CIN_SetExtents
+import trap_CIN_DrawCinematic
+import trap_CIN_RunCinematic
+import trap_CIN_StopCinematic
+import trap_CIN_PlayCinematic
+import trap_Key_SetBinding
+import trap_Key_GetBindingBuf
+import trap_Key_KeynumToStringBuf
+import trap_Key_GetKey
+import trap_Key_SetCatcher
+import trap_Key_GetCatcher
+import trap_Key_IsDown
+import trap_R_RegisterFont
+import trap_MemoryRemaining
+import testPrintFloat
+import testPrintInt
+import trap_SetUserCmdValue
+import trap_GetUserCmd
+import trap_GetCurrentCmdNumber
+import trap_GetServerCommand
+import trap_GetSnapshot
+import trap_GetCurrentSnapshotNumber
+import trap_GetGameState
+import trap_GetGlconfig
+import trap_R_RemapShader
+import trap_R_LerpTag
+import trap_R_ModelBounds
+import trap_R_DrawStretchPic
+import trap_R_SetColor
+import trap_R_RenderScene
+import trap_R_LightForPoint
+import trap_R_AddAdditiveLightToScene
+import trap_R_AddLightToScene
+import trap_R_AddPolysToScene
+import trap_R_AddPolyToScene
+import trap_R_AddRefEntityToScene
+import trap_R_ClearScene
+import trap_R_RegisterShaderNoMip
+import trap_R_RegisterShader
+import trap_R_RegisterSkin
+import trap_R_RegisterModel
+import trap_R_LoadWorldMap
+import trap_S_StopBackgroundTrack
+import trap_S_StartBackgroundTrack
+import trap_S_RegisterSound
+import trap_S_Respatialize
+import trap_S_UpdateEntityPosition
+import trap_S_AddRealLoopingSound
+import trap_S_AddLoopingSound
+import trap_S_ClearLoopingSounds
+import trap_S_StartLocalSound
+import trap_S_StopLoopingSound
+import trap_S_StartSound
+import trap_CM_MarkFragments
+import trap_CM_TransformedBiSphereTrace
+import trap_CM_BiSphereTrace
+import trap_CM_TransformedCapsuleTrace
+import trap_CM_CapsuleTrace
+import trap_CM_TransformedBoxTrace
+import trap_CM_BoxTrace
+import trap_CM_TransformedPointContents
+import trap_CM_PointContents
+import trap_CM_TempBoxModel
+import trap_CM_InlineModel
+import trap_CM_NumInlineModels
+import trap_CM_LoadMap
+import trap_UpdateScreen
+import trap_SendClientCommand
+import trap_AddCommand
+import trap_SendConsoleCommand
+import trap_FS_GetFileList
+import trap_FS_Seek
+import trap_FS_FCloseFile
+import trap_FS_Write
+import trap_FS_Read
+import trap_FS_FOpenFile
+import trap_LiteralArgs
+import trap_Args
+import trap_Argv
+import trap_Argc
+import trap_Cvar_VariableStringBuffer
+import trap_Cvar_Set
+import trap_Cvar_Update
+import trap_Cvar_Register
+import trap_Milliseconds
+import trap_Error
+import trap_Print
+import CG_TutorialText
+import CG_WritePTRCode
+import CG_ReadPTRCode
+import CG_DestroyTestTS_f
+import CG_TestTS_f
+import CG_AddTrails
+import CG_IsTrailSystemValid
+import CG_DestroyTrailSystem
+import CG_SpawnNewTrailSystem
+import CG_RegisterTrailSystem
+import CG_LoadTrailSystems
+import CG_DestroyTestPS_f
+import CG_TestPS_f
+import CG_ParticleSystemEntity
+import CG_AddParticles
+import CG_SetParticleSystemNormal
+import CG_IsParticleSystemValid
+import CG_IsParticleSystemInfinite
+import CG_DestroyParticleSystem
+import CG_SpawnNewParticleSystem
+import CG_RegisterParticleSystem
+import CG_LoadParticleSystems
+import CG_SetAttachmentOffset
+import CG_SetAttachmentParticle
+import CG_SetAttachmentTag
+import CG_SetAttachmentCent
+import CG_SetAttachmentPoint
+import CG_AttachToParticle
+import CG_AttachToTag
+import CG_AttachToCent
+import CG_AttachToPoint
+import CG_Attached
+import CG_AttachmentCentNum
+import CG_AttachmentVelocity
+import CG_AttachmentAxis
+import CG_AttachmentDir
+import CG_AttachmentPoint
+import CG_DefragmentMemory
+import CG_Free
+import CG_Alloc
+import CG_InitMemory
+import CG_CheckChangedPredictableEvents
+import CG_TransitionPlayerState
+import CG_Respawn
+import CG_RequestScores
+import CG_InitConsoleCommands
+import CG_ConsoleCommand
+import CG_ProcessSnapshots
+import CG_ImpactMark
+import CG_AddMarks
+import CG_InitMarkPolys
+import CG_AlienSense
+import CG_Scanner
+import CG_UpdateEntityPositions
+import CG_DrawItemSelectText
+import CG_DrawItemSelect
+import CG_AddPlayerWeapon
+import CG_AddViewWeapon
+import CG_ShotgunFire
+import CG_Bullet
+import CG_MissileHitPlayer
+import CG_MissileHitWall
+import CG_FireWeapon
+import CG_RegisterWeapon
+import CG_InitWeapons
+import CG_RegisterUpgrade
+import CG_InitUpgrades
+import CG_Weapon_f
+import CG_PrevWeapon_f
+import CG_NextWeapon_f
+import CG_PositionRotatedEntityOnTag
+import CG_PositionEntityOnTag
+import CG_AdjustPositionForMover
+import CG_Beam
+import CG_AddPacketEntities
+import CG_SetEntitySoundPosition
+import CG_DrawBoundingBox
+import CG_PainEvent
+import CG_EntityEvent
+import CG_CheckEvents
+import CG_PredictPlayerState
+import CG_BiSphereTrace
+import CG_CapTrace
+import CG_Trace
+import CG_PointContents
+import CG_BuildSolidList
+import CG_ModelDoor
+import CG_AnimMapObj
+import CG_RunLerpFrame
+import CG_AlienBuildableExplosion
+import CG_HumanBuildableExplosion
+import CG_InitBuildables
+import CG_Buildable
+import CG_GhostBuildable
+import CG_AtHighestClass
+import CG_Bleed
+import CG_PlayerOnFire
+import CG_PlayerDisconnect
+import CG_CustomSound
+import CG_PrecacheClientInfo
+import CG_NewClientInfo
+import CG_AddRefEntityWithPowerups
+import CG_ResetPlayerEntity
+import CG_Corpse
+import CG_Player
+import CG_ResetPainBlend
+import CG_UpdateMediaFraction
+import CG_DrawLoadingScreen
+import CG_Text_PaintChar
+import CG_GetKillerText
+import CG_GetTeamColor
+import CG_InitTeamChat
+import CG_SetPrintString
+import CG_RunMenuScript
+import CG_GetValue
+import CG_Text_Height
+import CG_Text_Width
+import CG_Text_Paint
+import CG_OwnerDraw
+import CG_DrawActive
+import CG_CenterPrint
+import CG_AddLagometerSnapshotInfo
+import CG_AddLagometerFrameInfo
+import teamChat2
+import teamChat1
+import systemChat
+import numSortedTeamPlayers
+import sortedTeamPlayers
+import CG_DrawTopBottom
+import CG_DrawSides
+import CG_DrawRect
+import CG_GetColorForHealth
+import CG_ColorForHealth
+import CG_TileClear
+import CG_FadeColor
+import CG_DrawStrlen
+import CG_DrawFadePic
+import CG_DrawPic
+import CG_FillRect
+import CG_AdjustFrom640
+import CG_DrawPlane
+import CG_DrawActiveFrame
+import CG_AddBufferedSound
+import CG_TestModelPrevSkin_f
+import CG_TestModelNextSkin_f
+import CG_TestModelPrevFrame_f
+import CG_TestModelNextFrame_f
+import CG_TestGun_f
+import CG_TestModel_f
+import CG_addSmoothOp
+import CG_AddNotifyText
+import CG_RemoveNotifyLine
+import CG_FileExists
+import CG_BuildSpectatorString
+import CG_SetScoreSelection
+import CG_EventHandling
+import CG_MouseEvent
+import CG_KeyEvent
+import CG_LoadMenus
+import CG_LastAttacker
+import CG_CrosshairPlayer
+import CG_UpdateCvars
+import CG_PlayerCount
+import CG_StartMusic
+import CG_Error
+import CG_Printf
+import CG_Argv
+import CG_ConfigString
+import cg_debugRandom
+import ui_humanTeamVoteActive
+import ui_alienTeamVoteActive
+import ui_voteActive
+import ui_loading
+import ui_dialog
+import ui_stages
+import ui_carriage
+import ui_currentClass
+import cg_painBlendZoom
+import cg_painBlendScale
+import cg_painBlendMax
+import cg_painBlendDownRate
+import cg_painBlendUpRate
+import cg_tutorial
+import cg_disableScannerPlane
+import cg_disableWarningDialogs
+import cg_debugPVS
+import cg_debugTrails
+import cg_debugParticles
+import cg_lightFlare
+import cg_consoleLatency
+import cg_depthSortParticles
+import cg_wwToggle
+import cg_wwFollow
+import cg_wwSmoothTime
+import cg_debugAlloc
+import cg_drawBBOX
+import cg_drawSurfNormal
+import cg_creepRes
+import cg_trueLightning
+import cg_oldPlasma
+import cg_oldRocket
+import cg_oldRail
+import cg_noProjectileTrail
+import cg_noTaunt
+import cg_bigFont
+import cg_smallFont
+import cg_cameraMode
+import cg_timescale
+import cg_timescaleFadeSpeed
+import cg_timescaleFadeEnd
+import cg_cameraOrbitDelay
+import cg_cameraOrbit
+import pmove_msec
+import pmove_fixed
+import cg_smoothClients
+import cg_scorePlum
+import cg_noVoiceText
+import cg_noVoiceChats
+import cg_teamChatsOnly
+import cg_drawFriend
+import cg_deferPlayers
+import cg_predictItems
+import cg_blood
+import cg_paused
+import cg_buildScript
+import cg_forceModel
+import cg_stats
+import cg_teamChatHeight
+import cg_teamChatTime
+import cg_synchronousClients
+import cg_drawAttacker
+import cg_lagometer
+import cg_stereoSeparation
+import cg_thirdPersonhax
+import cg_thirdPerson
+import cg_thirdPersonAngle
+import cg_thirdPersonRangehax
+import cg_thirdPersonRange
+import cg_zoomFov
+import cg_fov
+import cg_simpleItems
+import cg_ignore
+import cg_autoswitch
+import cg_tracerLength
+import cg_tracerWidth
+import cg_tracerChance
+import cg_viewsize
+import cg_drawGun
+import cg_gun_z
+import cg_gun_y
+import cg_gun_x
+import cg_gun_frame
+import cg_brassTime
+import cg_addMarks
+import cg_footsteps
+import cg_showmiss
+import cg_noPlayerAnims
+import cg_debugMove
+import cg_nopredict
+import cg_errorDecay
+import cg_railTrailTime
+import cg_teslaTrailTime
+import cg_debugEvents
+import cg_debugPosition
+import cg_debugAnim
+import cg_animSpeed
+import cg_draw2D
+import cg_drawStatus
+import cg_crosshairY
+import cg_crosshairX
+import cg_teamOverlayUserinfo
+import cg_drawTeamOverlay
+import cg_drawRewards
+import cg_drawCrosshairNames
+import cg_drawCrosshair
+import cg_drawAmmoWarning
+import cg_drawIcons
+import cg_draw3dIcons
+import cg_drawSnapshot
+import cg_drawDemoState
+import cg_drawFPS
+import cg_drawTimer
+import cg_gibs
+import cg_shadows
+import cg_swingSpeed
+import cg_bobroll
+import cg_bobpitch
+import cg_bobup
+import cg_runroll
+import cg_runpitch
+import cg_centertime
+import cg_markPolys
+import cg_buildables
+import cg_upgrades
+import cg_weapons
+import cg_entities
+import cg
+import cgs
+import g_nameBind2
+import g_nameBind1
+import BindingFromName
+import trap_PC_SourceFileAndLine
+import trap_PC_ReadToken
+import trap_PC_FreeSource
+import trap_PC_LoadSource
+import trap_PC_AddGlobalDefine
+import Item_Text_AutoWrapped_Paint
+import Controls_SetDefaults
+import Controls_SetConfig
+import Controls_GetConfig
+import UI_OutOfMemory
+import UI_InitMemory
+import UI_Alloc
+import Display_CacheAll
+import Menu_SetFeederSelection
+import Menu_Paint
+import Menus_CloseAll
+import LerpColor
+import Display_HandleKey
+import Menus_CloseByName
+import Menus_ShowByName
+import Menus_FindByName
+import Menus_OpenByName
+import Display_KeyBindPending
+import Display_CursorType
+import Display_MouseMove
+import Display_CaptureItem
+import Display_GetContext
+import Menus_Activate
+import Menus_AnyFullScreenVisible
+import Menu_Reset
+import Menus_ActivateByName
+import Menu_PaintAll
+import Menu_New
+import Menu_Count
+import PC_Script_Parse
+import PC_String_Parse
+import PC_Rect_Parse
+import PC_Int_Parse
+import PC_Color_Parse
+import PC_Float_Parse
+import Script_Parse
+import String_Parse
+import Rect_Parse
+import Int_Parse
+import Color_Parse
+import Float_Parse
+import Menu_ScrollFeeder
+import Menu_HandleMouseMove
+import Menu_HandleKey
+import Menu_GetFocused
+import Menu_PostParse
+import Item_Init
+import Menu_Init
+import Display_ExpandMacros
+import Init_Display
+import String_Report
+import String_Init
+import String_Alloc
+import BG_ClientListParse
+import BG_ClientListString
+import BG_ClientListRemove
+import BG_ClientListAdd
+import BG_ClientListTest
+import BG_UpgradeClassAvailable
+import BG_BuildableIsAllowed
+import BG_ClassIsAllowed
+import BG_UpgradeIsAllowed
+import BG_WeaponIsAllowed
+import BG_InitAllowedGameElements
+import BG_ParseCSVBuildableList
+import BG_ParseCSVClassList
+import BG_ParseCSVEquipmentList
+import atoi_neg
+import atof_neg
+import BG_PlayerTouchesItem
+import BG_PlayerStateToEntityStateExtraPolate
+import BG_PlayerStateToEntityState
+import BG_AddPredictableEventToPlayerstate
+import BG_EvaluateTrajectoryDelta
+import BG_EvaluateTrajectory
+import BG_FindTeamForUpgrade
+import BG_FindUsableForUpgrade
+import BG_FindPurchasableForUpgrade
+import BG_FindIconForUpgrade
+import BG_FindHumanNameForUpgrade
+import BG_FindUpgradeNumForName
+import BG_FindNameForUpgrade
+import BG_FindSlotsForUpgrade
+import BG_FindStagesForUpgrade
+import BG_FindPriceForUpgrade
+import BG_FindTeamForWeapon
+import BG_FindBuildDelayForWeapon
+import BG_FindLongRangedForWeapon
+import BG_FindPurchasableForWeapon
+import BG_FindZoomFovForWeapon
+import BG_WeaponCanZoom
+import BG_WeaponHasThirdMode
+import BG_WeaponHasAltMode
+import BG_FindKnockbackScaleForWeapon
+import BG_FindReloadTimeForWeapon
+import BG_FindRepeatRate3ForWeapon
+import BG_FindRepeatRate2ForWeapon
+import BG_FindRepeatRate1ForWeapon
+import BG_FindUsesEnergyForWeapon
+import BG_FindInfinteAmmoForWeapon
+import BG_FindAmmoForWeapon
+import BG_FindCrosshairSizeForWeapon
+import BG_FindCrosshairForWeapon
+import BG_FindIconForWeapon
+import BG_FindModelsForWeapon
+import BG_FindHumanNameForWeapon
+import BG_FindWeaponNumForName
+import BG_FindNameForWeapon
+import BG_FindSlotsForWeapon
+import BG_FindStagesForWeapon
+import BG_FindPriceForWeapon
+import BG_InitClassOverrides
+import BG_FindValueOfClass
+import BG_FindCostOfClass
+import BG_ClassCanEvolveFromTo
+import BG_FindBuildDistForClass
+import BG_FindStartWeaponForClass
+import BG_ClassHasAbility
+import BG_FindSteptimeForClass
+import BG_FindKnockbackScaleForClass
+import BG_FindJumpMagnitudeForClass
+import BG_FindStopSpeedForClass
+import BG_FindFrictionForClass
+import BG_FindAirAccelerationForClass
+import BG_FindAccelerationForClass
+import BG_FindSpeedForClass
+import BG_FindBobCycleForClass
+import BG_FindBobForClass
+import BG_FindFovForClass
+import BG_FindRegenRateForClass
+import BG_FindFallDamageForClass
+import BG_FindHealthForClass
+import BG_FindViewheightForClass
+import BG_FindZOffsetForClass
+import BG_FindBBoxForClass
+import BG_FindSpriteHeightForClass
+import BG_FindStagesForClass
+import BG_FindHudNameForClass
+import BG_FindShadowScaleForClass
+import BG_FindSkinNameForClass
+import BG_FindModelScaleForClass
+import BG_FindModelNameForClass
+import BG_FindHumanNameForClassNum
+import BG_FindNameForClassNum
+import BG_FindClassNumForName
+import BG_InitBuildableOverrides
+import BG_FindTransparentTestForBuildable
+import BG_FindReplaceableTestForBuildable
+import BG_FindUniqueTestForBuildable
+import BG_FindDCCTestForBuildable
+import BG_FindCreepSizeForBuildable
+import BG_FindCreepTestForBuildable
+import BG_FindInvertNormalForBuildable
+import BG_FindMinNormalForBuildable
+import BG_FindProjTypeForBuildable
+import BG_FindFireSpeedForBuildable
+import BG_FindRangeForBuildable
+import BG_FindUsableForBuildable
+import BG_FindBuildTimeForBuildable
+import BG_FindNextThinkForBuildable
+import BG_FindAnimForBuildable
+import BG_FindBuildWeaponForBuildable
+import BG_FindTeamForBuildable
+import BG_FindMODForBuildable
+import BG_FindSplashRadiusForBuildable
+import BG_FindSplashDamageForBuildable
+import BG_FindStagesForBuildable
+import BG_FindBuildPointsForBuildable
+import BG_FindBounceForBuildable
+import BG_FindTrajectoryForBuildable
+import BG_FindRegenRateForBuildable
+import BG_FindHealthForBuildable
+import BG_FindZOffsetForBuildable
+import BG_FindBBoxForBuildable
+import BG_FindModelScaleForBuildable
+import BG_FindModelsForBuildable
+import BG_FindEntityNameForBuildable
+import BG_FindHumanNameForBuildable
+import BG_FindNameForBuildable
+import BG_FindBuildNumForEntityName
+import BG_FindBuildNumForName
+import BG_GetValueOfEquipment
+import BG_GetValueOfHuman
+import BG_PositionBuildableRelativeToPlayer
+import BG_RotateAxis
+import BG_UpgradeIsActive
+import BG_DeactivateUpgrade
+import BG_ActivateUpgrade
+import BG_InventoryContainsUpgrade
+import BG_RemoveUpgradeFromInventory
+import BG_AddUpgradeToInventory
+import BG_InventoryContainsWeapon
+import BG_RemoveWeaponFromInventory
+import BG_AddWeaponToInventory
+import BG_WeaponIsFull
+import BG_PackAmmoArray
+import BG_UnpackAmmoArray
+import Pmove
+import PM_UpdateViewAngles
+import Com_Printf
+import Com_Error
+import Info_NextPair
+import Info_Validate
+import Info_SetValueForKey_Big
+import Info_SetValueForKey
+import Info_RemoveKey_big
+import Info_RemoveKey
+import Info_ValueForKey
+import Com_TruncateLongString
+import va
+import Q_CountChar
+import Q_CleanStr
+import Q_PrintStrlen
+import Q_strcat
+import Q_strncpyz
+import Q_stristr
+import Q_strrchr
+import Q_strupr
+import Q_strlwr
+import Q_stricmpn
+import Q_strncmp
+import Q_stricmp
+import Q_isintegral
+import Q_isanumber
+import Q_isdigit
+import Q_isalpha
+import Q_isupper
+import Q_islower
+import Q_isprint
+import Com_RandomBytes
+import Com_SkipCharset
+import Com_SkipTokens
+import Com_sprintf
+import Com_HexStrToInt
+import Parse3DMatrix
+import Parse2DMatrix
+import Parse1DMatrix
+import SkipRestOfLine
+import SkipBracedSection
+import COM_MatchToken
+import COM_ParseWarning
+import COM_ParseError
+import COM_Compress
+import COM_ParseExt
+import COM_Parse
+import COM_GetCurrentParseLine
+import COM_BeginParseSession
+import COM_DefaultExtension
+import COM_StripExtension
+import COM_GetExtension
+import COM_SkipPath
+import Com_Clamp
+import DistanceBetweenLineSegments
+import DistanceBetweenLineSegmentsSquared
+import VectorMaxComponent
+import VectorMinComponent
+import pointToLineDistance
+import VectorDistance
+import ProjectPointOntoVector
+import GetPerpendicularViewVector
+import Q_isnan
+import PerpendicularVector
+import AngleVectors
+import VectorMatrixMultiply
+import MatrixMultiply
+import MakeNormalVectors
+import RotateAroundAxe
+import RotateAroundDirection
+import RotatePointAroundVector
+import ProjectPointOnPlane
+import PlaneFromPoints
+import AngleDelta
+import AngleNormalize180
+import AngleNormalize360
+import AnglesSubtract
+import AngleSubtract
+import LerpAngle
+import AngleMod
+import BoundsIntersectPoint
+import BoundsIntersectSphere
+import BoundsIntersect
+import BoxOnPlaneSide
+import SetPlaneSignbits
+import AxisCopy
+import AxisClear
+import AxisToAngles
+import AnglesToAxis
+import vectoangles
+import Q_crandom
+import Q_random
+import Q_rand
+import Q_acos
+import Q_log2
+import VectorRotate
+import Vector4Scale
+import VectorNormalize2
+import VectorNormalize
+import CrossProduct
+import VectorInverse
+import VectorNormalizeFast
+import DistanceSquared
+import Distance
+import VectorLengthSquared
+import VectorLength
+import VectorCompare
+import AddPointToBounds
+import ClearBounds
+import RadiusFromBounds
+import NormalizeColor
+import ColorBytes4
+import ColorBytes3
+import _VectorMA
+import _VectorScale
+import _VectorCopy
+import _VectorAdd
+import _VectorSubtract
+import _DotProduct
+import ByteToDir
+import DirToByte
+import ClampShort
+import ClampChar
+import Q_rsqrt
+import Q_fabs
+import axisDefault
+import vec3_origin
+import g_color_table
+import colorDkGrey
+import colorMdGrey
+import colorLtGrey
+import colorWhite
+import colorCyan
+import colorMagenta
+import colorYellow
+import colorBlue
+import colorGreen
+import colorRed
+import colorBlack
+import bytedirs
+import Hunk_Alloc
+import FloatSwap
+import LongSwap
+import ShortSwap
+import rint
+import pow
+import acos
+import fabs
+import abs
+import tan
+import atan2
+import cos
+import sin
+import sqrt
+import floor
+import ceil
+import memcpy
+import memset
+import memmove
+import sscanf
+import vsprintf
+import _atoi
+import atoi
+import _atof
+import atof
+import toupper
+import tolower
+import strncpy
+import strstr
+import strrchr
+import strchr
+import strcmp
+import strcpy
+import strcat
+import strlen
+import rand
+import srand
+import qsort
+lit
+align 1
+LABELV $753
+byte 1 85
+byte 1 110
+byte 1 107
+byte 1 110
+byte 1 111
+byte 1 119
+byte 1 110
+byte 1 32
+byte 1 99
+byte 1 108
+byte 1 105
+byte 1 101
+byte 1 110
+byte 1 116
+byte 1 32
+byte 1 103
+byte 1 97
+byte 1 109
+byte 1 101
+byte 1 32
+byte 1 99
+byte 1 111
+byte 1 109
+byte 1 109
+byte 1 97
+byte 1 110
+byte 1 100
+byte 1 58
+byte 1 32
+byte 1 37
+byte 1 115
+byte 1 10
+byte 1 0
+align 1
+LABELV $752
+byte 1 109
+byte 1 101
+byte 1 110
+byte 1 117
+byte 1 32
+byte 1 112
+byte 1 116
+byte 1 114
+byte 1 99
+byte 1 95
+byte 1 112
+byte 1 111
+byte 1 112
+byte 1 109
+byte 1 101
+byte 1 110
+byte 1 117
+byte 1 10
+byte 1 0
+align 1
+LABELV $751
+byte 1 112
+byte 1 116
+byte 1 114
+byte 1 99
+byte 1 99
+byte 1 111
+byte 1 110
+byte 1 102
+byte 1 105
+byte 1 114
+byte 1 109
+byte 1 0
+align 1
+LABELV $746
+byte 1 112
+byte 1 116
+byte 1 114
+byte 1 99
+byte 1 105
+byte 1 115
+byte 1 115
+byte 1 117
+byte 1 101
+byte 1 0
+align 1
+LABELV $743
+byte 1 112
+byte 1 116
+byte 1 114
+byte 1 99
+byte 1 118
+byte 1 101
+byte 1 114
+byte 1 105
+byte 1 102
+byte 1 121
+byte 1 32
+byte 1 37
+byte 1 100
+byte 1 0
+align 1
+LABELV $742
+byte 1 112
+byte 1 116
+byte 1 114
+byte 1 99
+byte 1 114
+byte 1 101
+byte 1 113
+byte 1 117
+byte 1 101
+byte 1 115
+byte 1 116
+byte 1 0
+align 1
+LABELV $734
+byte 1 99
+byte 1 108
+byte 1 105
+byte 1 101
+byte 1 110
+byte 1 116
+byte 1 32
+byte 1 119
+byte 1 101
+byte 1 97
+byte 1 112
+byte 1 111
+byte 1 110
+byte 1 115
+byte 1 119
+byte 1 105
+byte 1 116
+byte 1 99
+byte 1 104
+byte 1 10
+byte 1 0
+align 1
+LABELV $733
+byte 1 119
+byte 1 101
+byte 1 97
+byte 1 112
+byte 1 111
+byte 1 110
+byte 1 115
+byte 1 119
+byte 1 105
+byte 1 116
+byte 1 99
+byte 1 104
+byte 1 0
+align 1
+LABELV $719
+byte 1 112
+byte 1 111
+byte 1 105
+byte 1 115
+byte 1 111
+byte 1 110
+byte 1 99
+byte 1 108
+byte 1 111
+byte 1 117
+byte 1 100
+byte 1 0
+align 1
+LABELV $716
+byte 1 99
+byte 1 108
+byte 1 111
+byte 1 115
+byte 1 101
+byte 1 109
+byte 1 101
+byte 1 110
+byte 1 117
+byte 1 115
+byte 1 10
+byte 1 0
+align 1
+LABELV $715
+byte 1 115
+byte 1 101
+byte 1 114
+byte 1 118
+byte 1 101
+byte 1 114
+byte 1 99
+byte 1 108
+byte 1 111
+byte 1 115
+byte 1 101
+byte 1 109
+byte 1 101
+byte 1 110
+byte 1 117
+byte 1 115
+byte 1 0
+align 1
+LABELV $709
+byte 1 115
+byte 1 101
+byte 1 114
+byte 1 118
+byte 1 101
+byte 1 114
+byte 1 109
+byte 1 101
+byte 1 110
+byte 1 117
+byte 1 0
+align 1
+LABELV $705
+byte 1 99
+byte 1 108
+byte 1 105
+byte 1 101
+byte 1 110
+byte 1 116
+byte 1 76
+byte 1 101
+byte 1 118
+byte 1 101
+byte 1 108
+byte 1 83
+byte 1 104
+byte 1 111
+byte 1 116
+byte 1 0
+align 1
+LABELV $700
+byte 1 114
+byte 1 101
+byte 1 109
+byte 1 97
+byte 1 112
+byte 1 83
+byte 1 104
+byte 1 97
+byte 1 100
+byte 1 101
+byte 1 114
+byte 1 0
+align 1
+LABELV $697
+byte 1 109
+byte 1 97
+byte 1 112
+byte 1 95
+byte 1 114
+byte 1 101
+byte 1 115
+byte 1 116
+byte 1 97
+byte 1 114
+byte 1 116
+byte 1 0
+align 1
+LABELV $694
+byte 1 116
+byte 1 105
+byte 1 110
+byte 1 102
+byte 1 111
+byte 1 0
+align 1
+LABELV $691
+byte 1 115
+byte 1 99
+byte 1 111
+byte 1 114
+byte 1 101
+byte 1 115
+byte 1 0
+align 1
+LABELV $676
+byte 1 116
+byte 1 99
+byte 1 104
+byte 1 97
+byte 1 116
+byte 1 0
+align 1
+LABELV $673
+byte 1 37
+byte 1 115
+byte 1 10
+byte 1 0
+align 1
+LABELV $667
+byte 1 99
+byte 1 104
+byte 1 97
+byte 1 116
+byte 1 0
+align 1
+LABELV $664
+byte 1 37
+byte 1 115
+byte 1 0
+align 1
+LABELV $663
+byte 1 112
+byte 1 114
+byte 1 105
+byte 1 110
+byte 1 116
+byte 1 0
+align 1
+LABELV $660
+byte 1 99
+byte 1 115
+byte 1 0
+align 1
+LABELV $657
+byte 1 99
+byte 1 112
+byte 1 0
+align 1
+LABELV $650
+byte 1 99
+byte 1 103
+byte 1 97
+byte 1 109
+byte 1 101
+byte 1 58
+byte 1 32
+byte 1 100
+byte 1 101
+byte 1 98
+byte 1 117
+byte 1 103
+byte 1 58
+byte 1 32
+byte 1 110
+byte 1 111
+byte 1 32
+byte 1 115
+byte 1 117
+byte 1 99
+byte 1 104
+byte 1 32
+byte 1 109
+byte 1 101
+byte 1 110
+byte 1 117
+byte 1 32
+byte 1 37
+byte 1 100
+byte 1 10
+byte 1 0
+align 1
+LABELV $649
+byte 1 109
+byte 1 101
+byte 1 110
+byte 1 117
+byte 1 32
+byte 1 116
+byte 1 114
+byte 1 101
+byte 1 109
+byte 1 117
+byte 1 108
+byte 1 111
+byte 1 117
+byte 1 115
+byte 1 95
+byte 1 97
+byte 1 108
+byte 1 105
+byte 1 101
+byte 1 110
+byte 1 117
+byte 1 112
+byte 1 103
+byte 1 114
+byte 1 97
+byte 1 100
+byte 1 101
+byte 1 10
+byte 1 0
+align 1
+LABELV $646
+byte 1 117
+byte 1 105
+byte 1 95
+byte 1 99
+byte 1 117
+byte 1 114
+byte 1 114
+byte 1 101
+byte 1 110
+byte 1 116
+byte 1 67
+byte 1 108
+byte 1 97
+byte 1 115
+byte 1 115
+byte 1 0
+align 1
+LABELV $644
+byte 1 84
+byte 1 104
+byte 1 101
+byte 1 32
+byte 1 101
+byte 1 120
+byte 1 105
+byte 1 116
+byte 1 32
+byte 1 116
+byte 1 111
+byte 1 32
+byte 1 116
+byte 1 104
+byte 1 105
+byte 1 115
+byte 1 32
+byte 1 72
+byte 1 111
+byte 1 118
+byte 1 101
+byte 1 108
+byte 1 32
+byte 1 119
+byte 1 111
+byte 1 117
+byte 1 108
+byte 1 100
+byte 1 32
+byte 1 97
+byte 1 108
+byte 1 119
+byte 1 97
+byte 1 121
+byte 1 115
+byte 1 32
+byte 1 98
+byte 1 101
+byte 1 32
+byte 1 98
+byte 1 108
+byte 1 111
+byte 1 99
+byte 1 107
+byte 1 101
+byte 1 100
+byte 1 10
+byte 1 0
+align 1
+LABELV $643
+byte 1 84
+byte 1 104
+byte 1 101
+byte 1 32
+byte 1 101
+byte 1 120
+byte 1 105
+byte 1 116
+byte 1 32
+byte 1 116
+byte 1 111
+byte 1 32
+byte 1 116
+byte 1 104
+byte 1 105
+byte 1 115
+byte 1 32
+byte 1 72
+byte 1 111
+byte 1 118
+byte 1 101
+byte 1 108
+byte 1 32
+byte 1 119
+byte 1 111
+byte 1 117
+byte 1 108
+byte 1 100
+byte 1 32
+byte 1 97
+byte 1 108
+byte 1 119
+byte 1 97
+byte 1 121
+byte 1 115
+byte 1 32
+byte 1 98
+byte 1 101
+byte 1 32
+byte 1 98
+byte 1 108
+byte 1 111
+byte 1 99
+byte 1 107
+byte 1 101
+byte 1 100
+byte 1 46
+byte 1 32
+byte 1 80
+byte 1 108
+byte 1 101
+byte 1 97
+byte 1 115
+byte 1 101
+byte 1 32
+byte 1 99
+byte 1 104
+byte 1 111
+byte 1 111
+byte 1 115
+byte 1 101
+byte 1 32
+byte 1 97
+byte 1 32
+byte 1 109
+byte 1 111
+byte 1 114
+byte 1 101
+byte 1 32
+byte 1 115
+byte 1 117
+byte 1 105
+byte 1 116
+byte 1 97
+byte 1 98
+byte 1 108
+byte 1 101
+byte 1 32
+byte 1 108
+byte 1 111
+byte 1 99
+byte 1 97
+byte 1 116
+byte 1 105
+byte 1 111
+byte 1 110
+byte 1 46
+byte 1 0
+align 1
+LABELV $638
+byte 1 84
+byte 1 104
+byte 1 101
+byte 1 32
+byte 1 101
+byte 1 120
+byte 1 105
+byte 1 116
+byte 1 32
+byte 1 116
+byte 1 111
+byte 1 32
+byte 1 116
+byte 1 104
+byte 1 105
+byte 1 115
+byte 1 32
+byte 1 72
+byte 1 111
+byte 1 118
+byte 1 101
+byte 1 108
+byte 1 32
+byte 1 105
+byte 1 115
+byte 1 32
+byte 1 99
+byte 1 117
+byte 1 114
+byte 1 114
+byte 1 101
+byte 1 110
+byte 1 116
+byte 1 108
+byte 1 121
+byte 1 32
+byte 1 98
+byte 1 108
+byte 1 111
+byte 1 99
+byte 1 107
+byte 1 101
+byte 1 100
+byte 1 10
+byte 1 0
+align 1
+LABELV $637
+byte 1 84
+byte 1 104
+byte 1 101
+byte 1 32
+byte 1 101
+byte 1 120
+byte 1 105
+byte 1 116
+byte 1 32
+byte 1 116
+byte 1 111
+byte 1 32
+byte 1 116
+byte 1 104
+byte 1 105
+byte 1 115
+byte 1 32
+byte 1 72
+byte 1 111
+byte 1 118
+byte 1 101
+byte 1 108
+byte 1 32
+byte 1 105
+byte 1 115
+byte 1 32
+byte 1 99
+byte 1 117
+byte 1 114
+byte 1 114
+byte 1 101
+byte 1 110
+byte 1 116
+byte 1 108
+byte 1 121
+byte 1 32
+byte 1 98
+byte 1 108
+byte 1 111
+byte 1 99
+byte 1 107
+byte 1 101
+byte 1 100
+byte 1 46
+byte 1 32
+byte 1 80
+byte 1 108
+byte 1 101
+byte 1 97
+byte 1 115
+byte 1 101
+byte 1 32
+byte 1 119
+byte 1 97
+byte 1 105
+byte 1 116
+byte 1 32
+byte 1 117
+byte 1 110
+byte 1 116
+byte 1 105
+byte 1 108
+byte 1 32
+byte 1 105
+byte 1 116
+byte 1 32
+byte 1 98
+byte 1 101
+byte 1 99
+byte 1 111
+byte 1 109
+byte 1 101
+byte 1 115
+byte 1 32
+byte 1 99
+byte 1 108
+byte 1 101
+byte 1 97
+byte 1 114
+byte 1 32
+byte 1 116
+byte 1 104
+byte 1 101
+byte 1 110
+byte 1 32
+byte 1 116
+byte 1 114
+byte 1 121
+byte 1 32
+byte 1 97
+byte 1 103
+byte 1 97
+byte 1 105
+byte 1 110
+byte 1 46
+byte 1 0
+align 1
+LABELV $632
+byte 1 84
+byte 1 104
+byte 1 105
+byte 1 115
+byte 1 32
+byte 1 72
+byte 1 111
+byte 1 118
+byte 1 101
+byte 1 108
+byte 1 32
+byte 1 105
+byte 1 115
+byte 1 32
+byte 1 111
+byte 1 99
+byte 1 99
+byte 1 117
+byte 1 112
+byte 1 105
+byte 1 101
+byte 1 100
+byte 1 32
+byte 1 98
+byte 1 121
+byte 1 32
+byte 1 97
+byte 1 110
+byte 1 111
+byte 1 116
+byte 1 104
+byte 1 101
+byte 1 114
+byte 1 32
+byte 1 98
+byte 1 117
+byte 1 105
+byte 1 108
+byte 1 100
+byte 1 101
+byte 1 114
+byte 1 10
+byte 1 0
+align 1
+LABELV $631
+byte 1 84
+byte 1 104
+byte 1 105
+byte 1 115
+byte 1 32
+byte 1 72
+byte 1 111
+byte 1 118
+byte 1 101
+byte 1 108
+byte 1 32
+byte 1 105
+byte 1 115
+byte 1 32
+byte 1 111
+byte 1 99
+byte 1 99
+byte 1 117
+byte 1 112
+byte 1 105
+byte 1 101
+byte 1 100
+byte 1 32
+byte 1 98
+byte 1 121
+byte 1 32
+byte 1 97
+byte 1 110
+byte 1 111
+byte 1 116
+byte 1 104
+byte 1 101
+byte 1 114
+byte 1 32
+byte 1 98
+byte 1 117
+byte 1 105
+byte 1 108
+byte 1 100
+byte 1 101
+byte 1 114
+byte 1 46
+byte 1 32
+byte 1 80
+byte 1 108
+byte 1 101
+byte 1 97
+byte 1 115
+byte 1 101
+byte 1 32
+byte 1 102
+byte 1 105
+byte 1 110
+byte 1 100
+byte 1 32
+byte 1 111
+byte 1 114
+byte 1 32
+byte 1 98
+byte 1 117
+byte 1 105
+byte 1 108
+byte 1 100
+byte 1 32
+byte 1 97
+byte 1 110
+byte 1 111
+byte 1 116
+byte 1 104
+byte 1 101
+byte 1 114
+byte 1 46
+byte 1 0
+align 1
+LABELV $626
+byte 1 84
+byte 1 104
+byte 1 101
+byte 1 114
+byte 1 101
+byte 1 32
+byte 1 105
+byte 1 115
+byte 1 32
+byte 1 110
+byte 1 111
+byte 1 32
+byte 1 79
+byte 1 118
+byte 1 101
+byte 1 114
+byte 1 109
+byte 1 105
+byte 1 110
+byte 1 100
+byte 1 46
+byte 1 32
+byte 1 65
+byte 1 110
+byte 1 32
+byte 1 79
+byte 1 118
+byte 1 101
+byte 1 114
+byte 1 109
+byte 1 105
+byte 1 110
+byte 1 100
+byte 1 32
+byte 1 109
+byte 1 117
+byte 1 115
+byte 1 116
+byte 1 32
+byte 1 98
+byte 1 101
+byte 1 32
+byte 1 98
+byte 1 117
+byte 1 105
+byte 1 108
+byte 1 116
+byte 1 32
+byte 1 116
+byte 1 111
+byte 1 32
+byte 1 97
+byte 1 108
+byte 1 108
+byte 1 111
+byte 1 119
+byte 1 32
+byte 1 121
+byte 1 111
+byte 1 117
+byte 1 32
+byte 1 116
+byte 1 111
+byte 1 32
+byte 1 117
+byte 1 112
+byte 1 103
+byte 1 114
+byte 1 97
+byte 1 100
+byte 1 101
+byte 1 46
+byte 1 0
+align 1
+LABELV $621
+byte 1 84
+byte 1 104
+byte 1 105
+byte 1 115
+byte 1 32
+byte 1 108
+byte 1 111
+byte 1 99
+byte 1 97
+byte 1 116
+byte 1 105
+byte 1 111
+byte 1 110
+byte 1 32
+byte 1 105
+byte 1 115
+byte 1 32
+byte 1 116
+byte 1 111
+byte 1 111
+byte 1 32
+byte 1 99
+byte 1 108
+byte 1 111
+byte 1 115
+byte 1 101
+byte 1 32
+byte 1 116
+byte 1 111
+byte 1 32
+byte 1 116
+byte 1 104
+byte 1 101
+byte 1 32
+byte 1 101
+byte 1 110
+byte 1 101
+byte 1 109
+byte 1 121
+byte 1 32
+byte 1 116
+byte 1 111
+byte 1 32
+byte 1 101
+byte 1 118
+byte 1 111
+byte 1 108
+byte 1 118
+byte 1 101
+byte 1 10
+byte 1 0
+align 1
+LABELV $620
+byte 1 84
+byte 1 104
+byte 1 105
+byte 1 115
+byte 1 32
+byte 1 108
+byte 1 111
+byte 1 99
+byte 1 97
+byte 1 116
+byte 1 105
+byte 1 111
+byte 1 110
+byte 1 32
+byte 1 105
+byte 1 115
+byte 1 32
+byte 1 116
+byte 1 111
+byte 1 111
+byte 1 32
+byte 1 99
+byte 1 108
+byte 1 111
+byte 1 115
+byte 1 101
+byte 1 32
+byte 1 116
+byte 1 111
+byte 1 32
+byte 1 116
+byte 1 104
+byte 1 101
+byte 1 32
+byte 1 101
+byte 1 110
+byte 1 101
+byte 1 109
+byte 1 121
+byte 1 32
+byte 1 116
+byte 1 111
+byte 1 32
+byte 1 101
+byte 1 118
+byte 1 111
+byte 1 108
+byte 1 118
+byte 1 101
+byte 1 46
+byte 1 32
+byte 1 77
+byte 1 111
+byte 1 118
+byte 1 101
+byte 1 32
+byte 1 97
+byte 1 119
+byte 1 97
+byte 1 121
+byte 1 32
+byte 1 117
+byte 1 110
+byte 1 116
+byte 1 105
+byte 1 108
+byte 1 32
+byte 1 121
+byte 1 111
+byte 1 117
+byte 1 32
+byte 1 97
+byte 1 114
+byte 1 101
+byte 1 32
+byte 1 110
+byte 1 111
+byte 1 32
+byte 1 108
+byte 1 111
+byte 1 110
+byte 1 103
+byte 1 101
+byte 1 114
+byte 1 32
+byte 1 97
+byte 1 119
+byte 1 97
+byte 1 114
+byte 1 101
+byte 1 32
+byte 1 111
+byte 1 102
+byte 1 32
+byte 1 116
+byte 1 104
+byte 1 101
+byte 1 32
+byte 1 101
+byte 1 110
+byte 1 101
+byte 1 109
+byte 1 121
+byte 1 39
+byte 1 115
+byte 1 32
+byte 1 112
+byte 1 114
+byte 1 101
+byte 1 115
+byte 1 101
+byte 1 110
+byte 1 99
+byte 1 101
+byte 1 32
+byte 1 97
+byte 1 110
+byte 1 100
+byte 1 32
+byte 1 116
+byte 1 114
+byte 1 121
+byte 1 32
+byte 1 97
+byte 1 103
+byte 1 97
+byte 1 105
+byte 1 110
+byte 1 46
+byte 1 0
+align 1
+LABELV $615
+byte 1 84
+byte 1 104
+byte 1 101
+byte 1 114
+byte 1 101
+byte 1 32
+byte 1 105
+byte 1 115
+byte 1 32
+byte 1 110
+byte 1 111
+byte 1 32
+byte 1 114
+byte 1 111
+byte 1 111
+byte 1 109
+byte 1 32
+byte 1 116
+byte 1 111
+byte 1 32
+byte 1 101
+byte 1 118
+byte 1 111
+byte 1 108
+byte 1 118
+byte 1 101
+byte 1 32
+byte 1 104
+byte 1 101
+byte 1 114
+byte 1 101
+byte 1 10
+byte 1 0
+align 1
+LABELV $614
+byte 1 84
+byte 1 104
+byte 1 101
+byte 1 114
+byte 1 101
+byte 1 32
+byte 1 105
+byte 1 115
+byte 1 32
+byte 1 110
+byte 1 111
+byte 1 32
+byte 1 114
+byte 1 111
+byte 1 111
+byte 1 109
+byte 1 32
+byte 1 116
+byte 1 111
+byte 1 32
+byte 1 101
+byte 1 118
+byte 1 111
+byte 1 108
+byte 1 118
+byte 1 101
+byte 1 32
+byte 1 104
+byte 1 101
+byte 1 114
+byte 1 101
+byte 1 46
+byte 1 32
+byte 1 77
+byte 1 111
+byte 1 118
+byte 1 101
+byte 1 32
+byte 1 97
+byte 1 119
+byte 1 97
+byte 1 121
+byte 1 32
+byte 1 102
+byte 1 114
+byte 1 111
+byte 1 109
+byte 1 32
+byte 1 119
+byte 1 97
+byte 1 108
+byte 1 108
+byte 1 115
+byte 1 32
+byte 1 111
+byte 1 114
+byte 1 32
+byte 1 111
+byte 1 116
+byte 1 104
+byte 1 101
+byte 1 114
+byte 1 32
+byte 1 110
+byte 1 101
+byte 1 97
+byte 1 114
+byte 1 98
+byte 1 121
+byte 1 32
+byte 1 111
+byte 1 98
+byte 1 106
+byte 1 101
+byte 1 99
+byte 1 116
+byte 1 115
+byte 1 32
+byte 1 97
+byte 1 110
+byte 1 100
+byte 1 32
+byte 1 116
+byte 1 114
+byte 1 121
+byte 1 32
+byte 1 97
+byte 1 103
+byte 1 97
+byte 1 105
+byte 1 110
+byte 1 46
+byte 1 0
+align 1
+LABELV $609
+byte 1 67
+byte 1 97
+byte 1 110
+byte 1 110
+byte 1 111
+byte 1 116
+byte 1 32
+byte 1 98
+byte 1 117
+byte 1 105
+byte 1 108
+byte 1 100
+byte 1 32
+byte 1 111
+byte 1 110
+byte 1 32
+byte 1 116
+byte 1 104
+byte 1 105
+byte 1 115
+byte 1 32
+byte 1 115
+byte 1 117
+byte 1 114
+byte 1 102
+byte 1 97
+byte 1 99
+byte 1 101
+byte 1 46
+byte 1 32
+byte 1 84
+byte 1 104
+byte 1 105
+byte 1 115
+byte 1 32
+byte 1 115
+byte 1 117
+byte 1 114
+byte 1 102
+byte 1 97
+byte 1 99
+byte 1 101
+byte 1 32
+byte 1 105
+byte 1 115
+byte 1 32
+byte 1 116
+byte 1 111
+byte 1 111
+byte 1 32
+byte 1 115
+byte 1 116
+byte 1 101
+byte 1 101
+byte 1 112
+byte 1 32
+byte 1 111
+byte 1 114
+byte 1 32
+byte 1 117
+byte 1 110
+byte 1 115
+byte 1 117
+byte 1 105
+byte 1 116
+byte 1 97
+byte 1 98
+byte 1 108
+byte 1 101
+byte 1 32
+byte 1 116
+byte 1 111
+byte 1 32
+byte 1 98
+byte 1 117
+byte 1 105
+byte 1 108
+byte 1 100
+byte 1 32
+byte 1 111
+byte 1 110
+byte 1 46
+byte 1 32
+byte 1 80
+byte 1 108
+byte 1 101
+byte 1 97
+byte 1 115
+byte 1 101
+byte 1 32
+byte 1 99
+byte 1 104
+byte 1 111
+byte 1 111
+byte 1 115
+byte 1 101
+byte 1 32
+byte 1 97
+byte 1 110
+byte 1 111
+byte 1 116
+byte 1 104
+byte 1 101
+byte 1 114
+byte 1 32
+byte 1 115
+byte 1 105
+byte 1 116
+byte 1 101
+byte 1 32
+byte 1 102
+byte 1 111
+byte 1 114
+byte 1 32
+byte 1 116
+byte 1 104
+byte 1 105
+byte 1 115
+byte 1 32
+byte 1 115
+byte 1 116
+byte 1 114
+byte 1 117
+byte 1 99
+byte 1 116
+byte 1 117
+byte 1 114
+byte 1 101
+byte 1 46
+byte 1 0
+align 1
+LABELV $604
+byte 1 84
+byte 1 104
+byte 1 105
+byte 1 115
+byte 1 32
+byte 1 115
+byte 1 112
+byte 1 97
+byte 1 119
+byte 1 110
+byte 1 32
+byte 1 119
+byte 1 105
+byte 1 108
+byte 1 108
+byte 1 32
+byte 1 110
+byte 1 111
+byte 1 116
+byte 1 32
+byte 1 98
+byte 1 101
+byte 1 32
+byte 1 99
+byte 1 111
+byte 1 110
+byte 1 116
+byte 1 114
+byte 1 111
+byte 1 108
+byte 1 108
+byte 1 101
+byte 1 100
+byte 1 32
+byte 1 98
+byte 1 121
+byte 1 32
+byte 1 97
+byte 1 110
+byte 1 32
+byte 1 79
+byte 1 118
+byte 1 101
+byte 1 114
+byte 1 109
+byte 1 105
+byte 1 110
+byte 1 100
+byte 1 10
+byte 1 0
+align 1
+LABELV $603
+byte 1 87
+byte 1 65
+byte 1 82
+byte 1 78
+byte 1 73
+byte 1 78
+byte 1 71
+byte 1 58
+byte 1 32
+byte 1 84
+byte 1 104
+byte 1 105
+byte 1 115
+byte 1 32
+byte 1 115
+byte 1 112
+byte 1 97
+byte 1 119
+byte 1 110
+byte 1 32
+byte 1 119
+byte 1 105
+byte 1 108
+byte 1 108
+byte 1 32
+byte 1 110
+byte 1 111
+byte 1 116
+byte 1 32
+byte 1 98
+byte 1 101
+byte 1 32
+byte 1 99
+byte 1 111
+byte 1 110
+byte 1 116
+byte 1 114
+byte 1 111
+byte 1 108
+byte 1 108
+byte 1 101
+byte 1 100
+byte 1 32
+byte 1 98
+byte 1 121
+byte 1 32
+byte 1 97
+byte 1 110
+byte 1 32
+byte 1 79
+byte 1 118
+byte 1 101
+byte 1 114
+byte 1 109
+byte 1 105
+byte 1 110
+byte 1 100
+byte 1 46
+byte 1 32
+byte 1 66
+byte 1 117
+byte 1 105
+byte 1 108
+byte 1 100
+byte 1 32
+byte 1 97
+byte 1 110
+byte 1 32
+byte 1 79
+byte 1 118
+byte 1 101
+byte 1 114
+byte 1 109
+byte 1 105
+byte 1 110
+byte 1 100
+byte 1 32
+byte 1 116
+byte 1 111
+byte 1 32
+byte 1 112
+byte 1 114
+byte 1 101
+byte 1 118
+byte 1 101
+byte 1 110
+byte 1 116
+byte 1 32
+byte 1 115
+byte 1 101
+byte 1 101
+byte 1 105
+byte 1 110
+byte 1 103
+byte 1 32
+byte 1 116
+byte 1 104
+byte 1 105
+byte 1 115
+byte 1 32
+byte 1 109
+byte 1 101
+byte 1 115
+byte 1 115
+byte 1 97
+byte 1 103
+byte 1 101
+byte 1 32
+byte 1 97
+byte 1 103
+byte 1 97
+byte 1 105
+byte 1 110
+byte 1 46
+byte 1 0
+align 1
+LABELV $598
+byte 1 84
+byte 1 104
+byte 1 101
+byte 1 32
+byte 1 79
+byte 1 118
+byte 1 101
+byte 1 114
+byte 1 109
+byte 1 105
+byte 1 110
+byte 1 100
+byte 1 32
+byte 1 99
+byte 1 97
+byte 1 110
+byte 1 110
+byte 1 111
+byte 1 116
+byte 1 32
+byte 1 99
+byte 1 111
+byte 1 110
+byte 1 116
+byte 1 114
+byte 1 111
+byte 1 108
+byte 1 32
+byte 1 97
+byte 1 110
+byte 1 121
+byte 1 32
+byte 1 109
+byte 1 111
+byte 1 114
+byte 1 101
+byte 1 32
+byte 1 115
+byte 1 116
+byte 1 114
+byte 1 117
+byte 1 99
+byte 1 116
+byte 1 117
+byte 1 114
+byte 1 101
+byte 1 115
+byte 1 10
+byte 1 0
+align 1
+LABELV $597
+byte 1 84
+byte 1 104
+byte 1 101
+byte 1 32
+byte 1 79
+byte 1 118
+byte 1 101
+byte 1 114
+byte 1 109
+byte 1 105
+byte 1 110
+byte 1 100
+byte 1 32
+byte 1 99
+byte 1 97
+byte 1 110
+byte 1 110
+byte 1 111
+byte 1 116
+byte 1 32
+byte 1 99
+byte 1 111
+byte 1 110
+byte 1 116
+byte 1 114
+byte 1 111
+byte 1 108
+byte 1 32
+byte 1 97
+byte 1 110
+byte 1 121
+byte 1 32
+byte 1 109
+byte 1 111
+byte 1 114
+byte 1 101
+byte 1 32
+byte 1 115
+byte 1 116
+byte 1 114
+byte 1 117
+byte 1 99
+byte 1 116
+byte 1 117
+byte 1 114
+byte 1 101
+byte 1 115
+byte 1 46
+byte 1 32
+byte 1 68
+byte 1 101
+byte 1 115
+byte 1 116
+byte 1 114
+byte 1 111
+byte 1 121
+byte 1 32
+byte 1 101
+byte 1 120
+byte 1 105
+byte 1 115
+byte 1 116
+byte 1 105
+byte 1 110
+byte 1 103
+byte 1 32
+byte 1 115
+byte 1 116
+byte 1 114
+byte 1 117
+byte 1 99
+byte 1 116
+byte 1 117
+byte 1 114
+byte 1 101
+byte 1 115
+byte 1 32
+byte 1 116
+byte 1 111
+byte 1 32
+byte 1 98
+byte 1 117
+byte 1 105
+byte 1 108
+byte 1 100
+byte 1 32
+byte 1 109
+byte 1 111
+byte 1 114
+byte 1 101
+byte 1 46
+byte 1 0
+align 1
+LABELV $592
+byte 1 84
+byte 1 104
+byte 1 101
+byte 1 114
+byte 1 101
+byte 1 32
+byte 1 99
+byte 1 97
+byte 1 110
+byte 1 32
+byte 1 111
+byte 1 110
+byte 1 108
+byte 1 121
+byte 1 32
+byte 1 98
+byte 1 101
+byte 1 32
+byte 1 111
+byte 1 110
+byte 1 101
+byte 1 32
+byte 1 72
+byte 1 111
+byte 1 118
+byte 1 101
+byte 1 108
+byte 1 10
+byte 1 0
+align 1
+LABELV $591
+byte 1 84
+byte 1 104
+byte 1 101
+byte 1 114
+byte 1 101
+byte 1 32
+byte 1 99
+byte 1 97
+byte 1 110
+byte 1 32
+byte 1 111
+byte 1 110
+byte 1 108
+byte 1 121
+byte 1 32
+byte 1 98
+byte 1 101
+byte 1 32
+byte 1 111
+byte 1 110
+byte 1 101
+byte 1 32
+byte 1 72
+byte 1 111
+byte 1 118
+byte 1 101
+byte 1 108
+byte 1 46
+byte 1 32
+byte 1 68
+byte 1 101
+byte 1 115
+byte 1 116
+byte 1 114
+byte 1 111
+byte 1 121
+byte 1 32
+byte 1 116
+byte 1 104
+byte 1 101
+byte 1 32
+byte 1 101
+byte 1 120
+byte 1 105
+byte 1 115
+byte 1 116
+byte 1 105
+byte 1 110
+byte 1 103
+byte 1 32
+byte 1 111
+byte 1 110
+byte 1 101
+byte 1 32
+byte 1 105
+byte 1 102
+byte 1 32
+byte 1 121
+byte 1 111
+byte 1 117
+byte 1 32
+byte 1 119
+byte 1 105
+byte 1 115
+byte 1 104
+byte 1 32
+byte 1 116
+byte 1 111
+byte 1 32
+byte 1 109
+byte 1 111
+byte 1 118
+byte 1 101
+byte 1 32
+byte 1 105
+byte 1 116
+byte 1 46
+byte 1 0
+align 1
+LABELV $586
+byte 1 84
+byte 1 104
+byte 1 101
+byte 1 114
+byte 1 101
+byte 1 32
+byte 1 99
+byte 1 97
+byte 1 110
+byte 1 32
+byte 1 111
+byte 1 110
+byte 1 108
+byte 1 121
+byte 1 32
+byte 1 98
+byte 1 101
+byte 1 32
+byte 1 111
+byte 1 110
+byte 1 101
+byte 1 32
+byte 1 79
+byte 1 118
+byte 1 101
+byte 1 114
+byte 1 109
+byte 1 105
+byte 1 110
+byte 1 100
+byte 1 10
+byte 1 0
+align 1
+LABELV $585
+byte 1 84
+byte 1 104
+byte 1 101
+byte 1 114
+byte 1 101
+byte 1 32
+byte 1 99
+byte 1 97
+byte 1 110
+byte 1 32
+byte 1 111
+byte 1 110
+byte 1 108
+byte 1 121
+byte 1 32
+byte 1 98
+byte 1 101
+byte 1 32
+byte 1 111
+byte 1 110
+byte 1 101
+byte 1 32
+byte 1 79
+byte 1 118
+byte 1 101
+byte 1 114
+byte 1 109
+byte 1 105
+byte 1 110
+byte 1 100
+byte 1 46
+byte 1 32
+byte 1 68
+byte 1 101
+byte 1 115
+byte 1 116
+byte 1 114
+byte 1 111
+byte 1 121
+byte 1 32
+byte 1 116
+byte 1 104
+byte 1 101
+byte 1 32
+byte 1 101
+byte 1 120
+byte 1 105
+byte 1 115
+byte 1 116
+byte 1 105
+byte 1 110
+byte 1 103
+byte 1 32
+byte 1 111
+byte 1 110
+byte 1 101
+byte 1 32
+byte 1 105
+byte 1 102
+byte 1 32
+byte 1 121
+byte 1 111
+byte 1 117
+byte 1 32
+byte 1 119
+byte 1 105
+byte 1 115
+byte 1 104
+byte 1 32
+byte 1 116
+byte 1 111
+byte 1 32
+byte 1 109
+byte 1 111
+byte 1 118
+byte 1 101
+byte 1 32
+byte 1 105
+byte 1 116
+byte 1 46
+byte 1 0
+align 1
+LABELV $580
+byte 1 84
+byte 1 104
+byte 1 101
+byte 1 114
+byte 1 101
+byte 1 32
+byte 1 105
+byte 1 115
+byte 1 32
+byte 1 110
+byte 1 111
+byte 1 32
+byte 1 79
+byte 1 118
+byte 1 101
+byte 1 114
+byte 1 109
+byte 1 105
+byte 1 110
+byte 1 100
+byte 1 10
+byte 1 0
+align 1
+LABELV $579
+byte 1 84
+byte 1 104
+byte 1 101
+byte 1 114
+byte 1 101
+byte 1 32
+byte 1 105
+byte 1 115
+byte 1 32
+byte 1 110
+byte 1 111
+byte 1 32
+byte 1 79
+byte 1 118
+byte 1 101
+byte 1 114
+byte 1 109
+byte 1 105
+byte 1 110
+byte 1 100
+byte 1 46
+byte 1 32
+byte 1 65
+byte 1 110
+byte 1 32
+byte 1 79
+byte 1 118
+byte 1 101
+byte 1 114
+byte 1 109
+byte 1 105
+byte 1 110
+byte 1 100
+byte 1 32
+byte 1 109
+byte 1 117
+byte 1 115
+byte 1 116
+byte 1 32
+byte 1 98
+byte 1 101
+byte 1 32
+byte 1 98
+byte 1 117
+byte 1 105
+byte 1 108
+byte 1 116
+byte 1 32
+byte 1 116
+byte 1 111
+byte 1 32
+byte 1 99
+byte 1 111
+byte 1 110
+byte 1 116
+byte 1 114
+byte 1 111
+byte 1 108
+byte 1 32
+byte 1 116
+byte 1 104
+byte 1 101
+byte 1 32
+byte 1 115
+byte 1 116
+byte 1 114
+byte 1 117
+byte 1 99
+byte 1 116
+byte 1 117
+byte 1 114
+byte 1 101
+byte 1 32
+byte 1 121
+byte 1 111
+byte 1 117
+byte 1 32
+byte 1 116
+byte 1 114
+byte 1 105
+byte 1 101
+byte 1 100
+byte 1 32
+byte 1 116
+byte 1 111
+byte 1 32
+byte 1 112
+byte 1 108
+byte 1 97
+byte 1 99
+byte 1 101
+byte 1 0
+align 1
+LABELV $574
+byte 1 84
+byte 1 104
+byte 1 101
+byte 1 114
+byte 1 101
+byte 1 32
+byte 1 105
+byte 1 115
+byte 1 32
+byte 1 110
+byte 1 111
+byte 1 32
+byte 1 99
+byte 1 114
+byte 1 101
+byte 1 101
+byte 1 112
+byte 1 32
+byte 1 104
+byte 1 101
+byte 1 114
+byte 1 101
+byte 1 10
+byte 1 0
+align 1
+LABELV $573
+byte 1 84
+byte 1 104
+byte 1 101
+byte 1 114
+byte 1 101
+byte 1 32
+byte 1 105
+byte 1 115
+byte 1 32
+byte 1 110
+byte 1 111
+byte 1 32
+byte 1 99
+byte 1 114
+byte 1 101
+byte 1 101
+byte 1 112
+byte 1 32
+byte 1 104
+byte 1 101
+byte 1 114
+byte 1 101
+byte 1 46
+byte 1 32
+byte 1 89
+byte 1 111
+byte 1 117
+byte 1 32
+byte 1 109
+byte 1 117
+byte 1 115
+byte 1 116
+byte 1 32
+byte 1 98
+byte 1 117
+byte 1 105
+byte 1 108
+byte 1 100
+byte 1 32
+byte 1 110
+byte 1 101
+byte 1 97
+byte 1 114
+byte 1 32
+byte 1 101
+byte 1 120
+byte 1 105
+byte 1 115
+byte 1 116
+byte 1 105
+byte 1 110
+byte 1 103
+byte 1 32
+byte 1 69
+byte 1 103
+byte 1 103
+byte 1 115
+byte 1 32
+byte 1 111
+byte 1 114
+byte 1 32
+byte 1 116
+byte 1 104
+byte 1 101
+byte 1 32
+byte 1 79
+byte 1 118
+byte 1 101
+byte 1 114
+byte 1 109
+byte 1 105
+byte 1 110
+byte 1 100
+byte 1 46
+byte 1 32
+byte 1 65
+byte 1 108
+byte 1 105
+byte 1 101
+byte 1 110
+byte 1 32
+byte 1 115
+byte 1 116
+byte 1 114
+byte 1 117
+byte 1 99
+byte 1 116
+byte 1 117
+byte 1 114
+byte 1 101
+byte 1 115
+byte 1 32
+byte 1 119
+byte 1 105
+byte 1 108
+byte 1 108
+byte 1 32
+byte 1 110
+byte 1 111
+byte 1 116
+byte 1 32
+byte 1 115
+byte 1 117
+byte 1 112
+byte 1 112
+byte 1 111
+byte 1 114
+byte 1 116
+byte 1 32
+byte 1 116
+byte 1 104
+byte 1 101
+byte 1 109
+byte 1 115
+byte 1 101
+byte 1 108
+byte 1 118
+byte 1 101
+byte 1 115
+byte 1 46
+byte 1 0
+align 1
+LABELV $568
+byte 1 84
+byte 1 104
+byte 1 101
+byte 1 114
+byte 1 101
+byte 1 32
+byte 1 105
+byte 1 115
+byte 1 32
+byte 1 110
+byte 1 111
+byte 1 32
+byte 1 114
+byte 1 111
+byte 1 111
+byte 1 109
+byte 1 32
+byte 1 116
+byte 1 111
+byte 1 32
+byte 1 98
+byte 1 117
+byte 1 105
+byte 1 108
+byte 1 100
+byte 1 32
+byte 1 104
+byte 1 101
+byte 1 114
+byte 1 101
+byte 1 46
+byte 1 32
+byte 1 77
+byte 1 111
+byte 1 118
+byte 1 101
+byte 1 32
+byte 1 117
+byte 1 110
+byte 1 116
+byte 1 105
+byte 1 108
+byte 1 32
+byte 1 116
+byte 1 104
+byte 1 101
+byte 1 32
+byte 1 115
+byte 1 116
+byte 1 114
+byte 1 117
+byte 1 99
+byte 1 116
+byte 1 117
+byte 1 114
+byte 1 101
+byte 1 32
+byte 1 116
+byte 1 117
+byte 1 114
+byte 1 110
+byte 1 115
+byte 1 32
+byte 1 116
+byte 1 114
+byte 1 97
+byte 1 110
+byte 1 115
+byte 1 108
+byte 1 117
+byte 1 99
+byte 1 101
+byte 1 110
+byte 1 116
+byte 1 32
+byte 1 103
+byte 1 114
+byte 1 101
+byte 1 101
+byte 1 110
+byte 1 32
+byte 1 105
+byte 1 110
+byte 1 100
+byte 1 105
+byte 1 99
+byte 1 97
+byte 1 116
+byte 1 105
+byte 1 110
+byte 1 103
+byte 1 32
+byte 1 97
+byte 1 32
+byte 1 118
+byte 1 97
+byte 1 108
+byte 1 105
+byte 1 100
+byte 1 32
+byte 1 98
+byte 1 117
+byte 1 105
+byte 1 108
+byte 1 100
+byte 1 32
+byte 1 108
+byte 1 111
+byte 1 99
+byte 1 97
+byte 1 116
+byte 1 105
+byte 1 111
+byte 1 110
+byte 1 46
+byte 1 0
+align 1
+LABELV $563
+byte 1 89
+byte 1 111
+byte 1 117
+byte 1 32
+byte 1 97
+byte 1 108
+byte 1 114
+byte 1 101
+byte 1 97
+byte 1 100
+byte 1 121
+byte 1 32
+byte 1 104
+byte 1 111
+byte 1 108
+byte 1 100
+byte 1 32
+byte 1 116
+byte 1 104
+byte 1 105
+byte 1 115
+byte 1 32
+byte 1 105
+byte 1 116
+byte 1 101
+byte 1 109
+byte 1 10
+byte 1 0
+align 1
+LABELV $562
+byte 1 89
+byte 1 111
+byte 1 117
+byte 1 32
+byte 1 97
+byte 1 108
+byte 1 114
+byte 1 101
+byte 1 97
+byte 1 100
+byte 1 121
+byte 1 32
+byte 1 104
+byte 1 111
+byte 1 108
+byte 1 100
+byte 1 32
+byte 1 116
+byte 1 104
+byte 1 105
+byte 1 115
+byte 1 32
+byte 1 105
+byte 1 116
+byte 1 101
+byte 1 109
+byte 1 46
+byte 1 32
+byte 1 73
+byte 1 116
+byte 1 32
+byte 1 105
+byte 1 115
+byte 1 32
+byte 1 110
+byte 1 111
+byte 1 116
+byte 1 32
+byte 1 112
+byte 1 111
+byte 1 115
+byte 1 115
+byte 1 105
+byte 1 98
+byte 1 108
+byte 1 101
+byte 1 32
+byte 1 116
+byte 1 111
+byte 1 32
+byte 1 99
+byte 1 97
+byte 1 114
+byte 1 114
+byte 1 121
+byte 1 32
+byte 1 109
+byte 1 117
+byte 1 108
+byte 1 116
+byte 1 105
+byte 1 112
+byte 1 108
+byte 1 101
+byte 1 32
+byte 1 105
+byte 1 116
+byte 1 101
+byte 1 109
+byte 1 115
+byte 1 32
+byte 1 111
+byte 1 102
+byte 1 32
+byte 1 116
+byte 1 104
+byte 1 101
+byte 1 32
+byte 1 115
+byte 1 97
+byte 1 109
+byte 1 101
+byte 1 32
+byte 1 116
+byte 1 121
+byte 1 112
+byte 1 101
+byte 1 46
+byte 1 0
+align 1
+LABELV $557
+byte 1 73
+byte 1 110
+byte 1 115
+byte 1 117
+byte 1 102
+byte 1 102
+byte 1 105
+byte 1 99
+byte 1 105
+byte 1 101
+byte 1 110
+byte 1 116
+byte 1 32
+byte 1 102
+byte 1 117
+byte 1 110
+byte 1 100
+byte 1 115
+byte 1 10
+byte 1 0
+align 1
+LABELV $556
+byte 1 73
+byte 1 110
+byte 1 115
+byte 1 117
+byte 1 102
+byte 1 102
+byte 1 105
+byte 1 99
+byte 1 105
+byte 1 101
+byte 1 110
+byte 1 116
+byte 1 32
+byte 1 102
+byte 1 117
+byte 1 110
+byte 1 100
+byte 1 115
+byte 1 46
+byte 1 32
+byte 1 89
+byte 1 111
+byte 1 117
+byte 1 32
+byte 1 100
+byte 1 111
+byte 1 32
+byte 1 110
+byte 1 111
+byte 1 116
+byte 1 32
+byte 1 104
+byte 1 97
+byte 1 118
+byte 1 101
+byte 1 32
+byte 1 101
+byte 1 110
+byte 1 111
+byte 1 117
+byte 1 103
+byte 1 104
+byte 1 32
+byte 1 99
+byte 1 114
+byte 1 101
+byte 1 100
+byte 1 105
+byte 1 116
+byte 1 115
+byte 1 32
+byte 1 116
+byte 1 111
+byte 1 32
+byte 1 112
+byte 1 101
+byte 1 114
+byte 1 102
+byte 1 111
+byte 1 114
+byte 1 109
+byte 1 32
+byte 1 116
+byte 1 104
+byte 1 105
+byte 1 115
+byte 1 32
+byte 1 97
+byte 1 99
+byte 1 116
+byte 1 105
+byte 1 111
+byte 1 110
+byte 1 46
+byte 1 0
+align 1
+LABELV $551
+byte 1 89
+byte 1 111
+byte 1 117
+byte 1 32
+byte 1 104
+byte 1 97
+byte 1 118
+byte 1 101
+byte 1 32
+byte 1 110
+byte 1 111
+byte 1 32
+byte 1 114
+byte 1 111
+byte 1 111
+byte 1 109
+byte 1 32
+byte 1 116
+byte 1 111
+byte 1 32
+byte 1 99
+byte 1 97
+byte 1 114
+byte 1 114
+byte 1 121
+byte 1 32
+byte 1 116
+byte 1 104
+byte 1 105
+byte 1 115
+byte 1 10
+byte 1 0
+align 1
+LABELV $550
+byte 1 89
+byte 1 111
+byte 1 117
+byte 1 32
+byte 1 104
+byte 1 97
+byte 1 118
+byte 1 101
+byte 1 32
+byte 1 110
+byte 1 111
+byte 1 32
+byte 1 114
+byte 1 111
+byte 1 111
+byte 1 109
+byte 1 32
+byte 1 116
+byte 1 111
+byte 1 32
+byte 1 99
+byte 1 97
+byte 1 114
+byte 1 114
+byte 1 121
+byte 1 32
+byte 1 116
+byte 1 104
+byte 1 105
+byte 1 115
+byte 1 46
+byte 1 32
+byte 1 80
+byte 1 108
+byte 1 101
+byte 1 97
+byte 1 115
+byte 1 101
+byte 1 32
+byte 1 115
+byte 1 101
+byte 1 108
+byte 1 108
+byte 1 32
+byte 1 97
+byte 1 110
+byte 1 121
+byte 1 32
+byte 1 99
+byte 1 111
+byte 1 110
+byte 1 102
+byte 1 108
+byte 1 105
+byte 1 99
+byte 1 116
+byte 1 105
+byte 1 110
+byte 1 103
+byte 1 32
+byte 1 117
+byte 1 112
+byte 1 103
+byte 1 114
+byte 1 97
+byte 1 100
+byte 1 101
+byte 1 115
+byte 1 32
+byte 1 98
+byte 1 101
+byte 1 102
+byte 1 111
+byte 1 114
+byte 1 101
+byte 1 32
+byte 1 112
+byte 1 117
+byte 1 114
+byte 1 99
+byte 1 104
+byte 1 97
+byte 1 115
+byte 1 105
+byte 1 110
+byte 1 103
+byte 1 32
+byte 1 116
+byte 1 104
+byte 1 105
+byte 1 115
+byte 1 32
+byte 1 105
+byte 1 116
+byte 1 101
+byte 1 109
+byte 1 46
+byte 1 0
+align 1
+LABELV $545
+byte 1 84
+byte 1 104
+byte 1 105
+byte 1 115
+byte 1 32
+byte 1 97
+byte 1 114
+byte 1 101
+byte 1 97
+byte 1 32
+byte 1 97
+byte 1 108
+byte 1 114
+byte 1 101
+byte 1 97
+byte 1 100
+byte 1 121
+byte 1 32
+byte 1 104
+byte 1 97
+byte 1 115
+byte 1 32
+byte 1 112
+byte 1 111
+byte 1 119
+byte 1 101
+byte 1 114
+byte 1 10
+byte 1 0
+align 1
+LABELV $544
+byte 1 84
+byte 1 104
+byte 1 105
+byte 1 115
+byte 1 32
+byte 1 97
+byte 1 114
+byte 1 101
+byte 1 97
+byte 1 32
+byte 1 97
+byte 1 108
+byte 1 114
+byte 1 101
+byte 1 97
+byte 1 100
+byte 1 121
+byte 1 32
+byte 1 104
+byte 1 97
+byte 1 115
+byte 1 32
+byte 1 112
+byte 1 111
+byte 1 119
+byte 1 101
+byte 1 114
+byte 1 46
+byte 1 32
+byte 1 65
+byte 1 32
+byte 1 82
+byte 1 101
+byte 1 112
+byte 1 101
+byte 1 97
+byte 1 116
+byte 1 101
+byte 1 114
+byte 1 32
+byte 1 105
+byte 1 115
+byte 1 32
+byte 1 110
+byte 1 111
+byte 1 116
+byte 1 32
+byte 1 114
+byte 1 101
+byte 1 113
+byte 1 117
+byte 1 105
+byte 1 114
+byte 1 101
+byte 1 100
+byte 1 32
+byte 1 104
+byte 1 101
+byte 1 114
+byte 1 101
+byte 1 46
+byte 1 0
+align 1
+LABELV $539
+byte 1 84
+byte 1 104
+byte 1 105
+byte 1 115
+byte 1 32
+byte 1 82
+byte 1 101
+byte 1 112
+byte 1 101
+byte 1 97
+byte 1 116
+byte 1 101
+byte 1 114
+byte 1 32
+byte 1 119
+byte 1 105
+byte 1 108
+byte 1 108
+byte 1 32
+byte 1 110
+byte 1 111
+byte 1 116
+byte 1 32
+byte 1 98
+byte 1 101
+byte 1 32
+byte 1 112
+byte 1 111
+byte 1 119
+byte 1 101
+byte 1 114
+byte 1 101
+byte 1 100
+byte 1 10
+byte 1 0
+align 1
+LABELV $538
+byte 1 87
+byte 1 65
+byte 1 82
+byte 1 78
+byte 1 73
+byte 1 78
+byte 1 71
+byte 1 58
+byte 1 32
+byte 1 84
+byte 1 104
+byte 1 105
+byte 1 115
+byte 1 32
+byte 1 82
+byte 1 101
+byte 1 112
+byte 1 101
+byte 1 97
+byte 1 116
+byte 1 101
+byte 1 114
+byte 1 32
+byte 1 119
+byte 1 105
+byte 1 108
+byte 1 108
+byte 1 32
+byte 1 110
+byte 1 111
+byte 1 116
+byte 1 32
+byte 1 98
+byte 1 101
+byte 1 32
+byte 1 112
+byte 1 111
+byte 1 119
+byte 1 101
+byte 1 114
+byte 1 101
+byte 1 100
+byte 1 32
+byte 1 97
+byte 1 115
+byte 1 32
+byte 1 116
+byte 1 104
+byte 1 101
+byte 1 114
+byte 1 101
+byte 1 32
+byte 1 105
+byte 1 115
+byte 1 32
+byte 1 110
+byte 1 111
+byte 1 32
+byte 1 112
+byte 1 97
+byte 1 114
+byte 1 101
+byte 1 110
+byte 1 116
+byte 1 32
+byte 1 82
+byte 1 101
+byte 1 97
+byte 1 99
+byte 1 116
+byte 1 111
+byte 1 114
+byte 1 32
+byte 1 112
+byte 1 114
+byte 1 111
+byte 1 118
+byte 1 105
+byte 1 100
+byte 1 105
+byte 1 110
+byte 1 103
+byte 1 32
+byte 1 112
+byte 1 111
+byte 1 119
+byte 1 101
+byte 1 114
+byte 1 46
+byte 1 32
+byte 1 66
+byte 1 117
+byte 1 105
+byte 1 108
+byte 1 100
+byte 1 32
+byte 1 97
+byte 1 32
+byte 1 82
+byte 1 101
+byte 1 97
+byte 1 99
+byte 1 116
+byte 1 111
+byte 1 114
+byte 1 46
+byte 1 0
+align 1
+LABELV $533
+byte 1 84
+byte 1 104
+byte 1 105
+byte 1 115
+byte 1 32
+byte 1 84
+byte 1 101
+byte 1 108
+byte 1 101
+byte 1 110
+byte 1 111
+byte 1 100
+byte 1 101
+byte 1 32
+byte 1 119
+byte 1 105
+byte 1 108
+byte 1 108
+byte 1 32
+byte 1 110
+byte 1 111
+byte 1 116
+byte 1 32
+byte 1 98
+byte 1 101
+byte 1 32
+byte 1 112
+byte 1 111
+byte 1 119
+byte 1 101
+byte 1 114
+byte 1 101
+byte 1 100
+byte 1 10
+byte 1 0
+align 1
+LABELV $532
+byte 1 87
+byte 1 65
+byte 1 82
+byte 1 78
+byte 1 73
+byte 1 78
+byte 1 71
+byte 1 58
+byte 1 32
+byte 1 84
+byte 1 104
+byte 1 105
+byte 1 115
+byte 1 32
+byte 1 84
+byte 1 101
+byte 1 108
+byte 1 101
+byte 1 110
+byte 1 111
+byte 1 100
+byte 1 101
+byte 1 32
+byte 1 119
+byte 1 105
+byte 1 108
+byte 1 108
+byte 1 32
+byte 1 110
+byte 1 111
+byte 1 116
+byte 1 32
+byte 1 98
+byte 1 101
+byte 1 32
+byte 1 112
+byte 1 111
+byte 1 119
+byte 1 101
+byte 1 114
+byte 1 101
+byte 1 100
+byte 1 46
+byte 1 32
+byte 1 66
+byte 1 117
+byte 1 105
+byte 1 108
+byte 1 100
+byte 1 32
+byte 1 110
+byte 1 101
+byte 1 97
+byte 1 114
+byte 1 32
+byte 1 97
+byte 1 32
+byte 1 112
+byte 1 111
+byte 1 119
+byte 1 101
+byte 1 114
+byte 1 32
+byte 1 115
+byte 1 116
+byte 1 114
+byte 1 117
+byte 1 99
+byte 1 116
+byte 1 117
+byte 1 114
+byte 1 101
+byte 1 32
+byte 1 116
+byte 1 111
+byte 1 32
+byte 1 112
+byte 1 114
+byte 1 101
+byte 1 118
+byte 1 101
+byte 1 110
+byte 1 116
+byte 1 32
+byte 1 115
+byte 1 101
+byte 1 101
+byte 1 105
+byte 1 110
+byte 1 103
+byte 1 32
+byte 1 116
+byte 1 104
+byte 1 105
+byte 1 115
+byte 1 32
+byte 1 109
+byte 1 101
+byte 1 115
+byte 1 115
+byte 1 97
+byte 1 103
+byte 1 101
+byte 1 32
+byte 1 97
+byte 1 103
+byte 1 97
+byte 1 105
+byte 1 110
+byte 1 46
+byte 1 0
+align 1
+LABELV $527
+byte 1 84
+byte 1 104
+byte 1 101
+byte 1 114
+byte 1 101
+byte 1 32
+byte 1 105
+byte 1 115
+byte 1 32
+byte 1 110
+byte 1 111
+byte 1 32
+byte 1 68
+byte 1 101
+byte 1 102
+byte 1 101
+byte 1 110
+byte 1 115
+byte 1 101
+byte 1 32
+byte 1 67
+byte 1 111
+byte 1 109
+byte 1 112
+byte 1 117
+byte 1 116
+byte 1 101
+byte 1 114
+byte 1 10
+byte 1 0
+align 1
+LABELV $526
+byte 1 84
+byte 1 104
+byte 1 101
+byte 1 114
+byte 1 101
+byte 1 32
+byte 1 105
+byte 1 115
+byte 1 32
+byte 1 110
+byte 1 111
+byte 1 32
+byte 1 68
+byte 1 101
+byte 1 102
+byte 1 101
+byte 1 110
+byte 1 115
+byte 1 101
+byte 1 32
+byte 1 67
+byte 1 111
+byte 1 109
+byte 1 112
+byte 1 117
+byte 1 116
+byte 1 101
+byte 1 114
+byte 1 46
+byte 1 32
+byte 1 65
+byte 1 32
+byte 1 68
+byte 1 101
+byte 1 102
+byte 1 101
+byte 1 110
+byte 1 115
+byte 1 101
+byte 1 32
+byte 1 67
+byte 1 111
+byte 1 109
+byte 1 112
+byte 1 117
+byte 1 116
+byte 1 101
+byte 1 114
+byte 1 32
+byte 1 105
+byte 1 115
+byte 1 32
+byte 1 110
+byte 1 101
+byte 1 101
+byte 1 100
+byte 1 101
+byte 1 100
+byte 1 32
+byte 1 116
+byte 1 111
+byte 1 32
+byte 1 98
+byte 1 117
+byte 1 105
+byte 1 108
+byte 1 100
+byte 1 32
+byte 1 116
+byte 1 104
+byte 1 105
+byte 1 115
+byte 1 46
+byte 1 0
+align 1
+LABELV $521
+byte 1 84
+byte 1 104
+byte 1 101
+byte 1 114
+byte 1 101
+byte 1 32
+byte 1 105
+byte 1 115
+byte 1 32
+byte 1 110
+byte 1 111
+byte 1 32
+byte 1 112
+byte 1 111
+byte 1 119
+byte 1 101
+byte 1 114
+byte 1 32
+byte 1 104
+byte 1 101
+byte 1 114
+byte 1 101
+byte 1 10
+byte 1 0
+align 1
+LABELV $520
+byte 1 84
+byte 1 104
+byte 1 101
+byte 1 114
+byte 1 101
+byte 1 32
+byte 1 105
+byte 1 115
+byte 1 32
+byte 1 110
+byte 1 111
+byte 1 32
+byte 1 112
+byte 1 111
+byte 1 119
+byte 1 101
+byte 1 114
+byte 1 32
+byte 1 104
+byte 1 101
+byte 1 114
+byte 1 101
+byte 1 46
+byte 1 32
+byte 1 73
+byte 1 102
+byte 1 32
+byte 1 97
+byte 1 118
+byte 1 97
+byte 1 105
+byte 1 108
+byte 1 97
+byte 1 98
+byte 1 108
+byte 1 101
+byte 1 44
+byte 1 32
+byte 1 97
+byte 1 32
+byte 1 82
+byte 1 101
+byte 1 112
+byte 1 101
+byte 1 97
+byte 1 116
+byte 1 101
+byte 1 114
+byte 1 32
+byte 1 109
+byte 1 97
+byte 1 121
+byte 1 32
+byte 1 98
+byte 1 101
+byte 1 32
+byte 1 117
+byte 1 115
+byte 1 101
+byte 1 100
+byte 1 32
+byte 1 116
+byte 1 111
+byte 1 32
+byte 1 116
+byte 1 114
+byte 1 97
+byte 1 110
+byte 1 115
+byte 1 109
+byte 1 105
+byte 1 116
+byte 1 32
+byte 1 112
+byte 1 111
+byte 1 119
+byte 1 101
+byte 1 114
+byte 1 32
+byte 1 116
+byte 1 111
+byte 1 32
+byte 1 116
+byte 1 104
+byte 1 105
+byte 1 115
+byte 1 32
+byte 1 108
+byte 1 111
+byte 1 99
+byte 1 97
+byte 1 116
+byte 1 105
+byte 1 111
+byte 1 110
+byte 1 46
+byte 1 0
+align 1
+LABELV $515
+byte 1 84
+byte 1 104
+byte 1 101
+byte 1 114
+byte 1 101
+byte 1 32
+byte 1 99
+byte 1 97
+byte 1 110
+byte 1 32
+byte 1 111
+byte 1 110
+byte 1 108
+byte 1 121
+byte 1 32
+byte 1 98
+byte 1 101
+byte 1 32
+byte 1 111
+byte 1 110
+byte 1 101
+byte 1 32
+byte 1 82
+byte 1 101
+byte 1 97
+byte 1 99
+byte 1 116
+byte 1 111
+byte 1 114
+byte 1 10
+byte 1 0
+align 1
+LABELV $514
+byte 1 84
+byte 1 104
+byte 1 101
+byte 1 114
+byte 1 101
+byte 1 32
+byte 1 99
+byte 1 97
+byte 1 110
+byte 1 32
+byte 1 111
+byte 1 110
+byte 1 108
+byte 1 121
+byte 1 32
+byte 1 98
+byte 1 101
+byte 1 32
+byte 1 111
+byte 1 110
+byte 1 101
+byte 1 32
+byte 1 82
+byte 1 101
+byte 1 97
+byte 1 99
+byte 1 116
+byte 1 111
+byte 1 114
+byte 1 46
+byte 1 32
+byte 1 68
+byte 1 101
+byte 1 115
+byte 1 116
+byte 1 114
+byte 1 111
+byte 1 121
+byte 1 32
+byte 1 116
+byte 1 104
+byte 1 101
+byte 1 32
+byte 1 101
+byte 1 120
+byte 1 105
+byte 1 115
+byte 1 116
+byte 1 105
+byte 1 110
+byte 1 103
+byte 1 32
+byte 1 111
+byte 1 110
+byte 1 101
+byte 1 32
+byte 1 105
+byte 1 102
+byte 1 32
+byte 1 121
+byte 1 111
+byte 1 117
+byte 1 32
+byte 1 119
+byte 1 105
+byte 1 115
+byte 1 104
+byte 1 32
+byte 1 116
+byte 1 111
+byte 1 32
+byte 1 109
+byte 1 111
+byte 1 118
+byte 1 101
+byte 1 32
+byte 1 105
+byte 1 116
+byte 1 46
+byte 1 0
+align 1
+LABELV $509
+byte 1 67
+byte 1 97
+byte 1 110
+byte 1 110
+byte 1 111
+byte 1 116
+byte 1 32
+byte 1 98
+byte 1 117
+byte 1 105
+byte 1 108
+byte 1 100
+byte 1 32
+byte 1 111
+byte 1 110
+byte 1 32
+byte 1 116
+byte 1 104
+byte 1 105
+byte 1 115
+byte 1 32
+byte 1 115
+byte 1 117
+byte 1 114
+byte 1 102
+byte 1 97
+byte 1 99
+byte 1 101
+byte 1 10
+byte 1 0
+align 1
+LABELV $508
+byte 1 67
+byte 1 97
+byte 1 110
+byte 1 110
+byte 1 111
+byte 1 116
+byte 1 32
+byte 1 98
+byte 1 117
+byte 1 105
+byte 1 108
+byte 1 100
+byte 1 32
+byte 1 111
+byte 1 110
+byte 1 32
+byte 1 116
+byte 1 104
+byte 1 105
+byte 1 115
+byte 1 32
+byte 1 115
+byte 1 117
+byte 1 114
+byte 1 102
+byte 1 97
+byte 1 99
+byte 1 101
+byte 1 46
+byte 1 32
+byte 1 84
+byte 1 104
+byte 1 101
+byte 1 32
+byte 1 115
+byte 1 117
+byte 1 114
+byte 1 102
+byte 1 97
+byte 1 99
+byte 1 101
+byte 1 32
+byte 1 105
+byte 1 115
+byte 1 32
+byte 1 116
+byte 1 111
+byte 1 111
+byte 1 32
+byte 1 115
+byte 1 116
+byte 1 101
+byte 1 101
+byte 1 112
+byte 1 32
+byte 1 111
+byte 1 114
+byte 1 32
+byte 1 117
+byte 1 110
+byte 1 115
+byte 1 117
+byte 1 105
+byte 1 116
+byte 1 97
+byte 1 98
+byte 1 108
+byte 1 101
+byte 1 32
+byte 1 116
+byte 1 111
+byte 1 32
+byte 1 98
+byte 1 117
+byte 1 105
+byte 1 108
+byte 1 100
+byte 1 32
+byte 1 111
+byte 1 110
+byte 1 46
+byte 1 32
+byte 1 80
+byte 1 108
+byte 1 101
+byte 1 97
+byte 1 115
+byte 1 101
+byte 1 32
+byte 1 99
+byte 1 104
+byte 1 111
+byte 1 111
+byte 1 115
+byte 1 101
+byte 1 32
+byte 1 97
+byte 1 110
+byte 1 111
+byte 1 116
+byte 1 104
+byte 1 101
+byte 1 114
+byte 1 32
+byte 1 115
+byte 1 105
+byte 1 116
+byte 1 101
+byte 1 32
+byte 1 102
+byte 1 111
+byte 1 114
+byte 1 32
+byte 1 116
+byte 1 104
+byte 1 105
+byte 1 115
+byte 1 32
+byte 1 115
+byte 1 116
+byte 1 114
+byte 1 117
+byte 1 99
+byte 1 116
+byte 1 117
+byte 1 114
+byte 1 101
+byte 1 46
+byte 1 0
+align 1
+LABELV $503
+byte 1 84
+byte 1 104
+byte 1 105
+byte 1 115
+byte 1 32
+byte 1 98
+byte 1 117
+byte 1 105
+byte 1 108
+byte 1 100
+byte 1 97
+byte 1 98
+byte 1 108
+byte 1 101
+byte 1 32
+byte 1 105
+byte 1 115
+byte 1 32
+byte 1 110
+byte 1 111
+byte 1 116
+byte 1 32
+byte 1 112
+byte 1 111
+byte 1 119
+byte 1 101
+byte 1 114
+byte 1 101
+byte 1 100
+byte 1 10
+byte 1 0
+align 1
+LABELV $502
+byte 1 84
+byte 1 104
+byte 1 105
+byte 1 115
+byte 1 32
+byte 1 98
+byte 1 117
+byte 1 105
+byte 1 108
+byte 1 100
+byte 1 97
+byte 1 98
+byte 1 108
+byte 1 101
+byte 1 32
+byte 1 105
+byte 1 115
+byte 1 32
+byte 1 110
+byte 1 111
+byte 1 116
+byte 1 32
+byte 1 112
+byte 1 111
+byte 1 119
+byte 1 101
+byte 1 114
+byte 1 101
+byte 1 100
+byte 1 46
+byte 1 32
+byte 1 66
+byte 1 117
+byte 1 105
+byte 1 108
+byte 1 100
+byte 1 32
+byte 1 97
+byte 1 32
+byte 1 82
+byte 1 101
+byte 1 97
+byte 1 99
+byte 1 116
+byte 1 111
+byte 1 114
+byte 1 32
+byte 1 97
+byte 1 110
+byte 1 100
+byte 1 47
+byte 1 111
+byte 1 114
+byte 1 32
+byte 1 82
+byte 1 101
+byte 1 112
+byte 1 101
+byte 1 97
+byte 1 116
+byte 1 101
+byte 1 114
+byte 1 32
+byte 1 105
+byte 1 110
+byte 1 32
+byte 1 111
+byte 1 114
+byte 1 100
+byte 1 101
+byte 1 114
+byte 1 32
+byte 1 116
+byte 1 111
+byte 1 32
+byte 1 112
+byte 1 111
+byte 1 119
+byte 1 101
+byte 1 114
+byte 1 32
+byte 1 105
+byte 1 116
+byte 1 46
+byte 1 0
+align 1
+LABELV $497
+byte 1 84
+byte 1 104
+byte 1 101
+byte 1 114
+byte 1 101
+byte 1 32
+byte 1 105
+byte 1 115
+byte 1 32
+byte 1 110
+byte 1 111
+byte 1 32
+byte 1 112
+byte 1 111
+byte 1 119
+byte 1 101
+byte 1 114
+byte 1 32
+byte 1 114
+byte 1 101
+byte 1 109
+byte 1 97
+byte 1 105
+byte 1 110
+byte 1 105
+byte 1 110
+byte 1 103
+byte 1 10
+byte 1 0
+align 1
+LABELV $496
+byte 1 84
+byte 1 104
+byte 1 101
+byte 1 114
+byte 1 101
+byte 1 32
+byte 1 105
+byte 1 115
+byte 1 32
+byte 1 110
+byte 1 111
+byte 1 32
+byte 1 112
+byte 1 111
+byte 1 119
+byte 1 101
+byte 1 114
+byte 1 32
+byte 1 114
+byte 1 101
+byte 1 109
+byte 1 97
+byte 1 105
+byte 1 110
+byte 1 105
+byte 1 110
+byte 1 103
+byte 1 46
+byte 1 32
+byte 1 70
+byte 1 114
+byte 1 101
+byte 1 101
+byte 1 32
+byte 1 117
+byte 1 112
+byte 1 32
+byte 1 112
+byte 1 111
+byte 1 119
+byte 1 101
+byte 1 114
+byte 1 32
+byte 1 98
+byte 1 121
+byte 1 32
+byte 1 100
+byte 1 101
+byte 1 115
+byte 1 116
+byte 1 114
+byte 1 111
+byte 1 121
+byte 1 105
+byte 1 110
+byte 1 103
+byte 1 32
+byte 1 101
+byte 1 120
+byte 1 105
+byte 1 115
+byte 1 116
+byte 1 105
+byte 1 110
+byte 1 103
+byte 1 32
+byte 1 98
+byte 1 117
+byte 1 105
+byte 1 108
+byte 1 100
+byte 1 97
+byte 1 98
+byte 1 108
+byte 1 101
+byte 1 32
+byte 1 111
+byte 1 98
+byte 1 106
+byte 1 101
+byte 1 99
+byte 1 116
+byte 1 115
+byte 1 46
+byte 1 0
+align 1
+LABELV $491
+byte 1 84
+byte 1 104
+byte 1 101
+byte 1 114
+byte 1 101
+byte 1 32
+byte 1 105
+byte 1 115
+byte 1 32
+byte 1 110
+byte 1 111
+byte 1 32
+byte 1 114
+byte 1 111
+byte 1 111
+byte 1 109
+byte 1 32
+byte 1 116
+byte 1 111
+byte 1 32
+byte 1 98
+byte 1 117
+byte 1 105
+byte 1 108
+byte 1 100
+byte 1 32
+byte 1 104
+byte 1 101
+byte 1 114
+byte 1 101
+byte 1 10
+byte 1 0
+align 1
+LABELV $490
+byte 1 84
+byte 1 104
+byte 1 101
+byte 1 114
+byte 1 101
+byte 1 32
+byte 1 105
+byte 1 115
+byte 1 32
+byte 1 110
+byte 1 111
+byte 1 32
+byte 1 114
+byte 1 111
+byte 1 111
+byte 1 109
+byte 1 32
+byte 1 116
+byte 1 111
+byte 1 32
+byte 1 98
+byte 1 117
+byte 1 105
+byte 1 108
+byte 1 100
+byte 1 32
+byte 1 104
+byte 1 101
+byte 1 114
+byte 1 101
+byte 1 46
+byte 1 32
+byte 1 77
+byte 1 111
+byte 1 118
+byte 1 101
+byte 1 32
+byte 1 117
+byte 1 110
+byte 1 116
+byte 1 105
+byte 1 108
+byte 1 32
+byte 1 116
+byte 1 104
+byte 1 101
+byte 1 32
+byte 1 98
+byte 1 117
+byte 1 105
+byte 1 108
+byte 1 100
+byte 1 97
+byte 1 98
+byte 1 108
+byte 1 101
+byte 1 32
+byte 1 116
+byte 1 117
+byte 1 114
+byte 1 110
+byte 1 115
+byte 1 32
+byte 1 116
+byte 1 114
+byte 1 97
+byte 1 110
+byte 1 115
+byte 1 108
+byte 1 117
+byte 1 99
+byte 1 101
+byte 1 110
+byte 1 116
+byte 1 32
+byte 1 103
+byte 1 114
+byte 1 101
+byte 1 101
+byte 1 110
+byte 1 32
+byte 1 105
+byte 1 110
+byte 1 100
+byte 1 105
+byte 1 99
+byte 1 97
+byte 1 116
+byte 1 105
+byte 1 110
+byte 1 103
+byte 1 32
+byte 1 97
+byte 1 32
+byte 1 118
+byte 1 97
+byte 1 108
+byte 1 105
+byte 1 100
+byte 1 32
+byte 1 98
+byte 1 117
+byte 1 105
+byte 1 108
+byte 1 100
+byte 1 32
+byte 1 108
+byte 1 111
+byte 1 99
+byte 1 97
+byte 1 116
+byte 1 105
+byte 1 111
+byte 1 110
+byte 1 46
+byte 1 0
+align 1
+LABELV $485
+byte 1 109
+byte 1 101
+byte 1 110
+byte 1 117
+byte 1 32
+byte 1 116
+byte 1 114
+byte 1 101
+byte 1 109
+byte 1 117
+byte 1 108
+byte 1 111
+byte 1 117
+byte 1 115
+byte 1 95
+byte 1 104
+byte 1 117
+byte 1 109
+byte 1 97
+byte 1 110
+byte 1 95
+byte 1 100
+byte 1 105
+byte 1 97
+byte 1 108
+byte 1 111
+byte 1 103
+byte 1 10
+byte 1 0
+align 1
+LABELV $484
+byte 1 84
+byte 1 104
+byte 1 101
+byte 1 32
+byte 1 104
+byte 1 117
+byte 1 109
+byte 1 97
+byte 1 110
+byte 1 32
+byte 1 116
+byte 1 101
+byte 1 97
+byte 1 109
+byte 1 32
+byte 1 104
+byte 1 97
+byte 1 115
+byte 1 32
+byte 1 116
+byte 1 111
+byte 1 111
+byte 1 32
+byte 1 109
+byte 1 97
+byte 1 110
+byte 1 121
+byte 1 32
+byte 1 112
+byte 1 108
+byte 1 97
+byte 1 121
+byte 1 101
+byte 1 114
+byte 1 115
+byte 1 46
+byte 1 32
+byte 1 80
+byte 1 108
+byte 1 101
+byte 1 97
+byte 1 115
+byte 1 101
+byte 1 32
+byte 1 119
+byte 1 97
+byte 1 105
+byte 1 116
+byte 1 32
+byte 1 117
+byte 1 110
+byte 1 116
+byte 1 105
+byte 1 108
+byte 1 32
+byte 1 115
+byte 1 108
+byte 1 111
+byte 1 116
+byte 1 115
+byte 1 32
+byte 1 98
+byte 1 101
+byte 1 99
+byte 1 111
+byte 1 109
+byte 1 101
+byte 1 32
+byte 1 97
+byte 1 118
+byte 1 97
+byte 1 105
+byte 1 108
+byte 1 97
+byte 1 98
+byte 1 108
+byte 1 101
+byte 1 32
+byte 1 111
+byte 1 114
+byte 1 32
+byte 1 106
+byte 1 111
+byte 1 105
+byte 1 110
+byte 1 32
+byte 1 116
+byte 1 104
+byte 1 101
+byte 1 32
+byte 1 97
+byte 1 108
+byte 1 105
+byte 1 101
+byte 1 110
+byte 1 32
+byte 1 116
+byte 1 101
+byte 1 97
+byte 1 109
+byte 1 46
+byte 1 0
+align 1
+LABELV $482
+byte 1 109
+byte 1 101
+byte 1 110
+byte 1 117
+byte 1 32
+byte 1 116
+byte 1 114
+byte 1 101
+byte 1 109
+byte 1 117
+byte 1 108
+byte 1 111
+byte 1 117
+byte 1 115
+byte 1 95
+byte 1 97
+byte 1 108
+byte 1 105
+byte 1 101
+byte 1 110
+byte 1 95
+byte 1 100
+byte 1 105
+byte 1 97
+byte 1 108
+byte 1 111
+byte 1 103
+byte 1 10
+byte 1 0
+align 1
+LABELV $481
+byte 1 84
+byte 1 104
+byte 1 101
+byte 1 32
+byte 1 97
+byte 1 108
+byte 1 105
+byte 1 101
+byte 1 110
+byte 1 32
+byte 1 116
+byte 1 101
+byte 1 97
+byte 1 109
+byte 1 32
+byte 1 104
+byte 1 97
+byte 1 115
+byte 1 32
+byte 1 116
+byte 1 111
+byte 1 111
+byte 1 32
+byte 1 109
+byte 1 97
+byte 1 110
+byte 1 121
+byte 1 32
+byte 1 112
+byte 1 108
+byte 1 97
+byte 1 121
+byte 1 101
+byte 1 114
+byte 1 115
+byte 1 46
+byte 1 32
+byte 1 80
+byte 1 108
+byte 1 101
+byte 1 97
+byte 1 115
+byte 1 101
+byte 1 32
+byte 1 119
+byte 1 97
+byte 1 105
+byte 1 116
+byte 1 32
+byte 1 117
+byte 1 110
+byte 1 116
+byte 1 105
+byte 1 108
+byte 1 32
+byte 1 115
+byte 1 108
+byte 1 111
+byte 1 116
+byte 1 115
+byte 1 32
+byte 1 98
+byte 1 101
+byte 1 99
+byte 1 111
+byte 1 109
+byte 1 101
+byte 1 32
+byte 1 97
+byte 1 118
+byte 1 97
+byte 1 105
+byte 1 108
+byte 1 97
+byte 1 98
+byte 1 108
+byte 1 101
+byte 1 32
+byte 1 111
+byte 1 114
+byte 1 32
+byte 1 106
+byte 1 111
+byte 1 105
+byte 1 110
+byte 1 32
+byte 1 116
+byte 1 104
+byte 1 101
+byte 1 32
+byte 1 104
+byte 1 117
+byte 1 109
+byte 1 97
+byte 1 110
+byte 1 32
+byte 1 116
+byte 1 101
+byte 1 97
+byte 1 109
+byte 1 46
+byte 1 0
+align 1
+LABELV $480
+byte 1 117
+byte 1 105
+byte 1 95
+byte 1 100
+byte 1 105
+byte 1 97
+byte 1 108
+byte 1 111
+byte 1 103
+byte 1 0
+align 1
+LABELV $478
+byte 1 109
+byte 1 101
+byte 1 110
+byte 1 117
+byte 1 32
+byte 1 116
+byte 1 114
+byte 1 101
+byte 1 109
+byte 1 117
+byte 1 108
+byte 1 111
+byte 1 117
+byte 1 115
+byte 1 95
+byte 1 104
+byte 1 117
+byte 1 109
+byte 1 97
+byte 1 110
+byte 1 97
+byte 1 114
+byte 1 109
+byte 1 111
+byte 1 117
+byte 1 114
+byte 1 121
+byte 1 10
+byte 1 0
+align 1
+LABELV $476
+byte 1 109
+byte 1 101
+byte 1 110
+byte 1 117
+byte 1 32
+byte 1 116
+byte 1 114
+byte 1 101
+byte 1 109
+byte 1 117
+byte 1 108
+byte 1 111
+byte 1 117
+byte 1 115
+byte 1 95
+byte 1 104
+byte 1 117
+byte 1 109
+byte 1 97
+byte 1 110
+byte 1 98
+byte 1 117
+byte 1 105
+byte 1 108
+byte 1 100
+byte 1 10
+byte 1 0
+align 1
+LABELV $474
+byte 1 109
+byte 1 101
+byte 1 110
+byte 1 117
+byte 1 32
+byte 1 116
+byte 1 114
+byte 1 101
+byte 1 109
+byte 1 117
+byte 1 108
+byte 1 111
+byte 1 117
+byte 1 115
+byte 1 95
+byte 1 97
+byte 1 108
+byte 1 105
+byte 1 101
+byte 1 110
+byte 1 98
+byte 1 117
+byte 1 105
+byte 1 108
+byte 1 100
+byte 1 10
+byte 1 0
+align 1
+LABELV $472
+byte 1 109
+byte 1 101
+byte 1 110
+byte 1 117
+byte 1 32
+byte 1 116
+byte 1 114
+byte 1 101
+byte 1 109
+byte 1 117
+byte 1 108
+byte 1 111
+byte 1 117
+byte 1 115
+byte 1 95
+byte 1 104
+byte 1 117
+byte 1 109
+byte 1 97
+byte 1 110
+byte 1 105
+byte 1 116
+byte 1 101
+byte 1 109
+byte 1 10
+byte 1 0
+align 1
+LABELV $470
+byte 1 109
+byte 1 101
+byte 1 110
+byte 1 117
+byte 1 32
+byte 1 116
+byte 1 114
+byte 1 101
+byte 1 109
+byte 1 117
+byte 1 108
+byte 1 111
+byte 1 117
+byte 1 115
+byte 1 95
+byte 1 97
+byte 1 108
+byte 1 105
+byte 1 101
+byte 1 110
+byte 1 99
+byte 1 108
+byte 1 97
+byte 1 115
+byte 1 115
+byte 1 10
+byte 1 0
+align 1
+LABELV $468
+byte 1 109
+byte 1 101
+byte 1 110
+byte 1 117
+byte 1 32
+byte 1 116
+byte 1 114
+byte 1 101
+byte 1 109
+byte 1 117
+byte 1 108
+byte 1 111
+byte 1 117
+byte 1 115
+byte 1 95
+byte 1 116
+byte 1 101
+byte 1 97
+byte 1 109
+byte 1 115
+byte 1 101
+byte 1 108
+byte 1 101
+byte 1 99
+byte 1 116
+byte 1 10
+byte 1 0
+align 1
+LABELV $461
+byte 1 117
+byte 1 105
+byte 1 95
+byte 1 115
+byte 1 116
+byte 1 97
+byte 1 103
+byte 1 101
+byte 1 115
+byte 1 0
+align 1
+LABELV $460
+byte 1 117
+byte 1 105
+byte 1 95
+byte 1 99
+byte 1 97
+byte 1 114
+byte 1 114
+byte 1 105
+byte 1 97
+byte 1 103
+byte 1 101
+byte 1 0
+align 1
+LABELV $459
+byte 1 36
+byte 1 0
+align 1
+LABELV $458
+byte 1 85
+byte 1 37
+byte 1 100
+byte 1 32
+byte 1 0
+align 1
+LABELV $450
+byte 1 87
+byte 1 37
+byte 1 100
+byte 1 32
+byte 1 0
+align 1
+LABELV $434
+byte 1 99
+byte 1 103
+byte 1 95
+byte 1 116
+byte 1 104
+byte 1 105
+byte 1 114
+byte 1 100
+byte 1 80
+byte 1 101
+byte 1 114
+byte 1 115
+byte 1 111
+byte 1 110
+byte 1 0
+align 1
+LABELV $433
+byte 1 70
+byte 1 73
+byte 1 71
+byte 1 72
+byte 1 84
+byte 1 33
+byte 1 0
+align 1
+LABELV $424
+byte 1 67
+byte 1 71
+byte 1 95
+byte 1 77
+byte 1 97
+byte 1 112
+byte 1 82
+byte 1 101
+byte 1 115
+byte 1 116
+byte 1 97
+byte 1 114
+byte 1 116
+byte 1 10
+byte 1 0
+align 1
+LABELV $332
+byte 1 117
+byte 1 105
+byte 1 95
+byte 1 97
+byte 1 108
+byte 1 105
+byte 1 101
+byte 1 110
+byte 1 84
+byte 1 101
+byte 1 97
+byte 1 109
+byte 1 86
+byte 1 111
+byte 1 116
+byte 1 101
+byte 1 65
+byte 1 99
+byte 1 116
+byte 1 105
+byte 1 118
+byte 1 101
+byte 1 0
+align 1
+LABELV $326
+byte 1 117
+byte 1 105
+byte 1 95
+byte 1 104
+byte 1 117
+byte 1 109
+byte 1 97
+byte 1 110
+byte 1 84
+byte 1 101
+byte 1 97
+byte 1 109
+byte 1 86
+byte 1 111
+byte 1 116
+byte 1 101
+byte 1 65
+byte 1 99
+byte 1 116
+byte 1 105
+byte 1 118
+byte 1 101
+byte 1 0
+align 1
+LABELV $304
+byte 1 48
+byte 1 0
+align 1
+LABELV $303
+byte 1 49
+byte 1 0
+align 1
+LABELV $302
+byte 1 117
+byte 1 105
+byte 1 95
+byte 1 118
+byte 1 111
+byte 1 116
+byte 1 101
+byte 1 65
+byte 1 99
+byte 1 116
+byte 1 105
+byte 1 118
+byte 1 101
+byte 1 0
+align 1
+LABELV $242
+byte 1 82
+byte 1 101
+byte 1 105
+byte 1 110
+byte 1 102
+byte 1 111
+byte 1 114
+byte 1 99
+byte 1 101
+byte 1 109
+byte 1 101
+byte 1 110
+byte 1 116
+byte 1 115
+byte 1 32
+byte 1 104
+byte 1 97
+byte 1 118
+byte 1 101
+byte 1 32
+byte 1 97
+byte 1 114
+byte 1 114
+byte 1 105
+byte 1 118
+byte 1 101
+byte 1 100
+byte 1 33
+byte 1 0
+align 1
+LABELV $233
+byte 1 87
+byte 1 101
+byte 1 32
+byte 1 104
+byte 1 97
+byte 1 118
+byte 1 101
+byte 1 32
+byte 1 101
+byte 1 118
+byte 1 111
+byte 1 108
+byte 1 118
+byte 1 101
+byte 1 100
+byte 1 33
+byte 1 0
+align 1
+LABELV $221
+byte 1 64
+byte 1 0
+align 1
+LABELV $218
+byte 1 58
+byte 1 0
+align 1
+LABELV $215
+byte 1 61
+byte 1 0
+align 1
+LABELV $204
+byte 1 37
+byte 1 100
+byte 1 32
+byte 1 37
+byte 1 100
+byte 1 32
+byte 1 37
+byte 1 100
+byte 1 0
+align 1
+LABELV $200
+byte 1 37
+byte 1 100
+byte 1 32
+byte 1 37
+byte 1 100
+byte 1 0
+align 1
+LABELV $193
+byte 1 37
+byte 1 100
+byte 1 32
+byte 1 37
+byte 1 100
+byte 1 32
+byte 1 37
+byte 1 100
+byte 1 32
+byte 1 37
+byte 1 100
+byte 1 32
+byte 1 37
+byte 1 100
+byte 1 32
+byte 1 37
+byte 1 100
+byte 1 0
+align 1
+LABELV $187
+byte 1 37
+byte 1 100
+byte 1 32
+byte 1 37
+byte 1 100
+byte 1 32
+byte 1 37
+byte 1 100
+byte 1 32
+byte 1 37
+byte 1 100
+byte 1 32
+byte 1 37
+byte 1 100
+byte 1 0
+align 1
+LABELV $177
+byte 1 109
+byte 1 97
+byte 1 112
+byte 1 115
+byte 1 47
+byte 1 37
+byte 1 115
+byte 1 46
+byte 1 98
+byte 1 115
+byte 1 112
+byte 1 0
+align 1
+LABELV $174
+byte 1 109
+byte 1 97
+byte 1 112
+byte 1 110
+byte 1 97
+byte 1 109
+byte 1 101
+byte 1 0
+align 1
+LABELV $173
+byte 1 115
+byte 1 118
+byte 1 95
+byte 1 109
+byte 1 97
+byte 1 120
+byte 1 99
+byte 1 108
+byte 1 105
+byte 1 101
+byte 1 110
+byte 1 116
+byte 1 115
+byte 1 0
+align 1
+LABELV $171
+byte 1 116
+byte 1 105
+byte 1 109
+byte 1 101
+byte 1 108
+byte 1 105
+byte 1 109
+byte 1 105
+byte 1 116
+byte 1 0
+align 1
+LABELV $169
+byte 1 116
+byte 1 101
+byte 1 97
+byte 1 109
+byte 1 102
+byte 1 108
+byte 1 97
+byte 1 103
+byte 1 115
+byte 1 0
+align 1
+LABELV $167
+byte 1 100
+byte 1 109
+byte 1 102
+byte 1 108
+byte 1 97
+byte 1 103
+byte 1 115
+byte 1 0
+align 1
+LABELV $113
+byte 1 99
+byte 1 103
+byte 1 46
+byte 1 110
+byte 1 117
+byte 1 109
+byte 1 83
+byte 1 99
+byte 1 111
+byte 1 114
+byte 1 101
+byte 1 115
+byte 1 58
+byte 1 32
+byte 1 37
+byte 1 100
+byte 1 10
+byte 1 0

@@ -1,0 +1,10972 @@
+export G_BounceMissile
+code
+proc G_BounceMissile 44 12
+file "..\..\..\..\src/game/g_missile.c"
+line 45
+;1:/*
+;2: ===========================================================================
+;3: Copyright (C) 1999-2005 Id Software, Inc.
+;4: Copyright (C) 2000-2006 Tim Angus
+;5:
+;6: This file is part of Tremulous.
+;7:
+;8: Tremulous is free software; you can redistribute it
+;9: and/or modify it under the terms of the GNU General Public License as
+;10: published by the Free Software Foundation; either version 2 of the License,
+;11: or (at your option) any later version.
+;12:
+;13: Tremulous is distributed in the hope that it will be
+;14: useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+;15: MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;16: GNU General Public License for more details.
+;17:
+;18: You should have received a copy of the GNU General Public License
+;19: along with Tremulous; if not, write to the Free Software
+;20: Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+;21: ===========================================================================
+;22: */
+;23:
+;24:#include "g_local.h"
+;25:
+;26:#define MISSILE_PRESTEP_TIME  50
+;27:
+;28:#ifndef RAND_MAX
+;29:#define RAND_MAX 32768
+;30:#endif
+;31:
+;32:#define GRENADE_SHRAPNEL_COUNT        10
+;33:#define GRENADE_SHRAPNEL_RANGE        1200
+;34:#define GRENADE_SHRAPNEL_MAG       1000
+;35:#define GRENADE_SHRAPNEL_DAMAGE		300
+;36:
+;37:/*
+;38: ================
+;39: G_BounceMissile
+;40:
+;41: ================
+;42: */
+;43:void
+;44:G_BounceMissile(gentity_t *ent, trace_t *trace)
+;45:{
+line 51
+;46:  vec3_t velocity;
+;47:  float dot;
+;48:  int hitTime;
+;49:
+;50:  // reflect the velocity on the trace plane
+;51:  hitTime = level.previousTime + (level.time - level.previousTime) * trace->fraction;
+ADDRLP4 16
+ADDRGP4 level+32
+INDIRI4
+CVIF4 4
+ADDRGP4 level+28
+INDIRI4
+ADDRGP4 level+32
+INDIRI4
+SUBI4
+CVIF4 4
+ADDRFP4 4
+INDIRP4
+CNSTI4 8
+ADDP4
+INDIRF4
+MULF4
+ADDF4
+CVFI4 4
+ASGNI4
+line 52
+;52:  BG_EvaluateTrajectoryDelta(&ent->s.pos, hitTime, velocity);
+ADDRFP4 0
+INDIRP4
+CNSTI4 12
+ADDP4
+ARGP4
+ADDRLP4 16
+INDIRI4
+ARGI4
+ADDRLP4 0
+ARGP4
+ADDRGP4 BG_EvaluateTrajectoryDelta
+CALLV
+pop
+line 53
+;53:  dot = DotProduct(velocity, trace->plane.normal);
+ADDRLP4 20
+ADDRFP4 4
+INDIRP4
+ASGNP4
+ADDRLP4 12
+ADDRLP4 0
+INDIRF4
+ADDRLP4 20
+INDIRP4
+CNSTI4 24
+ADDP4
+INDIRF4
+MULF4
+ADDRLP4 0+4
+INDIRF4
+ADDRLP4 20
+INDIRP4
+CNSTI4 28
+ADDP4
+INDIRF4
+MULF4
+ADDF4
+ADDRLP4 0+8
+INDIRF4
+ADDRLP4 20
+INDIRP4
+CNSTI4 32
+ADDP4
+INDIRF4
+MULF4
+ADDF4
+ASGNF4
+line 54
+;54:  VectorMA(velocity, -2 * dot, trace->plane.normal, ent->s.pos.trDelta);
+ADDRFP4 0
+INDIRP4
+CNSTI4 36
+ADDP4
+ADDRLP4 0
+INDIRF4
+ADDRFP4 4
+INDIRP4
+CNSTI4 24
+ADDP4
+INDIRF4
+CNSTF4 3221225472
+ADDRLP4 12
+INDIRF4
+MULF4
+MULF4
+ADDF4
+ASGNF4
+ADDRFP4 0
+INDIRP4
+CNSTI4 40
+ADDP4
+ADDRLP4 0+4
+INDIRF4
+ADDRFP4 4
+INDIRP4
+CNSTI4 28
+ADDP4
+INDIRF4
+CNSTF4 3221225472
+ADDRLP4 12
+INDIRF4
+MULF4
+MULF4
+ADDF4
+ASGNF4
+ADDRFP4 0
+INDIRP4
+CNSTI4 44
+ADDP4
+ADDRLP4 0+8
+INDIRF4
+ADDRFP4 4
+INDIRP4
+CNSTI4 32
+ADDP4
+INDIRF4
+CNSTF4 3221225472
+ADDRLP4 12
+INDIRF4
+MULF4
+MULF4
+ADDF4
+ASGNF4
+line 56
+;55:
+;56:  if (ent->s.eFlags & EF_BOUNCE_HALF)
+ADDRFP4 0
+INDIRP4
+CNSTI4 8
+ADDP4
+INDIRI4
+CNSTI4 16
+BANDI4
+CNSTI4 0
+EQI4 $92
+line 57
+;57:  {
+line 58
+;58:    VectorScale(ent->s.pos.trDelta, 0.65, ent->s.pos.trDelta);
+ADDRLP4 24
+ADDRFP4 0
+INDIRP4
+CNSTI4 36
+ADDP4
+ASGNP4
+ADDRLP4 24
+INDIRP4
+CNSTF4 1059481190
+ADDRLP4 24
+INDIRP4
+INDIRF4
+MULF4
+ASGNF4
+ADDRLP4 28
+ADDRFP4 0
+INDIRP4
+CNSTI4 40
+ADDP4
+ASGNP4
+ADDRLP4 28
+INDIRP4
+CNSTF4 1059481190
+ADDRLP4 28
+INDIRP4
+INDIRF4
+MULF4
+ASGNF4
+ADDRLP4 32
+ADDRFP4 0
+INDIRP4
+CNSTI4 44
+ADDP4
+ASGNP4
+ADDRLP4 32
+INDIRP4
+CNSTF4 1059481190
+ADDRLP4 32
+INDIRP4
+INDIRF4
+MULF4
+ASGNF4
+line 60
+;59:    // check for stop
+;60:    if (trace->plane.normal[2] > 0.2 && VectorLength(ent->s.pos.trDelta) < 40)
+ADDRFP4 4
+INDIRP4
+CNSTI4 32
+ADDP4
+INDIRF4
+CNSTF4 1045220557
+LEF4 $94
+ADDRFP4 0
+INDIRP4
+CNSTI4 36
+ADDP4
+ARGP4
+ADDRLP4 36
+ADDRGP4 VectorLength
+CALLF4
+ASGNF4
+ADDRLP4 36
+INDIRF4
+CNSTF4 1109393408
+GEF4 $94
+line 61
+;61:    {
+line 62
+;62:      ent->s.eFlags |= EF_NO_BOUNCE_SOUND;
+ADDRLP4 40
+ADDRFP4 0
+INDIRP4
+CNSTI4 8
+ADDP4
+ASGNP4
+ADDRLP4 40
+INDIRP4
+ADDRLP4 40
+INDIRP4
+INDIRI4
+CNSTI4 32
+BORI4
+ASGNI4
+line 63
+;63:      G_SetOrigin(ent, trace->endpos);
+ADDRFP4 0
+INDIRP4
+ARGP4
+ADDRFP4 4
+INDIRP4
+CNSTI4 12
+ADDP4
+ARGP4
+ADDRGP4 G_SetOrigin
+CALLV
+pop
+line 64
+;64:      return;
+ADDRGP4 $84
+JUMPV
+LABELV $94
+line 66
+;65:    }
+;66:  }
+LABELV $92
+line 68
+;67:
+;68:  VectorAdd(ent->r.currentOrigin, trace->plane.normal, ent->r.currentOrigin);
+ADDRLP4 24
+ADDRFP4 0
+INDIRP4
+CNSTI4 488
+ADDP4
+ASGNP4
+ADDRLP4 24
+INDIRP4
+ADDRLP4 24
+INDIRP4
+INDIRF4
+ADDRFP4 4
+INDIRP4
+CNSTI4 24
+ADDP4
+INDIRF4
+ADDF4
+ASGNF4
+ADDRLP4 28
+ADDRFP4 0
+INDIRP4
+CNSTI4 492
+ADDP4
+ASGNP4
+ADDRLP4 28
+INDIRP4
+ADDRLP4 28
+INDIRP4
+INDIRF4
+ADDRFP4 4
+INDIRP4
+CNSTI4 28
+ADDP4
+INDIRF4
+ADDF4
+ASGNF4
+ADDRLP4 32
+ADDRFP4 0
+INDIRP4
+CNSTI4 496
+ADDP4
+ASGNP4
+ADDRLP4 32
+INDIRP4
+ADDRLP4 32
+INDIRP4
+INDIRF4
+ADDRFP4 4
+INDIRP4
+CNSTI4 32
+ADDP4
+INDIRF4
+ADDF4
+ASGNF4
+line 69
+;69:  VectorCopy(ent->r.currentOrigin, ent->s.pos.trBase);
+ADDRLP4 36
+ADDRFP4 0
+INDIRP4
+ASGNP4
+ADDRLP4 36
+INDIRP4
+CNSTI4 24
+ADDP4
+ADDRLP4 36
+INDIRP4
+CNSTI4 488
+ADDP4
+INDIRB
+ASGNB 12
+line 70
+;70:  ent->s.pos.trTime = level.time;
+ADDRFP4 0
+INDIRP4
+CNSTI4 16
+ADDP4
+ADDRGP4 level+28
+INDIRI4
+ASGNI4
+line 71
+;71:}
+LABELV $84
+endproc G_BounceMissile 44 12
+export fire_shrapnel
+proc fire_shrapnel 32 4
+line 81
+;72:
+;73:/* SEX HAX NADE
+;74: * 
+;75: * */
+;76:void
+;77:G_ExplodeMissile(gentity_t *ent);
+;78:
+;79:gentity_t *
+;80:fire_shrapnel(gentity_t *self, vec3_t start, vec3_t dir)
+;81:{
+line 84
+;82:  gentity_t *bolt;
+;83:
+;84:  VectorNormalize(dir);
+ADDRFP4 8
+INDIRP4
+ARGP4
+ADDRGP4 VectorNormalize
+CALLF4
+pop
+line 86
+;85:
+;86:  bolt = G_Spawn();
+ADDRLP4 4
+ADDRGP4 G_Spawn
+CALLP4
+ASGNP4
+ADDRLP4 0
+ADDRLP4 4
+INDIRP4
+ASGNP4
+line 87
+;87:  bolt->classname = "pistol";
+ADDRLP4 0
+INDIRP4
+CNSTI4 524
+ADDP4
+ADDRGP4 $98
+ASGNP4
+line 88
+;88:  bolt->nextthink = level.time + 10000;
+ADDRLP4 0
+INDIRP4
+CNSTI4 768
+ADDP4
+ADDRGP4 level+28
+INDIRI4
+CNSTI4 10000
+ADDI4
+ASGNI4
+line 89
+;89:  bolt->think = G_ExplodeMissile;
+ADDRLP4 0
+INDIRP4
+CNSTI4 772
+ADDP4
+ADDRGP4 G_ExplodeMissile
+ASGNP4
+line 90
+;90:  bolt->s.eType = ET_MISSILE;
+ADDRLP4 8
+CNSTI4 4
+ASGNI4
+ADDRLP4 0
+INDIRP4
+ADDRLP4 8
+INDIRI4
+ADDP4
+ADDRLP4 8
+INDIRI4
+ASGNI4
+line 91
+;91:  bolt->r.svFlags = SVF_USE_CURRENT_ORIGIN;
+ADDRLP4 0
+INDIRP4
+CNSTI4 424
+ADDP4
+CNSTI4 128
+ASGNI4
+line 92
+;92:  bolt->s.weapon = WP_PISTOL;
+ADDRLP4 0
+INDIRP4
+CNSTI4 192
+ADDP4
+CNSTI4 1
+ASGNI4
+line 93
+;93:  bolt->s.generic1 = self->s.generic1; //weaponMode
+ADDRLP4 12
+CNSTI4 204
+ASGNI4
+ADDRLP4 0
+INDIRP4
+ADDRLP4 12
+INDIRI4
+ADDP4
+ADDRFP4 0
+INDIRP4
+ADDRLP4 12
+INDIRI4
+ADDP4
+INDIRI4
+ASGNI4
+line 94
+;94:  bolt->r.ownerNum = self->r.ownerNum;
+ADDRLP4 16
+CNSTI4 512
+ASGNI4
+ADDRLP4 0
+INDIRP4
+ADDRLP4 16
+INDIRI4
+ADDP4
+ADDRFP4 0
+INDIRP4
+ADDRLP4 16
+INDIRI4
+ADDP4
+INDIRI4
+ASGNI4
+line 95
+;95:  bolt->r.contents = 0;
+ADDRLP4 0
+INDIRP4
+CNSTI4 460
+ADDP4
+CNSTI4 0
+ASGNI4
+line 96
+;96:  bolt->parent = self;
+ADDRLP4 0
+INDIRP4
+CNSTI4 600
+ADDP4
+ADDRFP4 0
+INDIRP4
+ASGNP4
+line 97
+;97:  bolt->damage = GRENADE_SHRAPNEL_DAMAGE;
+ADDRLP4 0
+INDIRP4
+CNSTI4 844
+ADDP4
+CNSTI4 300
+ASGNI4
+line 98
+;98:  bolt->splashDamage = 0;
+ADDRLP4 0
+INDIRP4
+CNSTI4 848
+ADDP4
+CNSTI4 0
+ASGNI4
+line 99
+;99:  bolt->splashRadius = 0;
+ADDRLP4 0
+INDIRP4
+CNSTI4 852
+ADDP4
+CNSTI4 0
+ASGNI4
+line 100
+;100:  bolt->methodOfDeath = MOD_GRENADE;
+ADDRLP4 0
+INDIRP4
+CNSTI4 856
+ADDP4
+CNSTI4 11
+ASGNI4
+line 101
+;101:  bolt->splashMethodOfDeath = MOD_GRENADE;
+ADDRLP4 0
+INDIRP4
+CNSTI4 860
+ADDP4
+CNSTI4 11
+ASGNI4
+line 102
+;102:  bolt->clipmask = MASK_SHOT;
+ADDRLP4 0
+INDIRP4
+CNSTI4 572
+ADDP4
+CNSTI4 33554433
+ASGNI4
+line 103
+;103:  bolt->target_ent = NULL;
+ADDRLP4 0
+INDIRP4
+CNSTI4 676
+ADDP4
+CNSTP4 0
+ASGNP4
+line 105
+;104:
+;105:  bolt->s.pos.trType = TR_GRAVITY;
+ADDRLP4 0
+INDIRP4
+CNSTI4 12
+ADDP4
+CNSTI4 5
+ASGNI4
+line 106
+;106:  bolt->s.pos.trTime = level.time - MISSILE_PRESTEP_TIME; // move a bit on
+ADDRLP4 0
+INDIRP4
+CNSTI4 16
+ADDP4
+ADDRGP4 level+28
+INDIRI4
+CNSTI4 50
+SUBI4
+ASGNI4
+line 108
+;107:
+;108:  VectorCopy(start, bolt->s.pos.trBase);
+ADDRLP4 0
+INDIRP4
+CNSTI4 24
+ADDP4
+ADDRFP4 4
+INDIRP4
+INDIRB
+ASGNB 12
+line 109
+;109:  VectorScale(dir, 100, bolt->s.pos.trDelta);
+ADDRLP4 0
+INDIRP4
+CNSTI4 36
+ADDP4
+CNSTF4 1120403456
+ADDRFP4 8
+INDIRP4
+INDIRF4
+MULF4
+ASGNF4
+ADDRLP4 0
+INDIRP4
+CNSTI4 40
+ADDP4
+CNSTF4 1120403456
+ADDRFP4 8
+INDIRP4
+CNSTI4 4
+ADDP4
+INDIRF4
+MULF4
+ASGNF4
+ADDRLP4 0
+INDIRP4
+CNSTI4 44
+ADDP4
+CNSTF4 1120403456
+ADDRFP4 8
+INDIRP4
+CNSTI4 8
+ADDP4
+INDIRF4
+MULF4
+ASGNF4
+line 110
+;110:  SnapVector(bolt->s.pos.trDelta); // save net bandwidth
+ADDRLP4 20
+ADDRLP4 0
+INDIRP4
+CNSTI4 36
+ADDP4
+ASGNP4
+ADDRLP4 20
+INDIRP4
+ADDRLP4 20
+INDIRP4
+INDIRF4
+CVFI4 4
+CVIF4 4
+ASGNF4
+ADDRLP4 24
+ADDRLP4 0
+INDIRP4
+CNSTI4 40
+ADDP4
+ASGNP4
+ADDRLP4 24
+INDIRP4
+ADDRLP4 24
+INDIRP4
+INDIRF4
+CVFI4 4
+CVIF4 4
+ASGNF4
+ADDRLP4 28
+ADDRLP4 0
+INDIRP4
+CNSTI4 44
+ADDP4
+ASGNP4
+ADDRLP4 28
+INDIRP4
+ADDRLP4 28
+INDIRP4
+INDIRF4
+CVFI4 4
+CVIF4 4
+ASGNF4
+line 112
+;111:
+;112:  VectorCopy(start, bolt->r.currentOrigin);
+ADDRLP4 0
+INDIRP4
+CNSTI4 488
+ADDP4
+ADDRFP4 4
+INDIRP4
+INDIRB
+ASGNB 12
+line 114
+;113:
+;114:  return bolt;
+ADDRLP4 0
+INDIRP4
+RETP4
+LABELV $97
+endproc fire_shrapnel 32 4
+export G_Explodefragnade
+proc G_Explodefragnade 140 12
+line 119
+;115:}
+;116:
+;117:void
+;118:G_Explodefragnade(gentity_t *ent, vec3_t origin)
+;119:{
+line 126
+;120:  vec3_t pos, dir;
+;121:  long i;
+;122:  //int damage;
+;123:  float mag;
+;124:  trace_t tr;
+;125:  gentity_t *target;
+;126:  srand(trap_Milliseconds());
+ADDRLP4 96
+ADDRGP4 trap_Milliseconds
+CALLI4
+ASGNI4
+ADDRLP4 96
+INDIRI4
+CVIU4 4
+ARGU4
+ADDRGP4 srand
+CALLV
+pop
+line 127
+;127:  for(i = 0;i < GRENADE_SHRAPNEL_COUNT;i++)
+ADDRLP4 28
+CNSTI4 0
+ASGNI4
+LABELV $102
+line 128
+;128:  {
+line 130
+;129:    gentity_t *shrapnel;
+;130:    dir[0] = (int) (((double) rand() / ((double) (RAND_MAX) + (double) (1))) * GRENADE_SHRAPNEL_MAG) - (GRENADE_SHRAPNEL_MAG / 2);
+ADDRLP4 104
+ADDRGP4 rand
+CALLI4
+ASGNI4
+ADDRLP4 0
+CNSTF4 1148846080
+ADDRLP4 104
+INDIRI4
+CVIF4 4
+CNSTF4 1191182592
+DIVF4
+MULF4
+CVFI4 4
+CNSTI4 500
+SUBI4
+CVIF4 4
+ASGNF4
+line 131
+;131:    dir[1] = (int) (((double) rand() / ((double) (RAND_MAX) + (double) (1))) * GRENADE_SHRAPNEL_MAG) - (GRENADE_SHRAPNEL_MAG / 2);
+ADDRLP4 108
+ADDRGP4 rand
+CALLI4
+ASGNI4
+ADDRLP4 0+4
+CNSTF4 1148846080
+ADDRLP4 108
+INDIRI4
+CVIF4 4
+CNSTF4 1191182592
+DIVF4
+MULF4
+CVFI4 4
+CNSTI4 500
+SUBI4
+CVIF4 4
+ASGNF4
+line 132
+;132:    dir[2] = (int) (((double) rand() / ((double) (RAND_MAX) + (double) (1))) * GRENADE_SHRAPNEL_MAG) - (GRENADE_SHRAPNEL_MAG / 2);
+ADDRLP4 112
+ADDRGP4 rand
+CALLI4
+ASGNI4
+ADDRLP4 0+8
+CNSTF4 1148846080
+ADDRLP4 112
+INDIRI4
+CVIF4 4
+CNSTF4 1191182592
+DIVF4
+MULF4
+CVFI4 4
+CNSTI4 500
+SUBI4
+CVIF4 4
+ASGNF4
+line 134
+;133:    //VectorNormalize( dir );
+;134:    mag = abs(dir[0]) + abs(dir[1]) + abs(dir[2]);
+ADDRLP4 0
+INDIRF4
+CVFI4 4
+ARGI4
+ADDRLP4 116
+ADDRGP4 abs
+CALLI4
+ASGNI4
+ADDRLP4 0+4
+INDIRF4
+CVFI4 4
+ARGI4
+ADDRLP4 120
+ADDRGP4 abs
+CALLI4
+ASGNI4
+ADDRLP4 0+8
+INDIRF4
+CVFI4 4
+ARGI4
+ADDRLP4 124
+ADDRGP4 abs
+CALLI4
+ASGNI4
+ADDRLP4 12
+ADDRLP4 116
+INDIRI4
+ADDRLP4 120
+INDIRI4
+ADDI4
+ADDRLP4 124
+INDIRI4
+ADDI4
+CVIF4 4
+ASGNF4
+line 135
+;135:    dir[0] = dir[0] / mag;
+ADDRLP4 0
+ADDRLP4 0
+INDIRF4
+ADDRLP4 12
+INDIRF4
+DIVF4
+ASGNF4
+line 136
+;136:    dir[1] = dir[1] / mag;
+ADDRLP4 0+4
+ADDRLP4 0+4
+INDIRF4
+ADDRLP4 12
+INDIRF4
+DIVF4
+ASGNF4
+line 137
+;137:    dir[2] = dir[2] / mag;
+ADDRLP4 0+8
+ADDRLP4 0+8
+INDIRF4
+ADDRLP4 12
+INDIRF4
+DIVF4
+ASGNF4
+line 138
+;138:    VectorMA(origin, GRENADE_SHRAPNEL_RANGE, dir, pos);
+ADDRLP4 128
+ADDRFP4 4
+INDIRP4
+ASGNP4
+ADDRLP4 132
+CNSTF4 1150681088
+ASGNF4
+ADDRLP4 16
+ADDRLP4 128
+INDIRP4
+INDIRF4
+ADDRLP4 132
+INDIRF4
+ADDRLP4 0
+INDIRF4
+MULF4
+ADDF4
+ASGNF4
+ADDRLP4 16+4
+ADDRLP4 128
+INDIRP4
+CNSTI4 4
+ADDP4
+INDIRF4
+ADDRLP4 132
+INDIRF4
+ADDRLP4 0+4
+INDIRF4
+MULF4
+ADDF4
+ASGNF4
+ADDRLP4 16+8
+ADDRFP4 4
+INDIRP4
+CNSTI4 8
+ADDP4
+INDIRF4
+CNSTF4 1150681088
+ADDRLP4 0+8
+INDIRF4
+MULF4
+ADDF4
+ASGNF4
+line 140
+;139:    //trap_Trace( &tr, origin, NULL, NULL, pos, ent->r.ownerNum, MASK_SHOT );
+;140:    target = &g_entities[tr.entityNum];
+ADDRLP4 92
+CNSTI4 2476
+ADDRLP4 32+52
+INDIRI4
+MULI4
+ADDRGP4 g_entities
+ADDP4
+ASGNP4
+line 142
+;141:    //damage = Distance(tr.endpos,origin) / GRENADE_SHRAPNEL_RANGE * GRENADE_SHRAPNEL_DAMAGE;
+;142:    shrapnel = fire_shrapnel(ent, origin, dir);
+ADDRFP4 0
+INDIRP4
+ARGP4
+ADDRFP4 4
+INDIRP4
+ARGP4
+ADDRLP4 0
+ARGP4
+ADDRLP4 136
+ADDRGP4 fire_shrapnel
+CALLP4
+ASGNP4
+ADDRLP4 100
+ADDRLP4 136
+INDIRP4
+ASGNP4
+line 147
+;143:    //if(target->health > 0 && target->takedamage)
+;144:    //{
+;145:    //    G_Damage( target, ent, ent, dir, tr.endpos, damage, 0, MOD_GRENADE );
+;146:    //}
+;147:  }
+LABELV $103
+line 127
+ADDRLP4 28
+ADDRLP4 28
+INDIRI4
+CNSTI4 1
+ADDI4
+ASGNI4
+ADDRLP4 28
+INDIRI4
+CNSTI4 10
+LTI4 $102
+line 148
+;148:}
+LABELV $101
+endproc G_Explodefragnade 140 12
+export G_ExplodeMissile
+proc G_ExplodeMissile 36 24
+line 159
+;149:
+;150:/*
+;151: ================
+;152: G_ExplodeMissile
+;153:
+;154: Explode a missile without an impact
+;155: ================
+;156: */
+;157:void
+;158:G_ExplodeMissile(gentity_t *ent)
+;159:{
+line 163
+;160:  vec3_t dir;
+;161:  vec3_t origin;
+;162:
+;163:  BG_EvaluateTrajectory(&ent->s.pos, level.time, origin);
+ADDRFP4 0
+INDIRP4
+CNSTI4 12
+ADDP4
+ARGP4
+ADDRGP4 level+28
+INDIRI4
+ARGI4
+ADDRLP4 0
+ARGP4
+ADDRGP4 BG_EvaluateTrajectory
+CALLV
+pop
+line 164
+;164:  SnapVector(origin);
+ADDRLP4 0
+ADDRLP4 0
+INDIRF4
+CVFI4 4
+CVIF4 4
+ASGNF4
+ADDRLP4 0+4
+ADDRLP4 0+4
+INDIRF4
+CVFI4 4
+CVIF4 4
+ASGNF4
+ADDRLP4 0+8
+ADDRLP4 0+8
+INDIRF4
+CVFI4 4
+CVIF4 4
+ASGNF4
+line 165
+;165:  G_SetOrigin(ent, origin);
+ADDRFP4 0
+INDIRP4
+ARGP4
+ADDRLP4 0
+ARGP4
+ADDRGP4 G_SetOrigin
+CALLV
+pop
+line 168
+;166:
+;167:  // we don't have a valid direction, so just point straight up
+;168:  dir[0] = dir[1] = 0;
+ADDRLP4 24
+CNSTF4 0
+ASGNF4
+ADDRLP4 12+4
+ADDRLP4 24
+INDIRF4
+ASGNF4
+ADDRLP4 12
+ADDRLP4 24
+INDIRF4
+ASGNF4
+line 169
+;169:  dir[2] = 1;
+ADDRLP4 12+8
+CNSTF4 1065353216
+ASGNF4
+line 171
+;170:
+;171:  ent->s.eType = ET_GENERAL;
+ADDRFP4 0
+INDIRP4
+CNSTI4 4
+ADDP4
+CNSTI4 0
+ASGNI4
+line 174
+;172:
+;173:  //TA: tired... can't be fucked... hack
+;174:  if (ent->s.weapon != WP_LOCKBLOB_LAUNCHER)
+ADDRFP4 0
+INDIRP4
+CNSTI4 192
+ADDP4
+INDIRI4
+CNSTI4 14
+EQI4 $127
+line 175
+;175:    G_AddEvent(ent, EV_MISSILE_MISS, DirToByte(dir));
+ADDRLP4 12
+ARGP4
+ADDRLP4 28
+ADDRGP4 DirToByte
+CALLI4
+ASGNI4
+ADDRFP4 0
+INDIRP4
+ARGP4
+CNSTI4 40
+ARGI4
+ADDRLP4 28
+INDIRI4
+ARGI4
+ADDRGP4 G_AddEvent
+CALLV
+pop
+LABELV $127
+line 183
+;176:
+;177:  /*	if( ent->s.weapon == WP_BOMB )
+;178:   {
+;179:   G_Explodefragnade(ent, origin);
+;180:   return;
+;181:   }*/
+;182:
+;183:  ent->freeAfterEvent = qtrue;
+ADDRFP4 0
+INDIRP4
+CNSTI4 556
+ADDP4
+CNSTI4 1
+ASGNI4
+line 186
+;184:
+;185:  // splash damage
+;186:  if (ent->splashDamage)
+ADDRFP4 0
+INDIRP4
+CNSTI4 848
+ADDP4
+INDIRI4
+CNSTI4 0
+EQI4 $129
+line 187
+;187:    G_RadiusDamage(ent->r.currentOrigin, ent->parent, ent->splashDamage, ent->splashRadius, ent, ent->splashMethodOfDeath);
+ADDRLP4 32
+ADDRFP4 0
+INDIRP4
+ASGNP4
+ADDRLP4 32
+INDIRP4
+CNSTI4 488
+ADDP4
+ARGP4
+ADDRLP4 32
+INDIRP4
+CNSTI4 600
+ADDP4
+INDIRP4
+ARGP4
+ADDRLP4 32
+INDIRP4
+CNSTI4 848
+ADDP4
+INDIRI4
+CVIF4 4
+ARGF4
+ADDRLP4 32
+INDIRP4
+CNSTI4 852
+ADDP4
+INDIRI4
+CVIF4 4
+ARGF4
+ADDRLP4 32
+INDIRP4
+ARGP4
+ADDRLP4 32
+INDIRP4
+CNSTI4 860
+ADDP4
+INDIRI4
+ARGI4
+ADDRGP4 G_RadiusDamage
+CALLI4
+pop
+LABELV $129
+line 189
+;188:
+;189:  trap_LinkEntity(ent);
+ADDRFP4 0
+INDIRP4
+ARGP4
+ADDRGP4 trap_LinkEntity
+CALLV
+pop
+line 190
+;190:}
+LABELV $119
+endproc G_ExplodeMissile 36 24
+export G_MissileImpact
+proc G_MissileImpact 60 32
+line 203
+;191:
+;192:void
+;193:AHive_ReturnToHive(gentity_t *self);
+;194:
+;195:/*
+;196: ================
+;197: G_MissileImpact
+;198:
+;199: ================
+;200: */
+;201:void
+;202:G_MissileImpact(gentity_t *ent, trace_t *trace)
+;203:{
+line 207
+;204:  gentity_t *other, *attacker;
+;205:  vec3_t dir;
+;206:
+;207:  other = &g_entities[trace->entityNum];
+ADDRLP4 0
+CNSTI4 2476
+ADDRFP4 4
+INDIRP4
+CNSTI4 52
+ADDP4
+INDIRI4
+MULI4
+ADDRGP4 g_entities
+ADDP4
+ASGNP4
+line 208
+;208:  attacker = &g_entities[ent->r.ownerNum];
+ADDRLP4 4
+CNSTI4 2476
+ADDRFP4 0
+INDIRP4
+CNSTI4 512
+ADDP4
+INDIRI4
+MULI4
+ADDRGP4 g_entities
+ADDP4
+ASGNP4
+line 210
+;209:
+;210:  if (ent->s.weapon == WP_MINE)
+ADDRFP4 0
+INDIRP4
+CNSTI4 192
+ADDP4
+INDIRI4
+CNSTI4 11
+NEI4 $132
+line 211
+;211:  {
+line 212
+;212:    G_BounceMissile(ent, trace);
+ADDRFP4 0
+INDIRP4
+ARGP4
+ADDRFP4 4
+INDIRP4
+ARGP4
+ADDRGP4 G_BounceMissile
+CALLV
+pop
+line 215
+;213:
+;214:    //only play a sound if requested
+;215:    if (!(ent->s.eFlags & EF_NO_BOUNCE_SOUND))
+ADDRFP4 0
+INDIRP4
+CNSTI4 8
+ADDP4
+INDIRI4
+CNSTI4 32
+BANDI4
+CNSTI4 0
+NEI4 $131
+line 216
+;216:      G_AddEvent(ent, EV_GRENADE_BOUNCE, 0);
+ADDRFP4 0
+INDIRP4
+ARGP4
+CNSTI4 33
+ARGI4
+CNSTI4 0
+ARGI4
+ADDRGP4 G_AddEvent
+CALLV
+pop
+line 218
+;217:
+;218:    return;
+ADDRGP4 $131
+JUMPV
+LABELV $132
+line 220
+;219:  }
+;220:  else if (!other->takedamage && (ent->s.eFlags & (EF_BOUNCE | EF_BOUNCE_HALF)))
+ADDRLP4 20
+CNSTI4 0
+ASGNI4
+ADDRLP4 0
+INDIRP4
+CNSTI4 840
+ADDP4
+INDIRI4
+ADDRLP4 20
+INDIRI4
+NEI4 $136
+ADDRFP4 0
+INDIRP4
+CNSTI4 8
+ADDP4
+INDIRI4
+CNSTI4 24
+BANDI4
+ADDRLP4 20
+INDIRI4
+EQI4 $136
+line 221
+;221:  {
+line 222
+;222:    G_BounceMissile(ent, trace);
+ADDRFP4 0
+INDIRP4
+ARGP4
+ADDRFP4 4
+INDIRP4
+ARGP4
+ADDRGP4 G_BounceMissile
+CALLV
+pop
+line 225
+;223:
+;224:    //only play a sound if requested
+;225:    if (!(ent->s.eFlags & EF_NO_BOUNCE_SOUND))
+ADDRFP4 0
+INDIRP4
+CNSTI4 8
+ADDP4
+INDIRI4
+CNSTI4 32
+BANDI4
+CNSTI4 0
+NEI4 $131
+line 226
+;226:      G_AddEvent(ent, EV_GRENADE_BOUNCE, 0);
+ADDRFP4 0
+INDIRP4
+ARGP4
+CNSTI4 33
+ARGI4
+CNSTI4 0
+ARGI4
+ADDRGP4 G_AddEvent
+CALLV
+pop
+line 228
+;227:
+;228:    return;
+ADDRGP4 $131
+JUMPV
+LABELV $136
+line 231
+;229:  }
+;230:
+;231:  if (!strcmp(ent->classname, "grenade"))
+ADDRFP4 0
+INDIRP4
+CNSTI4 524
+ADDP4
+INDIRP4
+ARGP4
+ADDRGP4 $142
+ARGP4
+ADDRLP4 24
+ADDRGP4 strcmp
+CALLI4
+ASGNI4
+ADDRLP4 24
+INDIRI4
+CNSTI4 0
+NEI4 $140
+line 232
+;232:  {
+line 234
+;233:    //grenade doesn't explode on impact
+;234:    G_BounceMissile(ent, trace);
+ADDRFP4 0
+INDIRP4
+ARGP4
+ADDRFP4 4
+INDIRP4
+ARGP4
+ADDRGP4 G_BounceMissile
+CALLV
+pop
+line 237
+;235:
+;236:    //only play a sound if requested
+;237:    if (!(ent->s.eFlags & EF_NO_BOUNCE_SOUND))
+ADDRFP4 0
+INDIRP4
+CNSTI4 8
+ADDP4
+INDIRI4
+CNSTI4 32
+BANDI4
+CNSTI4 0
+NEI4 $131
+line 238
+;238:      G_AddEvent(ent, EV_GRENADE_BOUNCE, 0);
+ADDRFP4 0
+INDIRP4
+ARGP4
+CNSTI4 33
+ARGI4
+CNSTI4 0
+ARGI4
+ADDRGP4 G_AddEvent
+CALLV
+pop
+line 240
+;239:
+;240:    return;
+ADDRGP4 $131
+JUMPV
+LABELV $140
+line 242
+;241:  }
+;242:  else if (!strcmp(ent->classname, "lockblob"))
+ADDRFP4 0
+INDIRP4
+CNSTI4 524
+ADDP4
+INDIRP4
+ARGP4
+ADDRGP4 $147
+ARGP4
+ADDRLP4 28
+ADDRGP4 strcmp
+CALLI4
+ASGNI4
+ADDRLP4 28
+INDIRI4
+CNSTI4 0
+NEI4 $145
+line 243
+;243:  {
+line 244
+;244:    if (other->client && other->client->ps.stats[STAT_PTEAM] == PTE_HUMANS)
+ADDRLP4 32
+ADDRLP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+ASGNP4
+ADDRLP4 32
+INDIRP4
+CVPU4 4
+CNSTU4 0
+EQU4 $146
+ADDRLP4 32
+INDIRP4
+CNSTI4 216
+ADDP4
+INDIRI4
+CNSTI4 2
+NEI4 $146
+line 245
+;245:    {
+line 246
+;246:      other->client->ps.stats[STAT_STATE] |= SS_BLOBLOCKED;
+ADDRLP4 36
+ADDRLP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+CNSTI4 224
+ADDP4
+ASGNP4
+ADDRLP4 36
+INDIRP4
+ADDRLP4 36
+INDIRP4
+INDIRI4
+CNSTI4 64
+BORI4
+ASGNI4
+line 247
+;247:      other->client->lastLockTime = level.time;
+ADDRLP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+CNSTI4 1352
+ADDP4
+ADDRGP4 level+28
+INDIRI4
+ASGNI4
+line 248
+;248:      AngleVectors(other->client->ps.viewangles, dir, NULL, NULL);
+ADDRLP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+CNSTI4 152
+ADDP4
+ARGP4
+ADDRLP4 8
+ARGP4
+ADDRLP4 40
+CNSTP4 0
+ASGNP4
+ADDRLP4 40
+INDIRP4
+ARGP4
+ADDRLP4 40
+INDIRP4
+ARGP4
+ADDRGP4 AngleVectors
+CALLV
+pop
+line 249
+;249:      other->client->ps.stats[STAT_VIEWLOCK] = DirToByte(dir);
+ADDRLP4 8
+ARGP4
+ADDRLP4 44
+ADDRGP4 DirToByte
+CALLI4
+ASGNI4
+ADDRLP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+CNSTI4 244
+ADDP4
+ADDRLP4 44
+INDIRI4
+ASGNI4
+line 250
+;250:    }
+line 251
+;251:  }
+ADDRGP4 $146
+JUMPV
+LABELV $145
+line 252
+;252:  else if (!strcmp(ent->classname, "slowblob"))
+ADDRFP4 0
+INDIRP4
+CNSTI4 524
+ADDP4
+INDIRP4
+ARGP4
+ADDRGP4 $153
+ARGP4
+ADDRLP4 32
+ADDRGP4 strcmp
+CALLI4
+ASGNI4
+ADDRLP4 32
+INDIRI4
+CNSTI4 0
+NEI4 $151
+line 253
+;253:  {
+line 254
+;254:    if (other->client && other->client->ps.stats[STAT_PTEAM] == PTE_HUMANS)
+ADDRLP4 36
+ADDRLP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+ASGNP4
+ADDRLP4 36
+INDIRP4
+CVPU4 4
+CNSTU4 0
+EQU4 $152
+ADDRLP4 36
+INDIRP4
+CNSTI4 216
+ADDP4
+INDIRI4
+CNSTI4 2
+NEI4 $152
+line 255
+;255:    {
+line 256
+;256:      other->client->ps.stats[STAT_STATE] |= SS_SLOWLOCKED;
+ADDRLP4 40
+ADDRLP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+CNSTI4 224
+ADDP4
+ASGNP4
+ADDRLP4 40
+INDIRP4
+ADDRLP4 40
+INDIRP4
+INDIRI4
+CNSTI4 1024
+BORI4
+ASGNI4
+line 257
+;257:      other->client->lastSlowTime = level.time;
+ADDRLP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+CNSTI4 1356
+ADDP4
+ADDRGP4 level+28
+INDIRI4
+ASGNI4
+line 258
+;258:      AngleVectors(other->client->ps.viewangles, dir, NULL, NULL);
+ADDRLP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+CNSTI4 152
+ADDP4
+ARGP4
+ADDRLP4 8
+ARGP4
+ADDRLP4 44
+CNSTP4 0
+ASGNP4
+ADDRLP4 44
+INDIRP4
+ARGP4
+ADDRLP4 44
+INDIRP4
+ARGP4
+ADDRGP4 AngleVectors
+CALLV
+pop
+line 259
+;259:      other->client->ps.stats[STAT_VIEWLOCK] = DirToByte(dir);
+ADDRLP4 8
+ARGP4
+ADDRLP4 48
+ADDRGP4 DirToByte
+CALLI4
+ASGNI4
+ADDRLP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+CNSTI4 244
+ADDP4
+ADDRLP4 48
+INDIRI4
+ASGNI4
+line 260
+;260:    }
+line 261
+;261:  }
+ADDRGP4 $152
+JUMPV
+LABELV $151
+line 262
+;262:  else if (!strcmp(ent->classname, "hive"))
+ADDRFP4 0
+INDIRP4
+CNSTI4 524
+ADDP4
+INDIRP4
+ARGP4
+ADDRGP4 $159
+ARGP4
+ADDRLP4 36
+ADDRGP4 strcmp
+CALLI4
+ASGNI4
+ADDRLP4 36
+INDIRI4
+CNSTI4 0
+NEI4 $157
+line 263
+;263:  {
+line 264
+;264:    if (other->s.eType == ET_BUILDABLE && other->s.modelindex == BA_A_HIVE)
+ADDRLP4 0
+INDIRP4
+CNSTI4 4
+ADDP4
+INDIRI4
+CNSTI4 3
+NEI4 $160
+ADDRLP4 0
+INDIRP4
+CNSTI4 160
+ADDP4
+INDIRI4
+CNSTI4 7
+NEI4 $160
+line 265
+;265:    {
+line 266
+;266:      if (!ent->parent)
+ADDRFP4 0
+INDIRP4
+CNSTI4 600
+ADDP4
+INDIRP4
+CVPU4 4
+CNSTU4 0
+NEU4 $162
+line 267
+;267:        G_Printf(S_COLOR_YELLOW "WARNING: hive entity has no parent in G_MissileImpact\n");
+ADDRGP4 $164
+ARGP4
+ADDRGP4 G_Printf
+CALLV
+pop
+ADDRGP4 $163
+JUMPV
+LABELV $162
+line 269
+;268:      else
+;269:        ent->parent->active = qfalse;
+ADDRFP4 0
+INDIRP4
+CNSTI4 600
+ADDP4
+INDIRP4
+CNSTI4 968
+ADDP4
+CNSTI4 0
+ASGNI4
+LABELV $163
+line 271
+;270:
+;271:      G_FreeEntity(ent);
+ADDRFP4 0
+INDIRP4
+ARGP4
+ADDRGP4 G_FreeEntity
+CALLV
+pop
+line 272
+;272:      return;
+ADDRGP4 $131
+JUMPV
+LABELV $160
+line 275
+;273:    }
+;274:    else
+;275:    {
+line 277
+;276:      //prevent collision with the client when returning
+;277:      ent->r.ownerNum = other->s.number;
+ADDRFP4 0
+INDIRP4
+CNSTI4 512
+ADDP4
+ADDRLP4 0
+INDIRP4
+INDIRI4
+ASGNI4
+line 279
+;278:
+;279:      ent->think = AHive_ReturnToHive;
+ADDRFP4 0
+INDIRP4
+CNSTI4 772
+ADDP4
+ADDRGP4 AHive_ReturnToHive
+ASGNP4
+line 280
+;280:      ent->nextthink = level.time + FRAMETIME;
+ADDRFP4 0
+INDIRP4
+CNSTI4 768
+ADDP4
+ADDRGP4 level+28
+INDIRI4
+CNSTI4 100
+ADDI4
+ASGNI4
+line 287
+;281:
+;282:      //      //only damage humans
+;283:      //      if (other->client && other->client->ps.stats[ STAT_PTEAM ] == PTE_HUMANS)
+;284:      //        returnAfterDamage = qtrue;
+;285:      //      else
+;286:      //        return;
+;287:    }
+line 288
+;288:  }
+LABELV $157
+LABELV $152
+LABELV $146
+line 291
+;289:
+;290:  // impact damage
+;291:  if (other->takedamage)
+ADDRLP4 0
+INDIRP4
+CNSTI4 840
+ADDP4
+INDIRI4
+CNSTI4 0
+EQI4 $166
+line 292
+;292:  {
+line 294
+;293:    // FIXME: wrong damage direction?
+;294:    if (ent->damage)
+ADDRFP4 0
+INDIRP4
+CNSTI4 844
+ADDP4
+INDIRI4
+CNSTI4 0
+EQI4 $168
+line 295
+;295:    {
+line 298
+;296:      vec3_t velocity;
+;297:
+;298:      BG_EvaluateTrajectoryDelta(&ent->s.pos, level.time, velocity);
+ADDRFP4 0
+INDIRP4
+CNSTI4 12
+ADDP4
+ARGP4
+ADDRGP4 level+28
+INDIRI4
+ARGI4
+ADDRLP4 40
+ARGP4
+ADDRGP4 BG_EvaluateTrajectoryDelta
+CALLV
+pop
+line 299
+;299:      if (VectorLength(velocity) == 0)
+ADDRLP4 40
+ARGP4
+ADDRLP4 52
+ADDRGP4 VectorLength
+CALLF4
+ASGNF4
+ADDRLP4 52
+INDIRF4
+CNSTF4 0
+NEF4 $171
+line 300
+;300:        velocity[2] = 1; // stepped on a grenade
+ADDRLP4 40+8
+CNSTF4 1065353216
+ASGNF4
+LABELV $171
+line 302
+;301:
+;302:      G_Damage(other, ent, attacker, velocity, ent->s.origin, ent->damage, 0, ent->methodOfDeath);
+ADDRLP4 0
+INDIRP4
+ARGP4
+ADDRLP4 56
+ADDRFP4 0
+INDIRP4
+ASGNP4
+ADDRLP4 56
+INDIRP4
+ARGP4
+ADDRLP4 4
+INDIRP4
+ARGP4
+ADDRLP4 40
+ARGP4
+ADDRLP4 56
+INDIRP4
+CNSTI4 92
+ADDP4
+ARGP4
+ADDRLP4 56
+INDIRP4
+CNSTI4 844
+ADDP4
+INDIRI4
+ARGI4
+CNSTI4 0
+ARGI4
+ADDRLP4 56
+INDIRP4
+CNSTI4 856
+ADDP4
+INDIRI4
+ARGI4
+ADDRGP4 G_Damage
+CALLV
+pop
+line 303
+;303:    }
+LABELV $168
+line 304
+;304:  }
+LABELV $166
+line 312
+;305:
+;306:  //  if (returnAfterDamage)
+;307:  //    return;
+;308:
+;309:  // is it cheaper in bandwidth to just remove this ent and create a new
+;310:  // one, rather than changing the missile into the explosion?
+;311:
+;312:  if (other->takedamage && other->client)
+ADDRLP4 0
+INDIRP4
+CNSTI4 840
+ADDP4
+INDIRI4
+CNSTI4 0
+EQI4 $174
+ADDRLP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+CVPU4 4
+CNSTU4 0
+EQU4 $174
+line 313
+;313:  {
+line 314
+;314:    G_AddEvent(ent, EV_MISSILE_HIT, DirToByte(trace->plane.normal));
+ADDRFP4 4
+INDIRP4
+CNSTI4 24
+ADDP4
+ARGP4
+ADDRLP4 44
+ADDRGP4 DirToByte
+CALLI4
+ASGNI4
+ADDRFP4 0
+INDIRP4
+ARGP4
+CNSTI4 39
+ARGI4
+ADDRLP4 44
+INDIRI4
+ARGI4
+ADDRGP4 G_AddEvent
+CALLV
+pop
+line 315
+;315:    ent->s.otherEntityNum = other->s.number;
+ADDRFP4 0
+INDIRP4
+CNSTI4 140
+ADDP4
+ADDRLP4 0
+INDIRP4
+INDIRI4
+ASGNI4
+line 316
+;316:  }
+ADDRGP4 $175
+JUMPV
+LABELV $174
+line 317
+;317:  else if (trace->surfaceFlags & SURF_METALSTEPS)
+ADDRFP4 4
+INDIRP4
+CNSTI4 44
+ADDP4
+INDIRI4
+CNSTI4 4096
+BANDI4
+CNSTI4 0
+EQI4 $176
+line 318
+;318:    G_AddEvent(ent, EV_MISSILE_MISS_METAL, DirToByte(trace->plane.normal));
+ADDRFP4 4
+INDIRP4
+CNSTI4 24
+ADDP4
+ARGP4
+ADDRLP4 44
+ADDRGP4 DirToByte
+CALLI4
+ASGNI4
+ADDRFP4 0
+INDIRP4
+ARGP4
+CNSTI4 41
+ARGI4
+ADDRLP4 44
+INDIRI4
+ARGI4
+ADDRGP4 G_AddEvent
+CALLV
+pop
+ADDRGP4 $177
+JUMPV
+LABELV $176
+line 320
+;319:  else
+;320:  {
+line 321
+;321:    if (other->r.svFlags & SVF_BOT)
+ADDRLP4 0
+INDIRP4
+CNSTI4 424
+ADDP4
+INDIRI4
+CNSTI4 8
+BANDI4
+CNSTI4 0
+EQI4 $178
+line 322
+;322:    {
+line 323
+;323:      G_AddEvent(ent, EV_MISSILE_HIT, DirToByte(trace->plane.normal));
+ADDRFP4 4
+INDIRP4
+CNSTI4 24
+ADDP4
+ARGP4
+ADDRLP4 48
+ADDRGP4 DirToByte
+CALLI4
+ASGNI4
+ADDRFP4 0
+INDIRP4
+ARGP4
+CNSTI4 39
+ARGI4
+ADDRLP4 48
+INDIRI4
+ARGI4
+ADDRGP4 G_AddEvent
+CALLV
+pop
+line 324
+;324:      if(ent->s.weapon == WP_AXE && ent->s.generic1 == WPM_SECONDARY)
+ADDRLP4 52
+ADDRFP4 0
+INDIRP4
+ASGNP4
+ADDRLP4 56
+CNSTI4 2
+ASGNI4
+ADDRLP4 52
+INDIRP4
+CNSTI4 192
+ADDP4
+INDIRI4
+ADDRLP4 56
+INDIRI4
+NEI4 $179
+ADDRLP4 52
+INDIRP4
+CNSTI4 204
+ADDP4
+INDIRI4
+ADDRLP4 56
+INDIRI4
+NEI4 $179
+line 325
+;325:      {
+line 326
+;326:        return;
+ADDRGP4 $131
+JUMPV
+line 328
+;327:      }
+;328:    }
+LABELV $178
+line 330
+;329:    else
+;330:    {
+line 331
+;331:      G_AddEvent(ent, EV_MISSILE_MISS, DirToByte(trace->plane.normal));
+ADDRFP4 4
+INDIRP4
+CNSTI4 24
+ADDP4
+ARGP4
+ADDRLP4 48
+ADDRGP4 DirToByte
+CALLI4
+ASGNI4
+ADDRFP4 0
+INDIRP4
+ARGP4
+CNSTI4 40
+ARGI4
+ADDRLP4 48
+INDIRI4
+ARGI4
+ADDRGP4 G_AddEvent
+CALLV
+pop
+line 332
+;332:    }
+LABELV $179
+line 333
+;333:  }
+LABELV $177
+LABELV $175
+line 335
+;334:
+;335:  ent->freeAfterEvent = qtrue;
+ADDRFP4 0
+INDIRP4
+CNSTI4 556
+ADDP4
+CNSTI4 1
+ASGNI4
+line 338
+;336:
+;337:  // change over to a normal entity right at the point of impact
+;338:  ent->s.eType = ET_GENERAL;
+ADDRFP4 0
+INDIRP4
+CNSTI4 4
+ADDP4
+CNSTI4 0
+ASGNI4
+line 340
+;339:
+;340:  SnapVectorTowards(trace->endpos, ent->s.pos.trBase); // save net bandwidth
+ADDRFP4 4
+INDIRP4
+CNSTI4 12
+ADDP4
+ARGP4
+ADDRFP4 0
+INDIRP4
+CNSTI4 24
+ADDP4
+ARGP4
+ADDRGP4 SnapVectorTowards
+CALLV
+pop
+line 342
+;341:
+;342:  G_SetOrigin(ent, trace->endpos);
+ADDRFP4 0
+INDIRP4
+ARGP4
+ADDRFP4 4
+INDIRP4
+CNSTI4 12
+ADDP4
+ARGP4
+ADDRGP4 G_SetOrigin
+CALLV
+pop
+line 345
+;343:
+;344:  // splash damage (doesn't apply to person directly hit)
+;345:  if (ent->splashDamage)
+ADDRFP4 0
+INDIRP4
+CNSTI4 848
+ADDP4
+INDIRI4
+CNSTI4 0
+EQI4 $182
+line 346
+;346:    G_RadiusDamage(trace->endpos, ent->parent, ent->splashDamage, ent->splashRadius, other, ent->splashMethodOfDeath);
+ADDRFP4 4
+INDIRP4
+CNSTI4 12
+ADDP4
+ARGP4
+ADDRLP4 48
+ADDRFP4 0
+INDIRP4
+ASGNP4
+ADDRLP4 48
+INDIRP4
+CNSTI4 600
+ADDP4
+INDIRP4
+ARGP4
+ADDRLP4 48
+INDIRP4
+CNSTI4 848
+ADDP4
+INDIRI4
+CVIF4 4
+ARGF4
+ADDRLP4 48
+INDIRP4
+CNSTI4 852
+ADDP4
+INDIRI4
+CVIF4 4
+ARGF4
+ADDRLP4 0
+INDIRP4
+ARGP4
+ADDRLP4 48
+INDIRP4
+CNSTI4 860
+ADDP4
+INDIRI4
+ARGI4
+ADDRGP4 G_RadiusDamage
+CALLI4
+pop
+LABELV $182
+line 348
+;347:
+;348:  trap_LinkEntity(ent);
+ADDRFP4 0
+INDIRP4
+ARGP4
+ADDRGP4 trap_LinkEntity
+CALLV
+pop
+line 349
+;349:}
+LABELV $131
+endproc G_MissileImpact 60 32
+export G_RunMissile
+proc G_RunMissile 100 28
+line 359
+;350:
+;351:/*
+;352: ================
+;353: G_RunMissile
+;354:
+;355: ================
+;356: */
+;357:void
+;358:G_RunMissile(gentity_t *ent)
+;359:{
+line 365
+;360:  vec3_t origin;
+;361:  trace_t tr;
+;362:  int passent;
+;363:
+;364:  // get current position
+;365:  BG_EvaluateTrajectory(&ent->s.pos, level.time, origin);
+ADDRFP4 0
+INDIRP4
+CNSTI4 12
+ADDP4
+ARGP4
+ADDRGP4 level+28
+INDIRI4
+ARGI4
+ADDRLP4 64
+ARGP4
+ADDRGP4 BG_EvaluateTrajectory
+CALLV
+pop
+line 368
+;366:
+;367:  // ignore interactions with the missile owner
+;368:  passent = ent->r.ownerNum;
+ADDRLP4 60
+ADDRFP4 0
+INDIRP4
+CNSTI4 512
+ADDP4
+INDIRI4
+ASGNI4
+line 371
+;369:
+;370:  // trace a line from the previous position to the current position
+;371:  trap_Trace(&tr, ent->r.currentOrigin, ent->r.mins, ent->r.maxs, origin, passent, ent->clipmask);
+ADDRLP4 0
+ARGP4
+ADDRLP4 76
+ADDRFP4 0
+INDIRP4
+ASGNP4
+ADDRLP4 76
+INDIRP4
+CNSTI4 488
+ADDP4
+ARGP4
+ADDRLP4 76
+INDIRP4
+CNSTI4 436
+ADDP4
+ARGP4
+ADDRLP4 76
+INDIRP4
+CNSTI4 448
+ADDP4
+ARGP4
+ADDRLP4 64
+ARGP4
+ADDRLP4 60
+INDIRI4
+ARGI4
+ADDRLP4 76
+INDIRP4
+CNSTI4 572
+ADDP4
+INDIRI4
+ARGI4
+ADDRGP4 trap_Trace
+CALLV
+pop
+line 373
+;372:
+;373:  if (tr.startsolid || tr.allsolid)
+ADDRLP4 80
+CNSTI4 0
+ASGNI4
+ADDRLP4 0+4
+INDIRI4
+ADDRLP4 80
+INDIRI4
+NEI4 $189
+ADDRLP4 0
+INDIRI4
+ADDRLP4 80
+INDIRI4
+EQI4 $186
+LABELV $189
+line 374
+;374:  {
+line 376
+;375:    // make sure the tr.entityNum is set to the entity we're stuck in
+;376:    trap_Trace(&tr, ent->r.currentOrigin, ent->r.mins, ent->r.maxs, ent->r.currentOrigin, passent, ent->clipmask);
+ADDRLP4 0
+ARGP4
+ADDRLP4 84
+ADDRFP4 0
+INDIRP4
+ASGNP4
+ADDRLP4 88
+ADDRLP4 84
+INDIRP4
+CNSTI4 488
+ADDP4
+ASGNP4
+ADDRLP4 88
+INDIRP4
+ARGP4
+ADDRLP4 84
+INDIRP4
+CNSTI4 436
+ADDP4
+ARGP4
+ADDRLP4 84
+INDIRP4
+CNSTI4 448
+ADDP4
+ARGP4
+ADDRLP4 88
+INDIRP4
+ARGP4
+ADDRLP4 60
+INDIRI4
+ARGI4
+ADDRLP4 84
+INDIRP4
+CNSTI4 572
+ADDP4
+INDIRI4
+ARGI4
+ADDRGP4 trap_Trace
+CALLV
+pop
+line 377
+;377:    tr.fraction = 0;
+ADDRLP4 0+8
+CNSTF4 0
+ASGNF4
+line 378
+;378:  }
+ADDRGP4 $187
+JUMPV
+LABELV $186
+line 379
+;379:else    VectorCopy(tr.endpos, ent->r.currentOrigin);
+ADDRFP4 0
+INDIRP4
+CNSTI4 488
+ADDP4
+ADDRLP4 0+12
+INDIRB
+ASGNB 12
+LABELV $187
+line 381
+;380:
+;381:    ent->r.contents = CONTENTS_SOLID; //trick trap_LinkEntity into...
+ADDRFP4 0
+INDIRP4
+CNSTI4 460
+ADDP4
+CNSTI4 1
+ASGNI4
+line 382
+;382:    trap_LinkEntity(ent);
+ADDRFP4 0
+INDIRP4
+ARGP4
+ADDRGP4 trap_LinkEntity
+CALLV
+pop
+line 383
+;383:    ent->r.contents = 0; //...encoding bbox information
+ADDRFP4 0
+INDIRP4
+CNSTI4 460
+ADDP4
+CNSTI4 0
+ASGNI4
+line 385
+;384:
+;385:    if (tr.fraction != 1)
+ADDRLP4 0+8
+INDIRF4
+CNSTF4 1065353216
+EQF4 $192
+line 386
+;386:    {
+line 388
+;387:      // never explode or bounce on sky
+;388:      if (tr.surfaceFlags & SURF_NOIMPACT)
+ADDRLP4 0+44
+INDIRI4
+CNSTI4 16
+BANDI4
+CNSTI4 0
+EQI4 $195
+line 389
+;389:      {
+line 391
+;390:        // If grapple, reset owner
+;391:        if (ent->parent && ent->parent->client && ent->parent->client->hook == ent)
+ADDRLP4 84
+ADDRFP4 0
+INDIRP4
+ASGNP4
+ADDRLP4 88
+ADDRLP4 84
+INDIRP4
+CNSTI4 600
+ADDP4
+INDIRP4
+ASGNP4
+ADDRLP4 92
+CNSTU4 0
+ASGNU4
+ADDRLP4 88
+INDIRP4
+CVPU4 4
+ADDRLP4 92
+INDIRU4
+EQU4 $198
+ADDRLP4 96
+ADDRLP4 88
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+ASGNP4
+ADDRLP4 96
+INDIRP4
+CVPU4 4
+ADDRLP4 92
+INDIRU4
+EQU4 $198
+ADDRLP4 96
+INDIRP4
+CNSTI4 1272
+ADDP4
+INDIRP4
+CVPU4 4
+ADDRLP4 84
+INDIRP4
+CVPU4 4
+NEU4 $198
+line 392
+;392:        ent->parent->client->hook = NULL;
+ADDRFP4 0
+INDIRP4
+CNSTI4 600
+ADDP4
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+CNSTI4 1272
+ADDP4
+CNSTP4 0
+ASGNP4
+LABELV $198
+line 394
+;393:
+;394:        G_FreeEntity(ent);
+ADDRFP4 0
+INDIRP4
+ARGP4
+ADDRGP4 G_FreeEntity
+CALLV
+pop
+line 395
+;395:        return;
+ADDRGP4 $184
+JUMPV
+LABELV $195
+line 398
+;396:      }
+;397:
+;398:      G_MissileImpact(ent, &tr);
+ADDRFP4 0
+INDIRP4
+ARGP4
+ADDRLP4 0
+ARGP4
+ADDRGP4 G_MissileImpact
+CALLV
+pop
+line 399
+;399:      if (ent->s.eType != ET_MISSILE)
+ADDRLP4 84
+CNSTI4 4
+ASGNI4
+ADDRFP4 0
+INDIRP4
+ADDRLP4 84
+INDIRI4
+ADDP4
+INDIRI4
+ADDRLP4 84
+INDIRI4
+EQI4 $200
+line 400
+;400:      return; // exploded
+ADDRGP4 $184
+JUMPV
+LABELV $200
+line 401
+;401:    }
+LABELV $192
+line 404
+;402:
+;403:    // check think function after bouncing
+;404:    G_RunThink(ent);
+ADDRFP4 0
+INDIRP4
+ARGP4
+ADDRGP4 G_RunThink
+CALLV
+pop
+line 405
+;405:  }
+LABELV $184
+endproc G_RunMissile 100 28
+export fire_flamer
+proc fire_flamer 64 4
+line 417
+;406:
+;407:  //=============================================================================
+;408:
+;409:  /*
+;410:   =================
+;411:   fire_flamer
+;412:
+;413:   =================
+;414:   */
+;415:gentity_t *
+;416:fire_flamer(gentity_t *self, vec3_t start, vec3_t dir)
+;417:{
+line 421
+;418:  gentity_t *bolt;
+;419:  vec3_t pvel;
+;420:
+;421:  VectorNormalize(dir);
+ADDRFP4 8
+INDIRP4
+ARGP4
+ADDRGP4 VectorNormalize
+CALLF4
+pop
+line 423
+;422:
+;423:  bolt = G_Spawn();
+ADDRLP4 16
+ADDRGP4 G_Spawn
+CALLP4
+ASGNP4
+ADDRLP4 0
+ADDRLP4 16
+INDIRP4
+ASGNP4
+line 424
+;424:  bolt->classname = "flame";
+ADDRLP4 0
+INDIRP4
+CNSTI4 524
+ADDP4
+ADDRGP4 $203
+ASGNP4
+line 425
+;425:  bolt->nextthink = level.time + FLAMER_LIFETIME;
+ADDRLP4 0
+INDIRP4
+CNSTI4 768
+ADDP4
+ADDRGP4 level+28
+INDIRI4
+CVIF4 4
+CNSTF4 1145569280
+ADDF4
+CVFI4 4
+ASGNI4
+line 426
+;426:  bolt->think = G_ExplodeMissile;
+ADDRLP4 0
+INDIRP4
+CNSTI4 772
+ADDP4
+ADDRGP4 G_ExplodeMissile
+ASGNP4
+line 427
+;427:  bolt->s.eType = ET_MISSILE;
+ADDRLP4 20
+CNSTI4 4
+ASGNI4
+ADDRLP4 0
+INDIRP4
+ADDRLP4 20
+INDIRI4
+ADDP4
+ADDRLP4 20
+INDIRI4
+ASGNI4
+line 428
+;428:  bolt->r.svFlags = SVF_USE_CURRENT_ORIGIN;
+ADDRLP4 0
+INDIRP4
+CNSTI4 424
+ADDP4
+CNSTI4 128
+ASGNI4
+line 430
+;429://  bolt->s.weapon = WP_FLAMER;
+;430:  bolt->s.generic1 = self->s.generic1; //weaponMode
+ADDRLP4 24
+CNSTI4 204
+ASGNI4
+ADDRLP4 0
+INDIRP4
+ADDRLP4 24
+INDIRI4
+ADDP4
+ADDRFP4 0
+INDIRP4
+ADDRLP4 24
+INDIRI4
+ADDP4
+INDIRI4
+ASGNI4
+line 431
+;431:  bolt->r.ownerNum = self->s.number;
+ADDRLP4 0
+INDIRP4
+CNSTI4 512
+ADDP4
+ADDRFP4 0
+INDIRP4
+INDIRI4
+ASGNI4
+line 432
+;432:  bolt->parent = self;
+ADDRLP4 0
+INDIRP4
+CNSTI4 600
+ADDP4
+ADDRFP4 0
+INDIRP4
+ASGNP4
+line 433
+;433:  bolt->damage = FLAMER_DMG;
+ADDRLP4 0
+INDIRP4
+CNSTI4 844
+ADDP4
+CNSTI4 2
+ASGNI4
+line 434
+;434:  bolt->splashDamage = FLAMER_DMG;
+ADDRLP4 0
+INDIRP4
+CNSTI4 848
+ADDP4
+CNSTI4 2
+ASGNI4
+line 435
+;435:  bolt->splashRadius = FLAMER_RADIUS;
+ADDRLP4 0
+INDIRP4
+CNSTI4 852
+ADDP4
+CNSTI4 50
+ASGNI4
+line 438
+;436://  bolt->methodOfDeath = MOD_FLAMER;
+;437://  bolt->splashMethodOfDeath = MOD_FLAMER_SPLASH;
+;438:  bolt->clipmask = MASK_SHOT;
+ADDRLP4 0
+INDIRP4
+CNSTI4 572
+ADDP4
+CNSTI4 33554433
+ASGNI4
+line 439
+;439:  bolt->target_ent = NULL;
+ADDRLP4 0
+INDIRP4
+CNSTI4 676
+ADDP4
+CNSTP4 0
+ASGNP4
+line 440
+;440:  bolt->r.mins[0] = bolt->r.mins[1] = bolt->r.mins[2] = -15.0f;
+ADDRLP4 32
+CNSTF4 3245342720
+ASGNF4
+ADDRLP4 0
+INDIRP4
+CNSTI4 444
+ADDP4
+ADDRLP4 32
+INDIRF4
+ASGNF4
+ADDRLP4 0
+INDIRP4
+CNSTI4 440
+ADDP4
+ADDRLP4 32
+INDIRF4
+ASGNF4
+ADDRLP4 0
+INDIRP4
+CNSTI4 436
+ADDP4
+ADDRLP4 32
+INDIRF4
+ASGNF4
+line 441
+;441:  bolt->r.maxs[0] = bolt->r.maxs[1] = bolt->r.maxs[2] = 15.0f;
+ADDRLP4 40
+CNSTF4 1097859072
+ASGNF4
+ADDRLP4 0
+INDIRP4
+CNSTI4 456
+ADDP4
+ADDRLP4 40
+INDIRF4
+ASGNF4
+ADDRLP4 0
+INDIRP4
+CNSTI4 452
+ADDP4
+ADDRLP4 40
+INDIRF4
+ASGNF4
+ADDRLP4 0
+INDIRP4
+CNSTI4 448
+ADDP4
+ADDRLP4 40
+INDIRF4
+ASGNF4
+line 443
+;442:
+;443:  bolt->s.pos.trType = TR_LINEAR;
+ADDRLP4 0
+INDIRP4
+CNSTI4 12
+ADDP4
+CNSTI4 2
+ASGNI4
+line 444
+;444:  bolt->s.pos.trTime = level.time - MISSILE_PRESTEP_TIME; // move a bit on the very first frame
+ADDRLP4 0
+INDIRP4
+CNSTI4 16
+ADDP4
+ADDRGP4 level+28
+INDIRI4
+CNSTI4 50
+SUBI4
+ASGNI4
+line 445
+;445:  VectorCopy(start, bolt->s.pos.trBase);
+ADDRLP4 0
+INDIRP4
+CNSTI4 24
+ADDP4
+ADDRFP4 4
+INDIRP4
+INDIRB
+ASGNB 12
+line 446
+;446:  VectorScale(self->client->ps.velocity, FLAMER_LAG, pvel);
+ADDRLP4 44
+CNSTF4 1059481190
+ASGNF4
+ADDRLP4 48
+ADDRFP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+ASGNP4
+ADDRLP4 4
+ADDRLP4 44
+INDIRF4
+ADDRLP4 48
+INDIRP4
+INDIRP4
+CNSTI4 32
+ADDP4
+INDIRF4
+MULF4
+ASGNF4
+ADDRLP4 4+4
+ADDRLP4 44
+INDIRF4
+ADDRLP4 48
+INDIRP4
+INDIRP4
+CNSTI4 36
+ADDP4
+INDIRF4
+MULF4
+ASGNF4
+ADDRLP4 4+8
+CNSTF4 1059481190
+ADDRFP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+CNSTI4 40
+ADDP4
+INDIRF4
+MULF4
+ASGNF4
+line 447
+;447:  VectorMA(pvel, FLAMER_SPEED, dir, bolt->s.pos.trDelta);
+ADDRLP4 0
+INDIRP4
+CNSTI4 36
+ADDP4
+ADDRLP4 4
+INDIRF4
+CNSTF4 1128792064
+ADDRFP4 8
+INDIRP4
+INDIRF4
+MULF4
+ADDF4
+ASGNF4
+ADDRLP4 0
+INDIRP4
+CNSTI4 40
+ADDP4
+ADDRLP4 4+4
+INDIRF4
+CNSTF4 1128792064
+ADDRFP4 8
+INDIRP4
+CNSTI4 4
+ADDP4
+INDIRF4
+MULF4
+ADDF4
+ASGNF4
+ADDRLP4 0
+INDIRP4
+CNSTI4 44
+ADDP4
+ADDRLP4 4+8
+INDIRF4
+CNSTF4 1128792064
+ADDRFP4 8
+INDIRP4
+CNSTI4 8
+ADDP4
+INDIRF4
+MULF4
+ADDF4
+ASGNF4
+line 448
+;448:  SnapVector(bolt->s.pos.trDelta); // save net bandwidth
+ADDRLP4 52
+ADDRLP4 0
+INDIRP4
+CNSTI4 36
+ADDP4
+ASGNP4
+ADDRLP4 52
+INDIRP4
+ADDRLP4 52
+INDIRP4
+INDIRF4
+CVFI4 4
+CVIF4 4
+ASGNF4
+ADDRLP4 56
+ADDRLP4 0
+INDIRP4
+CNSTI4 40
+ADDP4
+ASGNP4
+ADDRLP4 56
+INDIRP4
+ADDRLP4 56
+INDIRP4
+INDIRF4
+CVFI4 4
+CVIF4 4
+ASGNF4
+ADDRLP4 60
+ADDRLP4 0
+INDIRP4
+CNSTI4 44
+ADDP4
+ASGNP4
+ADDRLP4 60
+INDIRP4
+ADDRLP4 60
+INDIRP4
+INDIRF4
+CVFI4 4
+CVIF4 4
+ASGNF4
+line 450
+;449:
+;450:  VectorCopy(start, bolt->r.currentOrigin);
+ADDRLP4 0
+INDIRP4
+CNSTI4 488
+ADDP4
+ADDRFP4 4
+INDIRP4
+INDIRB
+ASGNB 12
+line 452
+;451:
+;452:  return bolt;
+ADDRLP4 0
+INDIRP4
+RETP4
+LABELV $202
+endproc fire_flamer 64 4
+export fire_pulseRifle
+proc fire_pulseRifle 28 4
+line 462
+;453:}
+;454:/*
+;455: =================
+;456: fire_pulseRifle
+;457:
+;458: =================
+;459: */
+;460:gentity_t *
+;461:fire_pulseRifle(gentity_t *self, vec3_t start, vec3_t dir)
+;462:{
+line 465
+;463:  gentity_t *bolt;
+;464:
+;465:  VectorNormalize(dir);
+ADDRFP4 8
+INDIRP4
+ARGP4
+ADDRGP4 VectorNormalize
+CALLF4
+pop
+line 467
+;466:
+;467:  bolt = G_Spawn();
+ADDRLP4 4
+ADDRGP4 G_Spawn
+CALLP4
+ASGNP4
+ADDRLP4 0
+ADDRLP4 4
+INDIRP4
+ASGNP4
+line 468
+;468:  bolt->classname = "pulse";
+ADDRLP4 0
+INDIRP4
+CNSTI4 524
+ADDP4
+ADDRGP4 $211
+ASGNP4
+line 469
+;469:  bolt->nextthink = level.time + 10000;
+ADDRLP4 0
+INDIRP4
+CNSTI4 768
+ADDP4
+ADDRGP4 level+28
+INDIRI4
+CNSTI4 10000
+ADDI4
+ASGNI4
+line 470
+;470:  bolt->think = G_ExplodeMissile;
+ADDRLP4 0
+INDIRP4
+CNSTI4 772
+ADDP4
+ADDRGP4 G_ExplodeMissile
+ASGNP4
+line 471
+;471:  bolt->s.eType = ET_MISSILE;
+ADDRLP4 8
+CNSTI4 4
+ASGNI4
+ADDRLP4 0
+INDIRP4
+ADDRLP4 8
+INDIRI4
+ADDP4
+ADDRLP4 8
+INDIRI4
+ASGNI4
+line 472
+;472:  bolt->r.svFlags = SVF_USE_CURRENT_ORIGIN;
+ADDRLP4 0
+INDIRP4
+CNSTI4 424
+ADDP4
+CNSTI4 128
+ASGNI4
+line 474
+;473:  //bolt->s.weapon = WP_PULSE_RIFLE;
+;474:  bolt->s.generic1 = self->s.generic1; //weaponMode
+ADDRLP4 12
+CNSTI4 204
+ASGNI4
+ADDRLP4 0
+INDIRP4
+ADDRLP4 12
+INDIRI4
+ADDP4
+ADDRFP4 0
+INDIRP4
+ADDRLP4 12
+INDIRI4
+ADDP4
+INDIRI4
+ASGNI4
+line 475
+;475:  bolt->r.ownerNum = self->s.number;
+ADDRLP4 0
+INDIRP4
+CNSTI4 512
+ADDP4
+ADDRFP4 0
+INDIRP4
+INDIRI4
+ASGNI4
+line 476
+;476:  bolt->parent = self;
+ADDRLP4 0
+INDIRP4
+CNSTI4 600
+ADDP4
+ADDRFP4 0
+INDIRP4
+ASGNP4
+line 477
+;477:  bolt->damage = PRIFLE_DMG;
+ADDRLP4 0
+INDIRP4
+CNSTI4 844
+ADDP4
+CNSTI4 20
+ASGNI4
+line 478
+;478:  bolt->splashDamage = 0;
+ADDRLP4 0
+INDIRP4
+CNSTI4 848
+ADDP4
+CNSTI4 0
+ASGNI4
+line 479
+;479:  bolt->splashRadius = 0;
+ADDRLP4 0
+INDIRP4
+CNSTI4 852
+ADDP4
+CNSTI4 0
+ASGNI4
+line 482
+;480://  bolt->methodOfDeath = MOD_PRIFLE;
+;481://  bolt->splashMethodOfDeath = MOD_PRIFLE;
+;482:  bolt->clipmask = MASK_SHOT;
+ADDRLP4 0
+INDIRP4
+CNSTI4 572
+ADDP4
+CNSTI4 33554433
+ASGNI4
+line 483
+;483:  bolt->target_ent = NULL;
+ADDRLP4 0
+INDIRP4
+CNSTI4 676
+ADDP4
+CNSTP4 0
+ASGNP4
+line 485
+;484:
+;485:  bolt->s.pos.trType = TR_LINEAR;
+ADDRLP4 0
+INDIRP4
+CNSTI4 12
+ADDP4
+CNSTI4 2
+ASGNI4
+line 486
+;486:  bolt->s.pos.trTime = level.time - MISSILE_PRESTEP_TIME; // move a bit on the very first frame
+ADDRLP4 0
+INDIRP4
+CNSTI4 16
+ADDP4
+ADDRGP4 level+28
+INDIRI4
+CNSTI4 50
+SUBI4
+ASGNI4
+line 487
+;487:  VectorCopy(start, bolt->s.pos.trBase);
+ADDRLP4 0
+INDIRP4
+CNSTI4 24
+ADDP4
+ADDRFP4 4
+INDIRP4
+INDIRB
+ASGNB 12
+line 488
+;488:  VectorScale(dir, PRIFLE_SPEED, bolt->s.pos.trDelta);
+ADDRLP4 0
+INDIRP4
+CNSTI4 36
+ADDP4
+CNSTF4 1148846080
+ADDRFP4 8
+INDIRP4
+INDIRF4
+MULF4
+ASGNF4
+ADDRLP4 0
+INDIRP4
+CNSTI4 40
+ADDP4
+CNSTF4 1148846080
+ADDRFP4 8
+INDIRP4
+CNSTI4 4
+ADDP4
+INDIRF4
+MULF4
+ASGNF4
+ADDRLP4 0
+INDIRP4
+CNSTI4 44
+ADDP4
+CNSTF4 1148846080
+ADDRFP4 8
+INDIRP4
+CNSTI4 8
+ADDP4
+INDIRF4
+MULF4
+ASGNF4
+line 489
+;489:  SnapVector(bolt->s.pos.trDelta); // save net bandwidth
+ADDRLP4 16
+ADDRLP4 0
+INDIRP4
+CNSTI4 36
+ADDP4
+ASGNP4
+ADDRLP4 16
+INDIRP4
+ADDRLP4 16
+INDIRP4
+INDIRF4
+CVFI4 4
+CVIF4 4
+ASGNF4
+ADDRLP4 20
+ADDRLP4 0
+INDIRP4
+CNSTI4 40
+ADDP4
+ASGNP4
+ADDRLP4 20
+INDIRP4
+ADDRLP4 20
+INDIRP4
+INDIRF4
+CVFI4 4
+CVIF4 4
+ASGNF4
+ADDRLP4 24
+ADDRLP4 0
+INDIRP4
+CNSTI4 44
+ADDP4
+ASGNP4
+ADDRLP4 24
+INDIRP4
+ADDRLP4 24
+INDIRP4
+INDIRF4
+CVFI4 4
+CVIF4 4
+ASGNF4
+line 491
+;490:
+;491:  VectorCopy(start, bolt->r.currentOrigin);
+ADDRLP4 0
+INDIRP4
+CNSTI4 488
+ADDP4
+ADDRFP4 4
+INDIRP4
+INDIRB
+ASGNB 12
+line 493
+;492:
+;493:  return bolt;
+ADDRLP4 0
+INDIRP4
+RETP4
+LABELV $210
+endproc fire_pulseRifle 28 4
+export fire_luciferCannon
+proc fire_luciferCannon 36 4
+line 506
+;494:}
+;495:
+;496://=============================================================================
+;497:
+;498:/*
+;499: =================
+;500: fire_luciferCannon
+;501:
+;502: =================
+;503: */
+;504:gentity_t *
+;505:fire_luciferCannon(gentity_t *self, vec3_t start, vec3_t dir, int damage, int radius)
+;506:{
+line 508
+;507:  gentity_t *bolt;
+;508:  int localDamage = (int) (ceil(((float) damage / (float) LCANNON_TOTAL_CHARGE) * (float) LCANNON_DAMAGE));
+CNSTF4 1141145600
+ADDRFP4 12
+INDIRI4
+CVIF4 4
+CNSTF4 1132396544
+DIVF4
+MULF4
+ARGF4
+ADDRLP4 8
+ADDRGP4 ceil
+CALLF4
+ASGNF4
+ADDRLP4 4
+ADDRLP4 8
+INDIRF4
+CVFI4 4
+ASGNI4
+line 510
+;509:
+;510:  VectorNormalize(dir);
+ADDRFP4 8
+INDIRP4
+ARGP4
+ADDRGP4 VectorNormalize
+CALLF4
+pop
+line 512
+;511:
+;512:  bolt = G_Spawn();
+ADDRLP4 12
+ADDRGP4 G_Spawn
+CALLP4
+ASGNP4
+ADDRLP4 0
+ADDRLP4 12
+INDIRP4
+ASGNP4
+line 513
+;513:  bolt->classname = "lcannon";
+ADDRLP4 0
+INDIRP4
+CNSTI4 524
+ADDP4
+ADDRGP4 $215
+ASGNP4
+line 515
+;514:
+;515:  if (damage == LCANNON_TOTAL_CHARGE)
+ADDRFP4 12
+INDIRI4
+CNSTI4 255
+NEI4 $216
+line 516
+;516:    bolt->nextthink = level.time;
+ADDRLP4 0
+INDIRP4
+CNSTI4 768
+ADDP4
+ADDRGP4 level+28
+INDIRI4
+ASGNI4
+ADDRGP4 $217
+JUMPV
+LABELV $216
+line 518
+;517:  else
+;518:    bolt->nextthink = level.time + 10000;
+ADDRLP4 0
+INDIRP4
+CNSTI4 768
+ADDP4
+ADDRGP4 level+28
+INDIRI4
+CNSTI4 10000
+ADDI4
+ASGNI4
+LABELV $217
+line 520
+;519:
+;520:  bolt->think = G_ExplodeMissile;
+ADDRLP4 0
+INDIRP4
+CNSTI4 772
+ADDP4
+ADDRGP4 G_ExplodeMissile
+ASGNP4
+line 521
+;521:  bolt->s.eType = ET_MISSILE;
+ADDRLP4 16
+CNSTI4 4
+ASGNI4
+ADDRLP4 0
+INDIRP4
+ADDRLP4 16
+INDIRI4
+ADDP4
+ADDRLP4 16
+INDIRI4
+ASGNI4
+line 522
+;522:  bolt->r.svFlags = SVF_USE_CURRENT_ORIGIN;
+ADDRLP4 0
+INDIRP4
+CNSTI4 424
+ADDP4
+CNSTI4 128
+ASGNI4
+line 524
+;523://  bolt->s.weapon = WP_LUCIFER_CANNON;
+;524:  bolt->s.generic1 = self->s.generic1; //weaponMode
+ADDRLP4 20
+CNSTI4 204
+ASGNI4
+ADDRLP4 0
+INDIRP4
+ADDRLP4 20
+INDIRI4
+ADDP4
+ADDRFP4 0
+INDIRP4
+ADDRLP4 20
+INDIRI4
+ADDP4
+INDIRI4
+ASGNI4
+line 525
+;525:  bolt->r.ownerNum = self->s.number;
+ADDRLP4 0
+INDIRP4
+CNSTI4 512
+ADDP4
+ADDRFP4 0
+INDIRP4
+INDIRI4
+ASGNI4
+line 526
+;526:  bolt->parent = self;
+ADDRLP4 0
+INDIRP4
+CNSTI4 600
+ADDP4
+ADDRFP4 0
+INDIRP4
+ASGNP4
+line 527
+;527:  bolt->damage = localDamage;
+ADDRLP4 0
+INDIRP4
+CNSTI4 844
+ADDP4
+ADDRLP4 4
+INDIRI4
+ASGNI4
+line 528
+;528:  bolt->splashDamage = localDamage / 2;
+ADDRLP4 0
+INDIRP4
+CNSTI4 848
+ADDP4
+ADDRLP4 4
+INDIRI4
+CNSTI4 2
+DIVI4
+ASGNI4
+line 529
+;529:  bolt->splashRadius = radius;
+ADDRLP4 0
+INDIRP4
+CNSTI4 852
+ADDP4
+ADDRFP4 16
+INDIRI4
+ASGNI4
+line 532
+;530://  bolt->methodOfDeath = MOD_LCANNON;
+;531://  bolt->splashMethodOfDeath = MOD_LCANNON_SPLASH;
+;532:  bolt->clipmask = MASK_SHOT;
+ADDRLP4 0
+INDIRP4
+CNSTI4 572
+ADDP4
+CNSTI4 33554433
+ASGNI4
+line 533
+;533:  bolt->target_ent = NULL;
+ADDRLP4 0
+INDIRP4
+CNSTI4 676
+ADDP4
+CNSTP4 0
+ASGNP4
+line 535
+;534:
+;535:  bolt->s.pos.trType = TR_LINEAR;
+ADDRLP4 0
+INDIRP4
+CNSTI4 12
+ADDP4
+CNSTI4 2
+ASGNI4
+line 536
+;536:  bolt->s.pos.trTime = level.time - MISSILE_PRESTEP_TIME; // move a bit on the very first frame
+ADDRLP4 0
+INDIRP4
+CNSTI4 16
+ADDP4
+ADDRGP4 level+28
+INDIRI4
+CNSTI4 50
+SUBI4
+ASGNI4
+line 537
+;537:  VectorCopy(start, bolt->s.pos.trBase);
+ADDRLP4 0
+INDIRP4
+CNSTI4 24
+ADDP4
+ADDRFP4 4
+INDIRP4
+INDIRB
+ASGNB 12
+line 538
+;538:  VectorScale(dir, LCANNON_SPEED, bolt->s.pos.trDelta);
+ADDRLP4 0
+INDIRP4
+CNSTI4 36
+ADDP4
+CNSTF4 1135542272
+ADDRFP4 8
+INDIRP4
+INDIRF4
+MULF4
+ASGNF4
+ADDRLP4 0
+INDIRP4
+CNSTI4 40
+ADDP4
+CNSTF4 1135542272
+ADDRFP4 8
+INDIRP4
+CNSTI4 4
+ADDP4
+INDIRF4
+MULF4
+ASGNF4
+ADDRLP4 0
+INDIRP4
+CNSTI4 44
+ADDP4
+CNSTF4 1135542272
+ADDRFP4 8
+INDIRP4
+CNSTI4 8
+ADDP4
+INDIRF4
+MULF4
+ASGNF4
+line 539
+;539:  SnapVector(bolt->s.pos.trDelta); // save net bandwidth
+ADDRLP4 24
+ADDRLP4 0
+INDIRP4
+CNSTI4 36
+ADDP4
+ASGNP4
+ADDRLP4 24
+INDIRP4
+ADDRLP4 24
+INDIRP4
+INDIRF4
+CVFI4 4
+CVIF4 4
+ASGNF4
+ADDRLP4 28
+ADDRLP4 0
+INDIRP4
+CNSTI4 40
+ADDP4
+ASGNP4
+ADDRLP4 28
+INDIRP4
+ADDRLP4 28
+INDIRP4
+INDIRF4
+CVFI4 4
+CVIF4 4
+ASGNF4
+ADDRLP4 32
+ADDRLP4 0
+INDIRP4
+CNSTI4 44
+ADDP4
+ASGNP4
+ADDRLP4 32
+INDIRP4
+ADDRLP4 32
+INDIRP4
+INDIRF4
+CVFI4 4
+CVIF4 4
+ASGNF4
+line 541
+;540:
+;541:  VectorCopy(start, bolt->r.currentOrigin);
+ADDRLP4 0
+INDIRP4
+CNSTI4 488
+ADDP4
+ADDRFP4 4
+INDIRP4
+INDIRB
+ASGNB 12
+line 543
+;542:
+;543:  return bolt;
+ADDRLP4 0
+INDIRP4
+RETP4
+LABELV $214
+endproc fire_luciferCannon 36 4
+export launch_grenade
+proc launch_grenade 40 4
+line 554
+;544:}
+;545:
+;546:/*
+;547: =================
+;548: launch_grenade
+;549:
+;550: =================
+;551: */
+;552:gentity_t *
+;553:launch_grenade(gentity_t *self, vec3_t start, vec3_t dir)
+;554:{
+line 557
+;555:  gentity_t *bolt;
+;556:
+;557:  VectorNormalize(dir);
+ADDRFP4 8
+INDIRP4
+ARGP4
+ADDRGP4 VectorNormalize
+CALLF4
+pop
+line 559
+;558:
+;559:  bolt = G_Spawn();
+ADDRLP4 4
+ADDRGP4 G_Spawn
+CALLP4
+ASGNP4
+ADDRLP4 0
+ADDRLP4 4
+INDIRP4
+ASGNP4
+line 560
+;560:  bolt->classname = "grenade";
+ADDRLP4 0
+INDIRP4
+CNSTI4 524
+ADDP4
+ADDRGP4 $142
+ASGNP4
+line 561
+;561:  bolt->nextthink = level.time + 5000;
+ADDRLP4 0
+INDIRP4
+CNSTI4 768
+ADDP4
+ADDRGP4 level+28
+INDIRI4
+CNSTI4 5000
+ADDI4
+ASGNI4
+line 562
+;562:  bolt->think = G_ExplodeMissile;
+ADDRLP4 0
+INDIRP4
+CNSTI4 772
+ADDP4
+ADDRGP4 G_ExplodeMissile
+ASGNP4
+line 563
+;563:  bolt->s.eType = ET_MISSILE;
+ADDRLP4 8
+CNSTI4 4
+ASGNI4
+ADDRLP4 0
+INDIRP4
+ADDRLP4 8
+INDIRI4
+ADDP4
+ADDRLP4 8
+INDIRI4
+ASGNI4
+line 564
+;564:  bolt->r.svFlags = SVF_USE_CURRENT_ORIGIN;
+ADDRLP4 0
+INDIRP4
+CNSTI4 424
+ADDP4
+CNSTI4 128
+ASGNI4
+line 565
+;565:  bolt->s.weapon = WP_GRENADE;
+ADDRLP4 0
+INDIRP4
+CNSTI4 192
+ADDP4
+CNSTI4 10
+ASGNI4
+line 566
+;566:  bolt->s.eFlags = EF_BOUNCE_HALF;
+ADDRLP4 0
+INDIRP4
+CNSTI4 8
+ADDP4
+CNSTI4 16
+ASGNI4
+line 567
+;567:  bolt->s.generic1 = WPM_PRIMARY; //weaponMode
+ADDRLP4 0
+INDIRP4
+CNSTI4 204
+ADDP4
+CNSTI4 1
+ASGNI4
+line 568
+;568:  bolt->r.ownerNum = self->s.number;
+ADDRLP4 0
+INDIRP4
+CNSTI4 512
+ADDP4
+ADDRFP4 0
+INDIRP4
+INDIRI4
+ASGNI4
+line 569
+;569:  bolt->parent = self;
+ADDRLP4 0
+INDIRP4
+CNSTI4 600
+ADDP4
+ADDRFP4 0
+INDIRP4
+ASGNP4
+line 570
+;570:  bolt->damage = GRENADE_DAMAGE;
+ADDRLP4 0
+INDIRP4
+CNSTI4 844
+ADDP4
+CNSTI4 620
+ASGNI4
+line 571
+;571:  bolt->splashDamage = GRENADE_DAMAGE;
+ADDRLP4 0
+INDIRP4
+CNSTI4 848
+ADDP4
+CNSTI4 620
+ASGNI4
+line 572
+;572:  bolt->splashRadius = GRENADE_RANGE;
+ADDRLP4 0
+INDIRP4
+CNSTI4 852
+ADDP4
+CNSTI4 192
+ASGNI4
+line 573
+;573:  bolt->methodOfDeath = MOD_GRENADE;
+ADDRLP4 0
+INDIRP4
+CNSTI4 856
+ADDP4
+CNSTI4 11
+ASGNI4
+line 574
+;574:  bolt->splashMethodOfDeath = MOD_GRENADE;
+ADDRLP4 0
+INDIRP4
+CNSTI4 860
+ADDP4
+CNSTI4 11
+ASGNI4
+line 575
+;575:  bolt->clipmask = MASK_SHOT;
+ADDRLP4 0
+INDIRP4
+CNSTI4 572
+ADDP4
+CNSTI4 33554433
+ASGNI4
+line 576
+;576:  bolt->target_ent = NULL;
+ADDRLP4 0
+INDIRP4
+CNSTI4 676
+ADDP4
+CNSTP4 0
+ASGNP4
+line 577
+;577:  bolt->r.mins[0] = bolt->r.mins[1] = bolt->r.mins[2] = -3.0f;
+ADDRLP4 16
+CNSTF4 3225419776
+ASGNF4
+ADDRLP4 0
+INDIRP4
+CNSTI4 444
+ADDP4
+ADDRLP4 16
+INDIRF4
+ASGNF4
+ADDRLP4 0
+INDIRP4
+CNSTI4 440
+ADDP4
+ADDRLP4 16
+INDIRF4
+ASGNF4
+ADDRLP4 0
+INDIRP4
+CNSTI4 436
+ADDP4
+ADDRLP4 16
+INDIRF4
+ASGNF4
+line 578
+;578:  bolt->r.maxs[0] = bolt->r.maxs[1] = bolt->r.maxs[2] = 3.0f;
+ADDRLP4 24
+CNSTF4 1077936128
+ASGNF4
+ADDRLP4 0
+INDIRP4
+CNSTI4 456
+ADDP4
+ADDRLP4 24
+INDIRF4
+ASGNF4
+ADDRLP4 0
+INDIRP4
+CNSTI4 452
+ADDP4
+ADDRLP4 24
+INDIRF4
+ASGNF4
+ADDRLP4 0
+INDIRP4
+CNSTI4 448
+ADDP4
+ADDRLP4 24
+INDIRF4
+ASGNF4
+line 579
+;579:  bolt->s.time = level.time;
+ADDRLP4 0
+INDIRP4
+CNSTI4 84
+ADDP4
+ADDRGP4 level+28
+INDIRI4
+ASGNI4
+line 581
+;580:
+;581:  bolt->s.pos.trType = TR_GRAVITY;
+ADDRLP4 0
+INDIRP4
+CNSTI4 12
+ADDP4
+CNSTI4 5
+ASGNI4
+line 582
+;582:  bolt->s.pos.trTime = level.time - MISSILE_PRESTEP_TIME; // move a bit on the very first frame
+ADDRLP4 0
+INDIRP4
+CNSTI4 16
+ADDP4
+ADDRGP4 level+28
+INDIRI4
+CNSTI4 50
+SUBI4
+ASGNI4
+line 583
+;583:  VectorCopy(start, bolt->s.pos.trBase);
+ADDRLP4 0
+INDIRP4
+CNSTI4 24
+ADDP4
+ADDRFP4 4
+INDIRP4
+INDIRB
+ASGNB 12
+line 584
+;584:  VectorScale(dir, GRENADE_SPEED, bolt->s.pos.trDelta);
+ADDRLP4 0
+INDIRP4
+CNSTI4 36
+ADDP4
+CNSTF4 1137180672
+ADDRFP4 8
+INDIRP4
+INDIRF4
+MULF4
+ASGNF4
+ADDRLP4 0
+INDIRP4
+CNSTI4 40
+ADDP4
+CNSTF4 1137180672
+ADDRFP4 8
+INDIRP4
+CNSTI4 4
+ADDP4
+INDIRF4
+MULF4
+ASGNF4
+ADDRLP4 0
+INDIRP4
+CNSTI4 44
+ADDP4
+CNSTF4 1137180672
+ADDRFP4 8
+INDIRP4
+CNSTI4 8
+ADDP4
+INDIRF4
+MULF4
+ASGNF4
+line 585
+;585:  SnapVector(bolt->s.pos.trDelta); // save net bandwidth
+ADDRLP4 28
+ADDRLP4 0
+INDIRP4
+CNSTI4 36
+ADDP4
+ASGNP4
+ADDRLP4 28
+INDIRP4
+ADDRLP4 28
+INDIRP4
+INDIRF4
+CVFI4 4
+CVIF4 4
+ASGNF4
+ADDRLP4 32
+ADDRLP4 0
+INDIRP4
+CNSTI4 40
+ADDP4
+ASGNP4
+ADDRLP4 32
+INDIRP4
+ADDRLP4 32
+INDIRP4
+INDIRF4
+CVFI4 4
+CVIF4 4
+ASGNF4
+ADDRLP4 36
+ADDRLP4 0
+INDIRP4
+CNSTI4 44
+ADDP4
+ASGNP4
+ADDRLP4 36
+INDIRP4
+ADDRLP4 36
+INDIRP4
+INDIRF4
+CVFI4 4
+CVIF4 4
+ASGNF4
+line 587
+;586:
+;587:  VectorCopy(start, bolt->r.currentOrigin);
+ADDRLP4 0
+INDIRP4
+CNSTI4 488
+ADDP4
+ADDRFP4 4
+INDIRP4
+INDIRB
+ASGNB 12
+line 589
+;588:
+;589:  return bolt;
+ADDRLP4 0
+INDIRP4
+RETP4
+LABELV $221
+endproc launch_grenade 40 4
+export launch_bomb
+proc launch_bomb 0 0
+line 594
+;590:}
+;591:
+;592:gentity_t *
+;593:launch_bomb(gentity_t *self, vec3_t start, vec3_t dir)
+;594:{
+line 595
+;595:  return NULL;
+CNSTP4 0
+RETP4
+LABELV $225
+endproc launch_bomb 0 0
+export AHive_ReturnToHive
+proc AHive_ReturnToHive 116 28
+line 643
+;596:  /* gentity_t *bolt;
+;597:
+;598:   VectorNormalize( dir );
+;599:
+;600:   bolt = G_Spawn( );
+;601:   bolt->classname = "bomb";
+;602:   bolt->nextthink = level.time + 5000;
+;603:   bolt->think = G_ExplodeMissile;
+;604:   bolt->s.eType = ET_MISSILE;
+;605:   bolt->r.svFlags = SVF_USE_CURRENT_ORIGIN;
+;606:   bolt->s.weapon = WP_BOMB;
+;607:   bolt->s.eFlags = EF_BOUNCE_HALF;
+;608:   bolt->s.generic1 = WPM_PRIMARY; //weaponMode
+;609:   bolt->r.ownerNum = self->s.number;
+;610:   bolt->parent = self;
+;611:   bolt->damage = GRENADE_DAMAGE;
+;612:   bolt->splashDamage = GRENADE_DAMAGE;
+;613:   bolt->splashRadius = GRENADE_RANGE;
+;614:   bolt->methodOfDeath = MOD_GRENADE;
+;615:   bolt->splashMethodOfDeath = MOD_GRENADE;
+;616:   bolt->clipmask = MASK_SHOT;
+;617:   bolt->target_ent = NULL;
+;618:   bolt->r.mins[ 0 ] = bolt->r.mins[ 1 ] = bolt->r.mins[ 2 ] = -3.0f;
+;619:   bolt->r.maxs[ 0 ] = bolt->r.maxs[ 1 ] = bolt->r.maxs[ 2 ] = 3.0f;
+;620:   bolt->s.time = level.time;
+;621:
+;622:   bolt->s.pos.trType = TR_GRAVITY;
+;623:   bolt->s.pos.trTime = level.time - MISSILE_PRESTEP_TIME;   // move a bit on the very first frame
+;624:   VectorCopy( start, bolt->s.pos.trBase );
+;625:   VectorScale( dir, GRENADE_SPEED, bolt->s.pos.trDelta );
+;626:   SnapVector( bolt->s.pos.trDelta );      // save net bandwidth
+;627:
+;628:   VectorCopy( start, bolt->r.currentOrigin );
+;629:
+;630:   return bolt;*/
+;631:}
+;632://=============================================================================
+;633:
+;634:/*
+;635: ================
+;636: AHive_ReturnToHive
+;637:
+;638: Adjust the trajectory to point towards the hive
+;639: ================
+;640: */
+;641:void
+;642:AHive_ReturnToHive(gentity_t *self)
+;643:{
+line 647
+;644:  vec3_t dir;
+;645:  trace_t tr;
+;646:
+;647:  if (!self->parent)
+ADDRFP4 0
+INDIRP4
+CNSTI4 600
+ADDP4
+INDIRP4
+CVPU4 4
+CNSTU4 0
+NEU4 $227
+line 648
+;648:  {
+line 649
+;649:    G_Printf(S_COLOR_YELLOW "WARNING: AHive_ReturnToHive called with no self->parent\n");
+ADDRGP4 $229
+ARGP4
+ADDRGP4 G_Printf
+CALLV
+pop
+line 650
+;650:    return;
+ADDRGP4 $226
+JUMPV
+LABELV $227
+line 653
+;651:  }
+;652:
+;653:  trap_UnlinkEntity(self->parent);
+ADDRFP4 0
+INDIRP4
+CNSTI4 600
+ADDP4
+INDIRP4
+ARGP4
+ADDRGP4 trap_UnlinkEntity
+CALLV
+pop
+line 654
+;654:  trap_Trace(&tr, self->r.currentOrigin, self->r.mins, self->r.maxs, self->parent->r.currentOrigin, self->r.ownerNum, self->clipmask);
+ADDRLP4 12
+ARGP4
+ADDRLP4 72
+ADDRFP4 0
+INDIRP4
+ASGNP4
+ADDRLP4 76
+CNSTI4 488
+ASGNI4
+ADDRLP4 72
+INDIRP4
+ADDRLP4 76
+INDIRI4
+ADDP4
+ARGP4
+ADDRLP4 72
+INDIRP4
+CNSTI4 436
+ADDP4
+ARGP4
+ADDRLP4 72
+INDIRP4
+CNSTI4 448
+ADDP4
+ARGP4
+ADDRLP4 72
+INDIRP4
+CNSTI4 600
+ADDP4
+INDIRP4
+ADDRLP4 76
+INDIRI4
+ADDP4
+ARGP4
+ADDRLP4 72
+INDIRP4
+CNSTI4 512
+ADDP4
+INDIRI4
+ARGI4
+ADDRLP4 72
+INDIRP4
+CNSTI4 572
+ADDP4
+INDIRI4
+ARGI4
+ADDRGP4 trap_Trace
+CALLV
+pop
+line 655
+;655:  trap_LinkEntity(self->parent);
+ADDRFP4 0
+INDIRP4
+CNSTI4 600
+ADDP4
+INDIRP4
+ARGP4
+ADDRGP4 trap_LinkEntity
+CALLV
+pop
+line 657
+;656:
+;657:  if (tr.fraction < 1.0f)
+ADDRLP4 12+8
+INDIRF4
+CNSTF4 1065353216
+GEF4 $230
+line 658
+;658:  {
+line 660
+;659:    //if can't see hive then disperse
+;660:    VectorCopy(self->r.currentOrigin, self->s.pos.trBase);
+ADDRLP4 80
+ADDRFP4 0
+INDIRP4
+ASGNP4
+ADDRLP4 80
+INDIRP4
+CNSTI4 24
+ADDP4
+ADDRLP4 80
+INDIRP4
+CNSTI4 488
+ADDP4
+INDIRB
+ASGNB 12
+line 661
+;661:    self->s.pos.trType = TR_STATIONARY;
+ADDRFP4 0
+INDIRP4
+CNSTI4 12
+ADDP4
+CNSTI4 0
+ASGNI4
+line 662
+;662:    self->s.pos.trTime = level.time;
+ADDRFP4 0
+INDIRP4
+CNSTI4 16
+ADDP4
+ADDRGP4 level+28
+INDIRI4
+ASGNI4
+line 664
+;663:
+;664:    self->think = G_ExplodeMissile;
+ADDRFP4 0
+INDIRP4
+CNSTI4 772
+ADDP4
+ADDRGP4 G_ExplodeMissile
+ASGNP4
+line 665
+;665:    self->nextthink = level.time + 2000;
+ADDRFP4 0
+INDIRP4
+CNSTI4 768
+ADDP4
+ADDRGP4 level+28
+INDIRI4
+CNSTI4 2000
+ADDI4
+ASGNI4
+line 666
+;666:    self->parent->active = qfalse; //allow the parent to start again
+ADDRFP4 0
+INDIRP4
+CNSTI4 600
+ADDP4
+INDIRP4
+CNSTI4 968
+ADDP4
+CNSTI4 0
+ASGNI4
+line 667
+;667:  }
+ADDRGP4 $231
+JUMPV
+LABELV $230
+line 669
+;668:  else
+;669:  {
+line 670
+;670:    VectorSubtract(self->parent->r.currentOrigin, self->r.currentOrigin, dir);
+ADDRLP4 80
+ADDRFP4 0
+INDIRP4
+ASGNP4
+ADDRLP4 84
+ADDRLP4 80
+INDIRP4
+CNSTI4 600
+ADDP4
+ASGNP4
+ADDRLP4 88
+CNSTI4 488
+ASGNI4
+ADDRLP4 0
+ADDRLP4 84
+INDIRP4
+INDIRP4
+ADDRLP4 88
+INDIRI4
+ADDP4
+INDIRF4
+ADDRLP4 80
+INDIRP4
+ADDRLP4 88
+INDIRI4
+ADDP4
+INDIRF4
+SUBF4
+ASGNF4
+ADDRLP4 92
+CNSTI4 492
+ASGNI4
+ADDRLP4 0+4
+ADDRLP4 84
+INDIRP4
+INDIRP4
+ADDRLP4 92
+INDIRI4
+ADDP4
+INDIRF4
+ADDRLP4 80
+INDIRP4
+ADDRLP4 92
+INDIRI4
+ADDP4
+INDIRF4
+SUBF4
+ASGNF4
+ADDRLP4 96
+ADDRFP4 0
+INDIRP4
+ASGNP4
+ADDRLP4 100
+CNSTI4 496
+ASGNI4
+ADDRLP4 0+8
+ADDRLP4 96
+INDIRP4
+CNSTI4 600
+ADDP4
+INDIRP4
+ADDRLP4 100
+INDIRI4
+ADDP4
+INDIRF4
+ADDRLP4 96
+INDIRP4
+ADDRLP4 100
+INDIRI4
+ADDP4
+INDIRF4
+SUBF4
+ASGNF4
+line 671
+;671:    VectorNormalize(dir);
+ADDRLP4 0
+ARGP4
+ADDRGP4 VectorNormalize
+CALLF4
+pop
+line 674
+;672:
+;673:    //change direction towards the hive
+;674:    VectorScale(dir, HIVE_SPEED, self->s.pos.trDelta);
+ADDRFP4 0
+INDIRP4
+CNSTI4 36
+ADDP4
+CNSTF4 1131413504
+ADDRLP4 0
+INDIRF4
+MULF4
+ASGNF4
+ADDRFP4 0
+INDIRP4
+CNSTI4 40
+ADDP4
+CNSTF4 1131413504
+ADDRLP4 0+4
+INDIRF4
+MULF4
+ASGNF4
+ADDRFP4 0
+INDIRP4
+CNSTI4 44
+ADDP4
+CNSTF4 1131413504
+ADDRLP4 0+8
+INDIRF4
+MULF4
+ASGNF4
+line 675
+;675:    SnapVector(self->s.pos.trDelta); // save net bandwidth
+ADDRLP4 104
+ADDRFP4 0
+INDIRP4
+CNSTI4 36
+ADDP4
+ASGNP4
+ADDRLP4 104
+INDIRP4
+ADDRLP4 104
+INDIRP4
+INDIRF4
+CVFI4 4
+CVIF4 4
+ASGNF4
+ADDRLP4 108
+ADDRFP4 0
+INDIRP4
+CNSTI4 40
+ADDP4
+ASGNP4
+ADDRLP4 108
+INDIRP4
+ADDRLP4 108
+INDIRP4
+INDIRF4
+CVFI4 4
+CVIF4 4
+ASGNF4
+ADDRLP4 112
+ADDRFP4 0
+INDIRP4
+CNSTI4 44
+ADDP4
+ASGNP4
+ADDRLP4 112
+INDIRP4
+ADDRLP4 112
+INDIRP4
+INDIRF4
+CVFI4 4
+CVIF4 4
+ASGNF4
+line 676
+;676:    VectorCopy(self->r.currentOrigin, self->s.pos.trBase);
+ADDRLP4 104
+ADDRFP4 0
+INDIRP4
+ASGNP4
+ADDRLP4 104
+INDIRP4
+CNSTI4 24
+ADDP4
+ADDRLP4 104
+INDIRP4
+CNSTI4 488
+ADDP4
+INDIRB
+ASGNB 12
+line 677
+;677:    self->s.pos.trTime = level.time;
+ADDRFP4 0
+INDIRP4
+CNSTI4 16
+ADDP4
+ADDRGP4 level+28
+INDIRI4
+ASGNI4
+line 679
+;678:
+;679:    self->think = G_ExplodeMissile;
+ADDRFP4 0
+INDIRP4
+CNSTI4 772
+ADDP4
+ADDRGP4 G_ExplodeMissile
+ASGNP4
+line 680
+;680:    self->nextthink = level.time + 15000;
+ADDRFP4 0
+INDIRP4
+CNSTI4 768
+ADDP4
+ADDRGP4 level+28
+INDIRI4
+CNSTI4 15000
+ADDI4
+ASGNI4
+line 681
+;681:  }
+LABELV $231
+line 682
+;682:}
+LABELV $226
+endproc AHive_ReturnToHive 116 28
+export AHive_SearchAndDestroy
+proc AHive_SearchAndDestroy 136 28
+line 693
+;683:
+;684:/*
+;685: ================
+;686: AHive_SearchAndDestroy
+;687:
+;688: Adjust the trajectory to point towards the target
+;689: ================
+;690: */
+;691:void
+;692:AHive_SearchAndDestroy(gentity_t *self)
+;693:{
+line 697
+;694:  vec3_t dir;
+;695:  trace_t tr;
+;696:
+;697:  trap_Trace(&tr, self->r.currentOrigin, self->r.mins, self->r.maxs, self->target_ent->r.currentOrigin, self->r.ownerNum, self->clipmask);
+ADDRLP4 12
+ARGP4
+ADDRLP4 72
+ADDRFP4 0
+INDIRP4
+ASGNP4
+ADDRLP4 76
+CNSTI4 488
+ASGNI4
+ADDRLP4 72
+INDIRP4
+ADDRLP4 76
+INDIRI4
+ADDP4
+ARGP4
+ADDRLP4 72
+INDIRP4
+CNSTI4 436
+ADDP4
+ARGP4
+ADDRLP4 72
+INDIRP4
+CNSTI4 448
+ADDP4
+ARGP4
+ADDRLP4 72
+INDIRP4
+CNSTI4 676
+ADDP4
+INDIRP4
+ADDRLP4 76
+INDIRI4
+ADDP4
+ARGP4
+ADDRLP4 72
+INDIRP4
+CNSTI4 512
+ADDP4
+INDIRI4
+ARGI4
+ADDRLP4 72
+INDIRP4
+CNSTI4 572
+ADDP4
+INDIRI4
+ARGI4
+ADDRGP4 trap_Trace
+CALLV
+pop
+line 700
+;698:
+;699:  //if there is no LOS or the parent hive is too far away or the target is dead or notargeting, return
+;700:  if (tr.entityNum == ENTITYNUM_WORLD || Distance(self->r.currentOrigin, self->parent->r.currentOrigin) > (HIVE_RANGE * 5) || self->target_ent->health <= 0
+ADDRLP4 12+52
+INDIRI4
+CNSTI4 1022
+EQI4 $247
+ADDRLP4 80
+ADDRFP4 0
+INDIRP4
+ASGNP4
+ADDRLP4 84
+CNSTI4 488
+ASGNI4
+ADDRLP4 80
+INDIRP4
+ADDRLP4 84
+INDIRI4
+ADDP4
+ARGP4
+ADDRLP4 80
+INDIRP4
+CNSTI4 600
+ADDP4
+INDIRP4
+ADDRLP4 84
+INDIRI4
+ADDP4
+ARGP4
+ADDRLP4 88
+ADDRGP4 Distance
+CALLF4
+ASGNF4
+ADDRLP4 88
+INDIRF4
+CNSTF4 1157234688
+GTF4 $247
+ADDRLP4 92
+ADDRFP4 0
+INDIRP4
+CNSTI4 676
+ADDP4
+INDIRP4
+ASGNP4
+ADDRLP4 96
+CNSTI4 0
+ASGNI4
+ADDRLP4 92
+INDIRP4
+CNSTI4 812
+ADDP4
+INDIRI4
+ADDRLP4 96
+INDIRI4
+LEI4 $247
+ADDRLP4 92
+INDIRP4
+CNSTI4 536
+ADDP4
+INDIRI4
+CNSTI4 32
+BANDI4
+ADDRLP4 96
+INDIRI4
+EQI4 $242
+LABELV $247
+line 702
+;701:      || self->target_ent->flags & FL_NOTARGET)
+;702:  {
+line 703
+;703:    self->r.ownerNum = ENTITYNUM_WORLD;
+ADDRFP4 0
+INDIRP4
+CNSTI4 512
+ADDP4
+CNSTI4 1022
+ASGNI4
+line 705
+;704:
+;705:    self->think = AHive_ReturnToHive;
+ADDRFP4 0
+INDIRP4
+CNSTI4 772
+ADDP4
+ADDRGP4 AHive_ReturnToHive
+ASGNP4
+line 706
+;706:    self->nextthink = level.time + FRAMETIME;
+ADDRFP4 0
+INDIRP4
+CNSTI4 768
+ADDP4
+ADDRGP4 level+28
+INDIRI4
+CNSTI4 100
+ADDI4
+ASGNI4
+line 707
+;707:  }
+ADDRGP4 $243
+JUMPV
+LABELV $242
+line 709
+;708:  else
+;709:  {
+line 710
+;710:    VectorSubtract(self->target_ent->r.currentOrigin, self->r.currentOrigin, dir);
+ADDRLP4 100
+ADDRFP4 0
+INDIRP4
+ASGNP4
+ADDRLP4 104
+ADDRLP4 100
+INDIRP4
+CNSTI4 676
+ADDP4
+ASGNP4
+ADDRLP4 108
+CNSTI4 488
+ASGNI4
+ADDRLP4 0
+ADDRLP4 104
+INDIRP4
+INDIRP4
+ADDRLP4 108
+INDIRI4
+ADDP4
+INDIRF4
+ADDRLP4 100
+INDIRP4
+ADDRLP4 108
+INDIRI4
+ADDP4
+INDIRF4
+SUBF4
+ASGNF4
+ADDRLP4 112
+CNSTI4 492
+ASGNI4
+ADDRLP4 0+4
+ADDRLP4 104
+INDIRP4
+INDIRP4
+ADDRLP4 112
+INDIRI4
+ADDP4
+INDIRF4
+ADDRLP4 100
+INDIRP4
+ADDRLP4 112
+INDIRI4
+ADDP4
+INDIRF4
+SUBF4
+ASGNF4
+ADDRLP4 116
+ADDRFP4 0
+INDIRP4
+ASGNP4
+ADDRLP4 120
+CNSTI4 496
+ASGNI4
+ADDRLP4 0+8
+ADDRLP4 116
+INDIRP4
+CNSTI4 676
+ADDP4
+INDIRP4
+ADDRLP4 120
+INDIRI4
+ADDP4
+INDIRF4
+ADDRLP4 116
+INDIRP4
+ADDRLP4 120
+INDIRI4
+ADDP4
+INDIRF4
+SUBF4
+ASGNF4
+line 711
+;711:    VectorNormalize(dir);
+ADDRLP4 0
+ARGP4
+ADDRGP4 VectorNormalize
+CALLF4
+pop
+line 714
+;712:
+;713:    //change direction towards the player
+;714:    VectorScale(dir, HIVE_SPEED, self->s.pos.trDelta);
+ADDRFP4 0
+INDIRP4
+CNSTI4 36
+ADDP4
+CNSTF4 1131413504
+ADDRLP4 0
+INDIRF4
+MULF4
+ASGNF4
+ADDRFP4 0
+INDIRP4
+CNSTI4 40
+ADDP4
+CNSTF4 1131413504
+ADDRLP4 0+4
+INDIRF4
+MULF4
+ASGNF4
+ADDRFP4 0
+INDIRP4
+CNSTI4 44
+ADDP4
+CNSTF4 1131413504
+ADDRLP4 0+8
+INDIRF4
+MULF4
+ASGNF4
+line 715
+;715:    SnapVector(self->s.pos.trDelta); // save net bandwidth
+ADDRLP4 124
+ADDRFP4 0
+INDIRP4
+CNSTI4 36
+ADDP4
+ASGNP4
+ADDRLP4 124
+INDIRP4
+ADDRLP4 124
+INDIRP4
+INDIRF4
+CVFI4 4
+CVIF4 4
+ASGNF4
+ADDRLP4 128
+ADDRFP4 0
+INDIRP4
+CNSTI4 40
+ADDP4
+ASGNP4
+ADDRLP4 128
+INDIRP4
+ADDRLP4 128
+INDIRP4
+INDIRF4
+CVFI4 4
+CVIF4 4
+ASGNF4
+ADDRLP4 132
+ADDRFP4 0
+INDIRP4
+CNSTI4 44
+ADDP4
+ASGNP4
+ADDRLP4 132
+INDIRP4
+ADDRLP4 132
+INDIRP4
+INDIRF4
+CVFI4 4
+CVIF4 4
+ASGNF4
+line 716
+;716:    VectorCopy(self->r.currentOrigin, self->s.pos.trBase);
+ADDRLP4 124
+ADDRFP4 0
+INDIRP4
+ASGNP4
+ADDRLP4 124
+INDIRP4
+CNSTI4 24
+ADDP4
+ADDRLP4 124
+INDIRP4
+CNSTI4 488
+ADDP4
+INDIRB
+ASGNB 12
+line 717
+;717:    self->s.pos.trTime = level.time;
+ADDRFP4 0
+INDIRP4
+CNSTI4 16
+ADDP4
+ADDRGP4 level+28
+INDIRI4
+ASGNI4
+line 719
+;718:
+;719:    self->nextthink = level.time + HIVE_DIR_CHANGE_PERIOD;
+ADDRFP4 0
+INDIRP4
+CNSTI4 768
+ADDP4
+ADDRGP4 level+28
+INDIRI4
+CNSTI4 500
+ADDI4
+ASGNI4
+line 720
+;720:  }
+LABELV $243
+line 721
+;721:}
+LABELV $241
+endproc AHive_SearchAndDestroy 136 28
+export fire_hive
+proc fire_hive 32 4
+line 730
+;722:
+;723:/*
+;724: =================
+;725: fire_hive
+;726: =================
+;727: */
+;728:gentity_t *
+;729:fire_hive(gentity_t *self, vec3_t start, vec3_t dir)
+;730:{
+line 733
+;731:  gentity_t *bolt;
+;732:
+;733:  VectorNormalize(dir);
+ADDRFP4 8
+INDIRP4
+ARGP4
+ADDRGP4 VectorNormalize
+CALLF4
+pop
+line 735
+;734:
+;735:  bolt = G_Spawn();
+ADDRLP4 4
+ADDRGP4 G_Spawn
+CALLP4
+ASGNP4
+ADDRLP4 0
+ADDRLP4 4
+INDIRP4
+ASGNP4
+line 736
+;736:  bolt->classname = "hive";
+ADDRLP4 0
+INDIRP4
+CNSTI4 524
+ADDP4
+ADDRGP4 $159
+ASGNP4
+line 737
+;737:  bolt->nextthink = level.time + HIVE_DIR_CHANGE_PERIOD;
+ADDRLP4 0
+INDIRP4
+CNSTI4 768
+ADDP4
+ADDRGP4 level+28
+INDIRI4
+CNSTI4 500
+ADDI4
+ASGNI4
+line 738
+;738:  bolt->think = AHive_SearchAndDestroy;
+ADDRLP4 0
+INDIRP4
+CNSTI4 772
+ADDP4
+ADDRGP4 AHive_SearchAndDestroy
+ASGNP4
+line 739
+;739:  bolt->s.eType = ET_MISSILE;
+ADDRLP4 8
+CNSTI4 4
+ASGNI4
+ADDRLP4 0
+INDIRP4
+ADDRLP4 8
+INDIRI4
+ADDP4
+ADDRLP4 8
+INDIRI4
+ASGNI4
+line 740
+;740:  bolt->s.eFlags |= EF_BOUNCE | EF_NO_BOUNCE_SOUND;
+ADDRLP4 12
+ADDRLP4 0
+INDIRP4
+CNSTI4 8
+ADDP4
+ASGNP4
+ADDRLP4 12
+INDIRP4
+ADDRLP4 12
+INDIRP4
+INDIRI4
+CNSTI4 40
+BORI4
+ASGNI4
+line 741
+;741:  bolt->r.svFlags = SVF_USE_CURRENT_ORIGIN;
+ADDRLP4 0
+INDIRP4
+CNSTI4 424
+ADDP4
+CNSTI4 128
+ASGNI4
+line 742
+;742:  bolt->s.weapon = WP_HIVE;
+ADDRLP4 0
+INDIRP4
+CNSTI4 192
+ADDP4
+CNSTI4 15
+ASGNI4
+line 743
+;743:  bolt->s.generic1 = WPM_PRIMARY; //weaponMode
+ADDRLP4 0
+INDIRP4
+CNSTI4 204
+ADDP4
+CNSTI4 1
+ASGNI4
+line 744
+;744:  bolt->r.ownerNum = self->s.number;
+ADDRLP4 0
+INDIRP4
+CNSTI4 512
+ADDP4
+ADDRFP4 0
+INDIRP4
+INDIRI4
+ASGNI4
+line 745
+;745:  bolt->parent = self;
+ADDRLP4 0
+INDIRP4
+CNSTI4 600
+ADDP4
+ADDRFP4 0
+INDIRP4
+ASGNP4
+line 746
+;746:  bolt->damage = HIVE_DMG;
+ADDRLP4 0
+INDIRP4
+CNSTI4 844
+ADDP4
+CNSTI4 50
+ASGNI4
+line 747
+;747:  bolt->splashDamage = 0;
+ADDRLP4 0
+INDIRP4
+CNSTI4 848
+ADDP4
+CNSTI4 0
+ASGNI4
+line 748
+;748:  bolt->splashRadius = 0;
+ADDRLP4 0
+INDIRP4
+CNSTI4 852
+ADDP4
+CNSTI4 0
+ASGNI4
+line 749
+;749:  bolt->methodOfDeath = MOD_SWARM;
+ADDRLP4 0
+INDIRP4
+CNSTI4 856
+ADDP4
+CNSTI4 27
+ASGNI4
+line 750
+;750:  bolt->clipmask = MASK_SHOT;
+ADDRLP4 0
+INDIRP4
+CNSTI4 572
+ADDP4
+CNSTI4 33554433
+ASGNI4
+line 751
+;751:  bolt->target_ent = self->target_ent;
+ADDRLP4 16
+CNSTI4 676
+ASGNI4
+ADDRLP4 0
+INDIRP4
+ADDRLP4 16
+INDIRI4
+ADDP4
+ADDRFP4 0
+INDIRP4
+ADDRLP4 16
+INDIRI4
+ADDP4
+INDIRP4
+ASGNP4
+line 753
+;752:
+;753:  bolt->s.pos.trType = TR_LINEAR;
+ADDRLP4 0
+INDIRP4
+CNSTI4 12
+ADDP4
+CNSTI4 2
+ASGNI4
+line 754
+;754:  bolt->s.pos.trTime = level.time - MISSILE_PRESTEP_TIME; // move a bit on the very first frame
+ADDRLP4 0
+INDIRP4
+CNSTI4 16
+ADDP4
+ADDRGP4 level+28
+INDIRI4
+CNSTI4 50
+SUBI4
+ASGNI4
+line 755
+;755:  VectorCopy(start, bolt->s.pos.trBase);
+ADDRLP4 0
+INDIRP4
+CNSTI4 24
+ADDP4
+ADDRFP4 4
+INDIRP4
+INDIRB
+ASGNB 12
+line 756
+;756:  VectorScale(dir, HIVE_SPEED, bolt->s.pos.trDelta);
+ADDRLP4 0
+INDIRP4
+CNSTI4 36
+ADDP4
+CNSTF4 1131413504
+ADDRFP4 8
+INDIRP4
+INDIRF4
+MULF4
+ASGNF4
+ADDRLP4 0
+INDIRP4
+CNSTI4 40
+ADDP4
+CNSTF4 1131413504
+ADDRFP4 8
+INDIRP4
+CNSTI4 4
+ADDP4
+INDIRF4
+MULF4
+ASGNF4
+ADDRLP4 0
+INDIRP4
+CNSTI4 44
+ADDP4
+CNSTF4 1131413504
+ADDRFP4 8
+INDIRP4
+CNSTI4 8
+ADDP4
+INDIRF4
+MULF4
+ASGNF4
+line 757
+;757:  SnapVector(bolt->s.pos.trDelta); // save net bandwidth
+ADDRLP4 20
+ADDRLP4 0
+INDIRP4
+CNSTI4 36
+ADDP4
+ASGNP4
+ADDRLP4 20
+INDIRP4
+ADDRLP4 20
+INDIRP4
+INDIRF4
+CVFI4 4
+CVIF4 4
+ASGNF4
+ADDRLP4 24
+ADDRLP4 0
+INDIRP4
+CNSTI4 40
+ADDP4
+ASGNP4
+ADDRLP4 24
+INDIRP4
+ADDRLP4 24
+INDIRP4
+INDIRF4
+CVFI4 4
+CVIF4 4
+ASGNF4
+ADDRLP4 28
+ADDRLP4 0
+INDIRP4
+CNSTI4 44
+ADDP4
+ASGNP4
+ADDRLP4 28
+INDIRP4
+ADDRLP4 28
+INDIRP4
+INDIRF4
+CVFI4 4
+CVIF4 4
+ASGNF4
+line 758
+;758:  VectorCopy(start, bolt->r.currentOrigin);
+ADDRLP4 0
+INDIRP4
+CNSTI4 488
+ADDP4
+ADDRFP4 4
+INDIRP4
+INDIRB
+ASGNB 12
+line 760
+;759:
+;760:  return bolt;
+ADDRLP4 0
+INDIRP4
+RETP4
+LABELV $255
+endproc fire_hive 32 4
+export fire_lockblob
+proc fire_lockblob 24 4
+line 772
+;761:}
+;762:
+;763://=============================================================================
+;764:
+;765:/*
+;766: =================
+;767: fire_lockblob
+;768: =================
+;769: */
+;770:gentity_t *
+;771:fire_lockblob(gentity_t *self, vec3_t start, vec3_t dir)
+;772:{
+line 775
+;773:  gentity_t *bolt;
+;774:
+;775:  VectorNormalize(dir);
+ADDRFP4 8
+INDIRP4
+ARGP4
+ADDRGP4 VectorNormalize
+CALLF4
+pop
+line 777
+;776:
+;777:  bolt = G_Spawn();
+ADDRLP4 4
+ADDRGP4 G_Spawn
+CALLP4
+ASGNP4
+ADDRLP4 0
+ADDRLP4 4
+INDIRP4
+ASGNP4
+line 778
+;778:  bolt->classname = "lockblob";
+ADDRLP4 0
+INDIRP4
+CNSTI4 524
+ADDP4
+ADDRGP4 $147
+ASGNP4
+line 779
+;779:  bolt->nextthink = level.time + 15000;
+ADDRLP4 0
+INDIRP4
+CNSTI4 768
+ADDP4
+ADDRGP4 level+28
+INDIRI4
+CNSTI4 15000
+ADDI4
+ASGNI4
+line 780
+;780:  bolt->think = G_ExplodeMissile;
+ADDRLP4 0
+INDIRP4
+CNSTI4 772
+ADDP4
+ADDRGP4 G_ExplodeMissile
+ASGNP4
+line 781
+;781:  bolt->s.eType = ET_MISSILE;
+ADDRLP4 8
+CNSTI4 4
+ASGNI4
+ADDRLP4 0
+INDIRP4
+ADDRLP4 8
+INDIRI4
+ADDP4
+ADDRLP4 8
+INDIRI4
+ASGNI4
+line 782
+;782:  bolt->r.svFlags = SVF_USE_CURRENT_ORIGIN;
+ADDRLP4 0
+INDIRP4
+CNSTI4 424
+ADDP4
+CNSTI4 128
+ASGNI4
+line 783
+;783:  bolt->s.weapon = WP_LOCKBLOB_LAUNCHER;
+ADDRLP4 0
+INDIRP4
+CNSTI4 192
+ADDP4
+CNSTI4 14
+ASGNI4
+line 784
+;784:  bolt->s.generic1 = WPM_PRIMARY; //weaponMode
+ADDRLP4 0
+INDIRP4
+CNSTI4 204
+ADDP4
+CNSTI4 1
+ASGNI4
+line 785
+;785:  bolt->r.ownerNum = self->s.number;
+ADDRLP4 0
+INDIRP4
+CNSTI4 512
+ADDP4
+ADDRFP4 0
+INDIRP4
+INDIRI4
+ASGNI4
+line 786
+;786:  bolt->parent = self;
+ADDRLP4 0
+INDIRP4
+CNSTI4 600
+ADDP4
+ADDRFP4 0
+INDIRP4
+ASGNP4
+line 787
+;787:  bolt->damage = 0;
+ADDRLP4 0
+INDIRP4
+CNSTI4 844
+ADDP4
+CNSTI4 0
+ASGNI4
+line 788
+;788:  bolt->splashDamage = 0;
+ADDRLP4 0
+INDIRP4
+CNSTI4 848
+ADDP4
+CNSTI4 0
+ASGNI4
+line 789
+;789:  bolt->splashRadius = 0;
+ADDRLP4 0
+INDIRP4
+CNSTI4 852
+ADDP4
+CNSTI4 0
+ASGNI4
+line 790
+;790:  bolt->methodOfDeath = MOD_UNKNOWN; //doesn't do damage so will never kill
+ADDRLP4 0
+INDIRP4
+CNSTI4 856
+ADDP4
+CNSTI4 0
+ASGNI4
+line 791
+;791:  bolt->clipmask = MASK_SHOT;
+ADDRLP4 0
+INDIRP4
+CNSTI4 572
+ADDP4
+CNSTI4 33554433
+ASGNI4
+line 792
+;792:  bolt->target_ent = NULL;
+ADDRLP4 0
+INDIRP4
+CNSTI4 676
+ADDP4
+CNSTP4 0
+ASGNP4
+line 794
+;793:
+;794:  bolt->s.pos.trType = TR_LINEAR;
+ADDRLP4 0
+INDIRP4
+CNSTI4 12
+ADDP4
+CNSTI4 2
+ASGNI4
+line 795
+;795:  bolt->s.pos.trTime = level.time - MISSILE_PRESTEP_TIME; // move a bit on the very first frame
+ADDRLP4 0
+INDIRP4
+CNSTI4 16
+ADDP4
+ADDRGP4 level+28
+INDIRI4
+CNSTI4 50
+SUBI4
+ASGNI4
+line 796
+;796:  VectorCopy(start, bolt->s.pos.trBase);
+ADDRLP4 0
+INDIRP4
+CNSTI4 24
+ADDP4
+ADDRFP4 4
+INDIRP4
+INDIRB
+ASGNB 12
+line 797
+;797:  VectorScale(dir, 500, bolt->s.pos.trDelta);
+ADDRLP4 0
+INDIRP4
+CNSTI4 36
+ADDP4
+CNSTF4 1140457472
+ADDRFP4 8
+INDIRP4
+INDIRF4
+MULF4
+ASGNF4
+ADDRLP4 0
+INDIRP4
+CNSTI4 40
+ADDP4
+CNSTF4 1140457472
+ADDRFP4 8
+INDIRP4
+CNSTI4 4
+ADDP4
+INDIRF4
+MULF4
+ASGNF4
+ADDRLP4 0
+INDIRP4
+CNSTI4 44
+ADDP4
+CNSTF4 1140457472
+ADDRFP4 8
+INDIRP4
+CNSTI4 8
+ADDP4
+INDIRF4
+MULF4
+ASGNF4
+line 798
+;798:  SnapVector(bolt->s.pos.trDelta); // save net bandwidth
+ADDRLP4 12
+ADDRLP4 0
+INDIRP4
+CNSTI4 36
+ADDP4
+ASGNP4
+ADDRLP4 12
+INDIRP4
+ADDRLP4 12
+INDIRP4
+INDIRF4
+CVFI4 4
+CVIF4 4
+ASGNF4
+ADDRLP4 16
+ADDRLP4 0
+INDIRP4
+CNSTI4 40
+ADDP4
+ASGNP4
+ADDRLP4 16
+INDIRP4
+ADDRLP4 16
+INDIRP4
+INDIRF4
+CVFI4 4
+CVIF4 4
+ASGNF4
+ADDRLP4 20
+ADDRLP4 0
+INDIRP4
+CNSTI4 44
+ADDP4
+ASGNP4
+ADDRLP4 20
+INDIRP4
+ADDRLP4 20
+INDIRP4
+INDIRF4
+CVFI4 4
+CVIF4 4
+ASGNF4
+line 799
+;799:  VectorCopy(start, bolt->r.currentOrigin);
+ADDRLP4 0
+INDIRP4
+CNSTI4 488
+ADDP4
+ADDRFP4 4
+INDIRP4
+INDIRB
+ASGNB 12
+line 801
+;800:
+;801:  return bolt;
+ADDRLP4 0
+INDIRP4
+RETP4
+LABELV $258
+endproc fire_lockblob 24 4
+export fire_slowBlob
+proc fire_slowBlob 28 4
+line 811
+;802:}
+;803:
+;804:/*
+;805: =================
+;806: fire_slowBlob
+;807: =================
+;808: */
+;809:gentity_t *
+;810:fire_slowBlob(gentity_t *self, vec3_t start, vec3_t dir)
+;811:{
+line 814
+;812:  gentity_t *bolt;
+;813:
+;814:  VectorNormalize(dir);
+ADDRFP4 8
+INDIRP4
+ARGP4
+ADDRGP4 VectorNormalize
+CALLF4
+pop
+line 816
+;815:
+;816:  bolt = G_Spawn();
+ADDRLP4 4
+ADDRGP4 G_Spawn
+CALLP4
+ASGNP4
+ADDRLP4 0
+ADDRLP4 4
+INDIRP4
+ASGNP4
+line 817
+;817:  bolt->classname = "slowblob";
+ADDRLP4 0
+INDIRP4
+CNSTI4 524
+ADDP4
+ADDRGP4 $153
+ASGNP4
+line 818
+;818:  bolt->nextthink = level.time + 15000;
+ADDRLP4 0
+INDIRP4
+CNSTI4 768
+ADDP4
+ADDRGP4 level+28
+INDIRI4
+CNSTI4 15000
+ADDI4
+ASGNI4
+line 819
+;819:  bolt->think = G_ExplodeMissile;
+ADDRLP4 0
+INDIRP4
+CNSTI4 772
+ADDP4
+ADDRGP4 G_ExplodeMissile
+ASGNP4
+line 820
+;820:  bolt->s.eType = ET_MISSILE;
+ADDRLP4 8
+CNSTI4 4
+ASGNI4
+ADDRLP4 0
+INDIRP4
+ADDRLP4 8
+INDIRI4
+ADDP4
+ADDRLP4 8
+INDIRI4
+ASGNI4
+line 821
+;821:  bolt->r.svFlags = SVF_USE_CURRENT_ORIGIN;
+ADDRLP4 0
+INDIRP4
+CNSTI4 424
+ADDP4
+CNSTI4 128
+ASGNI4
+line 822
+;822:  bolt->s.weapon = WP_ABUILD2;
+ADDRLP4 0
+INDIRP4
+CNSTI4 192
+ADDP4
+CNSTI4 19
+ASGNI4
+line 823
+;823:  bolt->s.generic1 = self->s.generic1; //weaponMode
+ADDRLP4 12
+CNSTI4 204
+ASGNI4
+ADDRLP4 0
+INDIRP4
+ADDRLP4 12
+INDIRI4
+ADDP4
+ADDRFP4 0
+INDIRP4
+ADDRLP4 12
+INDIRI4
+ADDP4
+INDIRI4
+ASGNI4
+line 824
+;824:  bolt->r.ownerNum = self->s.number;
+ADDRLP4 0
+INDIRP4
+CNSTI4 512
+ADDP4
+ADDRFP4 0
+INDIRP4
+INDIRI4
+ASGNI4
+line 825
+;825:  bolt->parent = self;
+ADDRLP4 0
+INDIRP4
+CNSTI4 600
+ADDP4
+ADDRFP4 0
+INDIRP4
+ASGNP4
+line 826
+;826:  bolt->damage = ABUILDER_BLOB_DMG;
+ADDRLP4 0
+INDIRP4
+CNSTI4 844
+ADDP4
+CNSTI4 4
+ASGNI4
+line 827
+;827:  bolt->splashDamage = 0;
+ADDRLP4 0
+INDIRP4
+CNSTI4 848
+ADDP4
+CNSTI4 0
+ASGNI4
+line 828
+;828:  bolt->splashRadius = 0;
+ADDRLP4 0
+INDIRP4
+CNSTI4 852
+ADDP4
+CNSTI4 0
+ASGNI4
+line 829
+;829:  bolt->methodOfDeath = MOD_SLOWBLOB;
+ADDRLP4 0
+INDIRP4
+CNSTI4 856
+ADDP4
+CNSTI4 25
+ASGNI4
+line 830
+;830:  bolt->splashMethodOfDeath = MOD_SLOWBLOB;
+ADDRLP4 0
+INDIRP4
+CNSTI4 860
+ADDP4
+CNSTI4 25
+ASGNI4
+line 831
+;831:  bolt->clipmask = MASK_SHOT;
+ADDRLP4 0
+INDIRP4
+CNSTI4 572
+ADDP4
+CNSTI4 33554433
+ASGNI4
+line 832
+;832:  bolt->target_ent = NULL;
+ADDRLP4 0
+INDIRP4
+CNSTI4 676
+ADDP4
+CNSTP4 0
+ASGNP4
+line 834
+;833:
+;834:  bolt->s.pos.trType = TR_GRAVITY;
+ADDRLP4 0
+INDIRP4
+CNSTI4 12
+ADDP4
+CNSTI4 5
+ASGNI4
+line 835
+;835:  bolt->s.pos.trTime = level.time - MISSILE_PRESTEP_TIME; // move a bit on the very first frame
+ADDRLP4 0
+INDIRP4
+CNSTI4 16
+ADDP4
+ADDRGP4 level+28
+INDIRI4
+CNSTI4 50
+SUBI4
+ASGNI4
+line 836
+;836:  VectorCopy(start, bolt->s.pos.trBase);
+ADDRLP4 0
+INDIRP4
+CNSTI4 24
+ADDP4
+ADDRFP4 4
+INDIRP4
+INDIRB
+ASGNB 12
+line 837
+;837:  VectorScale(dir, ABUILDER_BLOB_SPEED, bolt->s.pos.trDelta);
+ADDRLP4 0
+INDIRP4
+CNSTI4 36
+ADDP4
+CNSTF4 1145569280
+ADDRFP4 8
+INDIRP4
+INDIRF4
+MULF4
+ASGNF4
+ADDRLP4 0
+INDIRP4
+CNSTI4 40
+ADDP4
+CNSTF4 1145569280
+ADDRFP4 8
+INDIRP4
+CNSTI4 4
+ADDP4
+INDIRF4
+MULF4
+ASGNF4
+ADDRLP4 0
+INDIRP4
+CNSTI4 44
+ADDP4
+CNSTF4 1145569280
+ADDRFP4 8
+INDIRP4
+CNSTI4 8
+ADDP4
+INDIRF4
+MULF4
+ASGNF4
+line 838
+;838:  SnapVector(bolt->s.pos.trDelta); // save net bandwidth
+ADDRLP4 16
+ADDRLP4 0
+INDIRP4
+CNSTI4 36
+ADDP4
+ASGNP4
+ADDRLP4 16
+INDIRP4
+ADDRLP4 16
+INDIRP4
+INDIRF4
+CVFI4 4
+CVIF4 4
+ASGNF4
+ADDRLP4 20
+ADDRLP4 0
+INDIRP4
+CNSTI4 40
+ADDP4
+ASGNP4
+ADDRLP4 20
+INDIRP4
+ADDRLP4 20
+INDIRP4
+INDIRF4
+CVFI4 4
+CVIF4 4
+ASGNF4
+ADDRLP4 24
+ADDRLP4 0
+INDIRP4
+CNSTI4 44
+ADDP4
+ASGNP4
+ADDRLP4 24
+INDIRP4
+ADDRLP4 24
+INDIRP4
+INDIRF4
+CVFI4 4
+CVIF4 4
+ASGNF4
+line 839
+;839:  VectorCopy(start, bolt->r.currentOrigin);
+ADDRLP4 0
+INDIRP4
+CNSTI4 488
+ADDP4
+ADDRFP4 4
+INDIRP4
+INDIRB
+ASGNB 12
+line 841
+;840:
+;841:  return bolt;
+ADDRLP4 0
+INDIRP4
+RETP4
+LABELV $261
+endproc fire_slowBlob 28 4
+export fire_paraLockBlob
+proc fire_paraLockBlob 28 4
+line 851
+;842:}
+;843:
+;844:/*
+;845: =================
+;846: fire_paraLockBlob
+;847: =================
+;848: */
+;849:gentity_t *
+;850:fire_paraLockBlob(gentity_t *self, vec3_t start, vec3_t dir)
+;851:{
+line 854
+;852:  gentity_t *bolt;
+;853:
+;854:  VectorNormalize(dir);
+ADDRFP4 8
+INDIRP4
+ARGP4
+ADDRGP4 VectorNormalize
+CALLF4
+pop
+line 856
+;855:
+;856:  bolt = G_Spawn();
+ADDRLP4 4
+ADDRGP4 G_Spawn
+CALLP4
+ASGNP4
+ADDRLP4 0
+ADDRLP4 4
+INDIRP4
+ASGNP4
+line 857
+;857:  bolt->classname = "lockblob";
+ADDRLP4 0
+INDIRP4
+CNSTI4 524
+ADDP4
+ADDRGP4 $147
+ASGNP4
+line 858
+;858:  bolt->nextthink = level.time + 15000;
+ADDRLP4 0
+INDIRP4
+CNSTI4 768
+ADDP4
+ADDRGP4 level+28
+INDIRI4
+CNSTI4 15000
+ADDI4
+ASGNI4
+line 859
+;859:  bolt->think = G_ExplodeMissile;
+ADDRLP4 0
+INDIRP4
+CNSTI4 772
+ADDP4
+ADDRGP4 G_ExplodeMissile
+ASGNP4
+line 860
+;860:  bolt->s.eType = ET_MISSILE;
+ADDRLP4 8
+CNSTI4 4
+ASGNI4
+ADDRLP4 0
+INDIRP4
+ADDRLP4 8
+INDIRI4
+ADDP4
+ADDRLP4 8
+INDIRI4
+ASGNI4
+line 861
+;861:  bolt->r.svFlags = SVF_USE_CURRENT_ORIGIN;
+ADDRLP4 0
+INDIRP4
+CNSTI4 424
+ADDP4
+CNSTI4 128
+ASGNI4
+line 862
+;862:  bolt->s.weapon = WP_LOCKBLOB_LAUNCHER;
+ADDRLP4 0
+INDIRP4
+CNSTI4 192
+ADDP4
+CNSTI4 14
+ASGNI4
+line 863
+;863:  bolt->s.generic1 = self->s.generic1; //weaponMode
+ADDRLP4 12
+CNSTI4 204
+ASGNI4
+ADDRLP4 0
+INDIRP4
+ADDRLP4 12
+INDIRI4
+ADDP4
+ADDRFP4 0
+INDIRP4
+ADDRLP4 12
+INDIRI4
+ADDP4
+INDIRI4
+ASGNI4
+line 864
+;864:  bolt->r.ownerNum = self->s.number;
+ADDRLP4 0
+INDIRP4
+CNSTI4 512
+ADDP4
+ADDRFP4 0
+INDIRP4
+INDIRI4
+ASGNI4
+line 865
+;865:  bolt->parent = self;
+ADDRLP4 0
+INDIRP4
+CNSTI4 600
+ADDP4
+ADDRFP4 0
+INDIRP4
+ASGNP4
+line 866
+;866:  bolt->damage = 0;
+ADDRLP4 0
+INDIRP4
+CNSTI4 844
+ADDP4
+CNSTI4 0
+ASGNI4
+line 867
+;867:  bolt->splashDamage = 0;
+ADDRLP4 0
+INDIRP4
+CNSTI4 848
+ADDP4
+CNSTI4 0
+ASGNI4
+line 868
+;868:  bolt->splashRadius = 0;
+ADDRLP4 0
+INDIRP4
+CNSTI4 852
+ADDP4
+CNSTI4 0
+ASGNI4
+line 869
+;869:  bolt->clipmask = MASK_SHOT;
+ADDRLP4 0
+INDIRP4
+CNSTI4 572
+ADDP4
+CNSTI4 33554433
+ASGNI4
+line 870
+;870:  bolt->target_ent = NULL;
+ADDRLP4 0
+INDIRP4
+CNSTI4 676
+ADDP4
+CNSTP4 0
+ASGNP4
+line 872
+;871:
+;872:  bolt->s.pos.trType = TR_GRAVITY;
+ADDRLP4 0
+INDIRP4
+CNSTI4 12
+ADDP4
+CNSTI4 5
+ASGNI4
+line 873
+;873:  bolt->s.pos.trTime = level.time - MISSILE_PRESTEP_TIME; // move a bit on the very first frame
+ADDRLP4 0
+INDIRP4
+CNSTI4 16
+ADDP4
+ADDRGP4 level+28
+INDIRI4
+CNSTI4 50
+SUBI4
+ASGNI4
+line 874
+;874:  VectorCopy(start, bolt->s.pos.trBase);
+ADDRLP4 0
+INDIRP4
+CNSTI4 24
+ADDP4
+ADDRFP4 4
+INDIRP4
+INDIRB
+ASGNB 12
+line 875
+;875:  VectorScale(dir, LOCKBLOB_SPEED, bolt->s.pos.trDelta);
+ADDRLP4 0
+INDIRP4
+CNSTI4 36
+ADDP4
+CNSTF4 1143111680
+ADDRFP4 8
+INDIRP4
+INDIRF4
+MULF4
+ASGNF4
+ADDRLP4 0
+INDIRP4
+CNSTI4 40
+ADDP4
+CNSTF4 1143111680
+ADDRFP4 8
+INDIRP4
+CNSTI4 4
+ADDP4
+INDIRF4
+MULF4
+ASGNF4
+ADDRLP4 0
+INDIRP4
+CNSTI4 44
+ADDP4
+CNSTF4 1143111680
+ADDRFP4 8
+INDIRP4
+CNSTI4 8
+ADDP4
+INDIRF4
+MULF4
+ASGNF4
+line 876
+;876:  SnapVector(bolt->s.pos.trDelta); // save net bandwidth
+ADDRLP4 16
+ADDRLP4 0
+INDIRP4
+CNSTI4 36
+ADDP4
+ASGNP4
+ADDRLP4 16
+INDIRP4
+ADDRLP4 16
+INDIRP4
+INDIRF4
+CVFI4 4
+CVIF4 4
+ASGNF4
+ADDRLP4 20
+ADDRLP4 0
+INDIRP4
+CNSTI4 40
+ADDP4
+ASGNP4
+ADDRLP4 20
+INDIRP4
+ADDRLP4 20
+INDIRP4
+INDIRF4
+CVFI4 4
+CVIF4 4
+ASGNF4
+ADDRLP4 24
+ADDRLP4 0
+INDIRP4
+CNSTI4 44
+ADDP4
+ASGNP4
+ADDRLP4 24
+INDIRP4
+ADDRLP4 24
+INDIRP4
+INDIRF4
+CVFI4 4
+CVIF4 4
+ASGNF4
+line 877
+;877:  VectorCopy(start, bolt->r.currentOrigin);
+ADDRLP4 0
+INDIRP4
+CNSTI4 488
+ADDP4
+ADDRFP4 4
+INDIRP4
+INDIRB
+ASGNB 12
+line 879
+;878:
+;879:  return bolt;
+ADDRLP4 0
+INDIRP4
+RETP4
+LABELV $264
+endproc fire_paraLockBlob 28 4
+export fire_bounceBall
+proc fire_bounceBall 28 4
+line 889
+;880:}
+;881:
+;882:/*
+;883: =================
+;884: fire_bounceBall
+;885: =================
+;886: */
+;887:gentity_t *
+;888:fire_bounceBall(gentity_t *self, vec3_t start, vec3_t dir)
+;889:{
+line 892
+;890:  gentity_t *bolt;
+;891:
+;892:  VectorNormalize(dir);
+ADDRFP4 8
+INDIRP4
+ARGP4
+ADDRGP4 VectorNormalize
+CALLF4
+pop
+line 894
+;893:
+;894:  bolt = G_Spawn();
+ADDRLP4 4
+ADDRGP4 G_Spawn
+CALLP4
+ASGNP4
+ADDRLP4 0
+ADDRLP4 4
+INDIRP4
+ASGNP4
+line 895
+;895:  bolt->classname = "bounceball";
+ADDRLP4 0
+INDIRP4
+CNSTI4 524
+ADDP4
+ADDRGP4 $268
+ASGNP4
+line 896
+;896:  bolt->nextthink = level.time + 3000;
+ADDRLP4 0
+INDIRP4
+CNSTI4 768
+ADDP4
+ADDRGP4 level+28
+INDIRI4
+CNSTI4 3000
+ADDI4
+ASGNI4
+line 897
+;897:  bolt->think = G_ExplodeMissile;
+ADDRLP4 0
+INDIRP4
+CNSTI4 772
+ADDP4
+ADDRGP4 G_ExplodeMissile
+ASGNP4
+line 898
+;898:  bolt->s.eType = ET_MISSILE;
+ADDRLP4 8
+CNSTI4 4
+ASGNI4
+ADDRLP4 0
+INDIRP4
+ADDRLP4 8
+INDIRI4
+ADDP4
+ADDRLP4 8
+INDIRI4
+ASGNI4
+line 899
+;899:  bolt->r.svFlags = SVF_USE_CURRENT_ORIGIN;
+ADDRLP4 0
+INDIRP4
+CNSTI4 424
+ADDP4
+CNSTI4 128
+ASGNI4
+line 900
+;900:  bolt->s.weapon = WP_ALEVEL3_UPG;
+ADDRLP4 0
+INDIRP4
+CNSTI4 192
+ADDP4
+CNSTI4 28
+ASGNI4
+line 901
+;901:  bolt->s.generic1 = self->s.generic1; //weaponMode
+ADDRLP4 12
+CNSTI4 204
+ASGNI4
+ADDRLP4 0
+INDIRP4
+ADDRLP4 12
+INDIRI4
+ADDP4
+ADDRFP4 0
+INDIRP4
+ADDRLP4 12
+INDIRI4
+ADDP4
+INDIRI4
+ASGNI4
+line 902
+;902:  bolt->r.ownerNum = self->s.number;
+ADDRLP4 0
+INDIRP4
+CNSTI4 512
+ADDP4
+ADDRFP4 0
+INDIRP4
+INDIRI4
+ASGNI4
+line 903
+;903:  bolt->parent = self;
+ADDRLP4 0
+INDIRP4
+CNSTI4 600
+ADDP4
+ADDRFP4 0
+INDIRP4
+ASGNP4
+line 904
+;904:  bolt->damage = LEVEL3_BOUNCEBALL_DMG;
+ADDRLP4 0
+INDIRP4
+CNSTI4 844
+ADDP4
+CNSTI4 110
+ASGNI4
+line 905
+;905:  bolt->splashDamage = 0;
+ADDRLP4 0
+INDIRP4
+CNSTI4 848
+ADDP4
+CNSTI4 0
+ASGNI4
+line 906
+;906:  bolt->splashRadius = 0;
+ADDRLP4 0
+INDIRP4
+CNSTI4 852
+ADDP4
+CNSTI4 0
+ASGNI4
+line 909
+;907://  bolt->methodOfDeath = MOD_LEVEL3_BOUNCEBALL;
+;908://  bolt->splashMethodOfDeath = MOD_LEVEL3_BOUNCEBALL;
+;909:  bolt->clipmask = MASK_SHOT;
+ADDRLP4 0
+INDIRP4
+CNSTI4 572
+ADDP4
+CNSTI4 33554433
+ASGNI4
+line 910
+;910:  bolt->target_ent = NULL;
+ADDRLP4 0
+INDIRP4
+CNSTI4 676
+ADDP4
+CNSTP4 0
+ASGNP4
+line 912
+;911:
+;912:  bolt->s.pos.trType = TR_GRAVITY;
+ADDRLP4 0
+INDIRP4
+CNSTI4 12
+ADDP4
+CNSTI4 5
+ASGNI4
+line 913
+;913:  bolt->s.pos.trTime = level.time - MISSILE_PRESTEP_TIME; // move a bit on the very first frame
+ADDRLP4 0
+INDIRP4
+CNSTI4 16
+ADDP4
+ADDRGP4 level+28
+INDIRI4
+CNSTI4 50
+SUBI4
+ASGNI4
+line 914
+;914:  VectorCopy(start, bolt->s.pos.trBase);
+ADDRLP4 0
+INDIRP4
+CNSTI4 24
+ADDP4
+ADDRFP4 4
+INDIRP4
+INDIRB
+ASGNB 12
+line 915
+;915:  VectorScale(dir, LEVEL3_BOUNCEBALL_SPEED, bolt->s.pos.trDelta);
+ADDRLP4 0
+INDIRP4
+CNSTI4 36
+ADDP4
+CNSTF4 1148846080
+ADDRFP4 8
+INDIRP4
+INDIRF4
+MULF4
+ASGNF4
+ADDRLP4 0
+INDIRP4
+CNSTI4 40
+ADDP4
+CNSTF4 1148846080
+ADDRFP4 8
+INDIRP4
+CNSTI4 4
+ADDP4
+INDIRF4
+MULF4
+ASGNF4
+ADDRLP4 0
+INDIRP4
+CNSTI4 44
+ADDP4
+CNSTF4 1148846080
+ADDRFP4 8
+INDIRP4
+CNSTI4 8
+ADDP4
+INDIRF4
+MULF4
+ASGNF4
+line 916
+;916:  SnapVector(bolt->s.pos.trDelta); // save net bandwidth
+ADDRLP4 16
+ADDRLP4 0
+INDIRP4
+CNSTI4 36
+ADDP4
+ASGNP4
+ADDRLP4 16
+INDIRP4
+ADDRLP4 16
+INDIRP4
+INDIRF4
+CVFI4 4
+CVIF4 4
+ASGNF4
+ADDRLP4 20
+ADDRLP4 0
+INDIRP4
+CNSTI4 40
+ADDP4
+ASGNP4
+ADDRLP4 20
+INDIRP4
+ADDRLP4 20
+INDIRP4
+INDIRF4
+CVFI4 4
+CVIF4 4
+ASGNF4
+ADDRLP4 24
+ADDRLP4 0
+INDIRP4
+CNSTI4 44
+ADDP4
+ASGNP4
+ADDRLP4 24
+INDIRP4
+ADDRLP4 24
+INDIRP4
+INDIRF4
+CVFI4 4
+CVIF4 4
+ASGNF4
+line 917
+;917:  VectorCopy(start, bolt->r.currentOrigin);
+ADDRLP4 0
+INDIRP4
+CNSTI4 488
+ADDP4
+ADDRFP4 4
+INDIRP4
+INDIRB
+ASGNB 12
+line 920
+;918:  /*bolt->s.eFlags |= EF_BOUNCE;*/
+;919:
+;920:  return bolt;
+ADDRLP4 0
+INDIRP4
+RETP4
+LABELV $267
+endproc fire_bounceBall 28 4
+export drawRedBall
+proc drawRedBall 48 4
+line 925
+;921:}
+;922:
+;923:gentity_t *
+;924:drawRedBall(gentity_t *ent, int x, int y)
+;925:{
+line 930
+;926:
+;927:  gentity_t *bolt;
+;928:  vec3_t start;
+;929:
+;930:  start[0] = convertGridToWorld(x);
+ADDRFP4 4
+INDIRI4
+ARGI4
+ADDRLP4 16
+ADDRGP4 convertGridToWorld
+CALLI4
+ASGNI4
+ADDRLP4 4
+ADDRLP4 16
+INDIRI4
+CVIF4 4
+ASGNF4
+line 931
+;931:  start[1] = convertGridToWorld(y);
+ADDRFP4 8
+INDIRI4
+ARGI4
+ADDRLP4 20
+ADDRGP4 convertGridToWorld
+CALLI4
+ASGNI4
+ADDRLP4 4+4
+ADDRLP4 20
+INDIRI4
+CVIF4 4
+ASGNF4
+line 932
+;932:  start[2] = ent->client->ps.origin[2] + 30;//Over the head.
+ADDRLP4 4+8
+ADDRFP4 0
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+CNSTI4 28
+ADDP4
+INDIRF4
+CNSTF4 1106247680
+ADDF4
+ASGNF4
+line 934
+;933:
+;934:  bolt = G_Spawn();
+ADDRLP4 24
+ADDRGP4 G_Spawn
+CALLP4
+ASGNP4
+ADDRLP4 0
+ADDRLP4 24
+INDIRP4
+ASGNP4
+line 935
+;935:  bolt->classname = "pulse";
+ADDRLP4 0
+INDIRP4
+CNSTI4 524
+ADDP4
+ADDRGP4 $211
+ASGNP4
+line 936
+;936:  bolt->nextthink = level.time + 10000;
+ADDRLP4 0
+INDIRP4
+CNSTI4 768
+ADDP4
+ADDRGP4 level+28
+INDIRI4
+CNSTI4 10000
+ADDI4
+ASGNI4
+line 937
+;937:  bolt->think = G_ExplodeMissile;
+ADDRLP4 0
+INDIRP4
+CNSTI4 772
+ADDP4
+ADDRGP4 G_ExplodeMissile
+ASGNP4
+line 938
+;938:  bolt->s.eType = ET_MISSILE;
+ADDRLP4 28
+CNSTI4 4
+ASGNI4
+ADDRLP4 0
+INDIRP4
+ADDRLP4 28
+INDIRI4
+ADDP4
+ADDRLP4 28
+INDIRI4
+ASGNI4
+line 939
+;939:  bolt->r.svFlags = SVF_USE_CURRENT_ORIGIN;
+ADDRLP4 0
+INDIRP4
+CNSTI4 424
+ADDP4
+CNSTI4 128
+ASGNI4
+line 941
+;940:  //bolt->s.weapon = WP_PULSE_RIFLE;
+;941:  bolt->s.generic1 = ent->s.generic1; //weaponMode
+ADDRLP4 32
+CNSTI4 204
+ASGNI4
+ADDRLP4 0
+INDIRP4
+ADDRLP4 32
+INDIRI4
+ADDP4
+ADDRFP4 0
+INDIRP4
+ADDRLP4 32
+INDIRI4
+ADDP4
+INDIRI4
+ASGNI4
+line 942
+;942:  bolt->r.ownerNum = ent->s.number;
+ADDRLP4 0
+INDIRP4
+CNSTI4 512
+ADDP4
+ADDRFP4 0
+INDIRP4
+INDIRI4
+ASGNI4
+line 943
+;943:  bolt->parent = ent;
+ADDRLP4 0
+INDIRP4
+CNSTI4 600
+ADDP4
+ADDRFP4 0
+INDIRP4
+ASGNP4
+line 944
+;944:  bolt->damage = PRIFLE_DMG;
+ADDRLP4 0
+INDIRP4
+CNSTI4 844
+ADDP4
+CNSTI4 20
+ASGNI4
+line 945
+;945:  bolt->splashDamage = 0;
+ADDRLP4 0
+INDIRP4
+CNSTI4 848
+ADDP4
+CNSTI4 0
+ASGNI4
+line 946
+;946:  bolt->splashRadius = 0;
+ADDRLP4 0
+INDIRP4
+CNSTI4 852
+ADDP4
+CNSTI4 0
+ASGNI4
+line 949
+;947://  bolt->methodOfDeath = MOD_PRIFLE;
+;948://  bolt->splashMethodOfDeath = MOD_PRIFLE;
+;949:  bolt->clipmask = MASK_WATER;
+ADDRLP4 0
+INDIRP4
+CNSTI4 572
+ADDP4
+CNSTI4 56
+ASGNI4
+line 950
+;950:  bolt->target_ent = NULL;
+ADDRLP4 0
+INDIRP4
+CNSTI4 676
+ADDP4
+CNSTP4 0
+ASGNP4
+line 952
+;951:
+;952:  bolt->s.pos.trType = TR_LINEAR;
+ADDRLP4 0
+INDIRP4
+CNSTI4 12
+ADDP4
+CNSTI4 2
+ASGNI4
+line 953
+;953:  bolt->s.pos.trTime = level.time - MISSILE_PRESTEP_TIME; // move a bit on the very first frame
+ADDRLP4 0
+INDIRP4
+CNSTI4 16
+ADDP4
+ADDRGP4 level+28
+INDIRI4
+CNSTI4 50
+SUBI4
+ASGNI4
+line 954
+;954:  VectorCopy(start, bolt->s.pos.trBase);
+ADDRLP4 0
+INDIRP4
+CNSTI4 24
+ADDP4
+ADDRLP4 4
+INDIRB
+ASGNB 12
+line 955
+;955:  VectorScale(start, 0, bolt->s.pos.trDelta);
+ADDRLP4 0
+INDIRP4
+CNSTI4 36
+ADDP4
+CNSTF4 0
+ADDRLP4 4
+INDIRF4
+MULF4
+ASGNF4
+ADDRLP4 0
+INDIRP4
+CNSTI4 40
+ADDP4
+CNSTF4 0
+ADDRLP4 4+4
+INDIRF4
+MULF4
+ASGNF4
+ADDRLP4 0
+INDIRP4
+CNSTI4 44
+ADDP4
+CNSTF4 0
+ADDRLP4 4+8
+INDIRF4
+MULF4
+ASGNF4
+line 957
+;956:
+;957:  SnapVector(bolt->s.pos.trDelta); // save net bandwidth
+ADDRLP4 36
+ADDRLP4 0
+INDIRP4
+CNSTI4 36
+ADDP4
+ASGNP4
+ADDRLP4 36
+INDIRP4
+ADDRLP4 36
+INDIRP4
+INDIRF4
+CVFI4 4
+CVIF4 4
+ASGNF4
+ADDRLP4 40
+ADDRLP4 0
+INDIRP4
+CNSTI4 40
+ADDP4
+ASGNP4
+ADDRLP4 40
+INDIRP4
+ADDRLP4 40
+INDIRP4
+INDIRF4
+CVFI4 4
+CVIF4 4
+ASGNF4
+ADDRLP4 44
+ADDRLP4 0
+INDIRP4
+CNSTI4 44
+ADDP4
+ASGNP4
+ADDRLP4 44
+INDIRP4
+ADDRLP4 44
+INDIRP4
+INDIRF4
+CVFI4 4
+CVIF4 4
+ASGNF4
+line 959
+;958:
+;959:  VectorCopy(start, bolt->r.currentOrigin);
+ADDRLP4 0
+INDIRP4
+CNSTI4 488
+ADDP4
+ADDRLP4 4
+INDIRB
+ASGNB 12
+line 961
+;960:
+;961:  return bolt;
+ADDRLP4 0
+INDIRP4
+RETP4
+LABELV $271
+endproc drawRedBall 48 4
+export launch_grenade_primary
+proc launch_grenade_primary 40 4
+line 965
+;962:}
+;963:gentity_t *
+;964:launch_grenade_primary(gentity_t *self, vec3_t start, vec3_t dir)
+;965:{
+line 968
+;966:  gentity_t *bolt;
+;967:
+;968:  VectorNormalize(dir);
+ADDRFP4 8
+INDIRP4
+ARGP4
+ADDRGP4 VectorNormalize
+CALLF4
+pop
+line 970
+;969:
+;970:  bolt = G_Spawn();
+ADDRLP4 4
+ADDRGP4 G_Spawn
+CALLP4
+ASGNP4
+ADDRLP4 0
+ADDRLP4 4
+INDIRP4
+ASGNP4
+line 971
+;971:  bolt->classname = "grenade2";
+ADDRLP4 0
+INDIRP4
+CNSTI4 524
+ADDP4
+ADDRGP4 $279
+ASGNP4
+line 972
+;972:  bolt->nextthink = level.time + 5000;
+ADDRLP4 0
+INDIRP4
+CNSTI4 768
+ADDP4
+ADDRGP4 level+28
+INDIRI4
+CNSTI4 5000
+ADDI4
+ASGNI4
+line 973
+;973:  bolt->think = G_ExplodeMissile;
+ADDRLP4 0
+INDIRP4
+CNSTI4 772
+ADDP4
+ADDRGP4 G_ExplodeMissile
+ASGNP4
+line 974
+;974:  bolt->s.eType = ET_MISSILE;
+ADDRLP4 8
+CNSTI4 4
+ASGNI4
+ADDRLP4 0
+INDIRP4
+ADDRLP4 8
+INDIRI4
+ADDP4
+ADDRLP4 8
+INDIRI4
+ASGNI4
+line 975
+;975:  bolt->r.svFlags = SVF_USE_CURRENT_ORIGIN;
+ADDRLP4 0
+INDIRP4
+CNSTI4 424
+ADDP4
+CNSTI4 128
+ASGNI4
+line 976
+;976:  bolt->s.weapon = WP_GRENADE;
+ADDRLP4 0
+INDIRP4
+CNSTI4 192
+ADDP4
+CNSTI4 10
+ASGNI4
+line 978
+;977:  //bolt->s.eFlags = EF_BOUNCE_HALF;
+;978:  bolt->s.generic1 = WPM_PRIMARY; //weaponMode
+ADDRLP4 0
+INDIRP4
+CNSTI4 204
+ADDP4
+CNSTI4 1
+ASGNI4
+line 979
+;979:  bolt->r.ownerNum = self->s.number;
+ADDRLP4 0
+INDIRP4
+CNSTI4 512
+ADDP4
+ADDRFP4 0
+INDIRP4
+INDIRI4
+ASGNI4
+line 980
+;980:  bolt->parent = self;
+ADDRLP4 0
+INDIRP4
+CNSTI4 600
+ADDP4
+ADDRFP4 0
+INDIRP4
+ASGNP4
+line 981
+;981:  bolt->damage = LAUNCHER_DAMAGE;
+ADDRLP4 0
+INDIRP4
+CNSTI4 844
+ADDP4
+CNSTI4 300
+ASGNI4
+line 982
+;982:  bolt->splashDamage = LAUNCHER_DAMAGE;
+ADDRLP4 0
+INDIRP4
+CNSTI4 848
+ADDP4
+CNSTI4 300
+ASGNI4
+line 983
+;983:  bolt->splashRadius = LAUNCHER_RADIUS;
+ADDRLP4 0
+INDIRP4
+CNSTI4 852
+ADDP4
+CNSTI4 100
+ASGNI4
+line 984
+;984:  bolt->methodOfDeath = MOD_GRENADE_LAUNCHER;
+ADDRLP4 0
+INDIRP4
+CNSTI4 856
+ADDP4
+CNSTI4 8
+ASGNI4
+line 985
+;985:  bolt->splashMethodOfDeath = MOD_GRENADE_LAUNCHER;
+ADDRLP4 0
+INDIRP4
+CNSTI4 860
+ADDP4
+CNSTI4 8
+ASGNI4
+line 986
+;986:  bolt->clipmask = MASK_SHOT;
+ADDRLP4 0
+INDIRP4
+CNSTI4 572
+ADDP4
+CNSTI4 33554433
+ASGNI4
+line 987
+;987:  bolt->target_ent = NULL;
+ADDRLP4 0
+INDIRP4
+CNSTI4 676
+ADDP4
+CNSTP4 0
+ASGNP4
+line 988
+;988:  bolt->r.mins[0] = bolt->r.mins[1] = bolt->r.mins[2] = -3.0f;
+ADDRLP4 16
+CNSTF4 3225419776
+ASGNF4
+ADDRLP4 0
+INDIRP4
+CNSTI4 444
+ADDP4
+ADDRLP4 16
+INDIRF4
+ASGNF4
+ADDRLP4 0
+INDIRP4
+CNSTI4 440
+ADDP4
+ADDRLP4 16
+INDIRF4
+ASGNF4
+ADDRLP4 0
+INDIRP4
+CNSTI4 436
+ADDP4
+ADDRLP4 16
+INDIRF4
+ASGNF4
+line 989
+;989:  bolt->r.maxs[0] = bolt->r.maxs[1] = bolt->r.maxs[2] = 3.0f;
+ADDRLP4 24
+CNSTF4 1077936128
+ASGNF4
+ADDRLP4 0
+INDIRP4
+CNSTI4 456
+ADDP4
+ADDRLP4 24
+INDIRF4
+ASGNF4
+ADDRLP4 0
+INDIRP4
+CNSTI4 452
+ADDP4
+ADDRLP4 24
+INDIRF4
+ASGNF4
+ADDRLP4 0
+INDIRP4
+CNSTI4 448
+ADDP4
+ADDRLP4 24
+INDIRF4
+ASGNF4
+line 990
+;990:  bolt->s.time = level.time;
+ADDRLP4 0
+INDIRP4
+CNSTI4 84
+ADDP4
+ADDRGP4 level+28
+INDIRI4
+ASGNI4
+line 992
+;991:
+;992:  bolt->s.pos.trType = TR_GRAVITY;
+ADDRLP4 0
+INDIRP4
+CNSTI4 12
+ADDP4
+CNSTI4 5
+ASGNI4
+line 993
+;993:  bolt->s.pos.trTime = level.time - MISSILE_PRESTEP_TIME; // move a bit on the very first frame
+ADDRLP4 0
+INDIRP4
+CNSTI4 16
+ADDP4
+ADDRGP4 level+28
+INDIRI4
+CNSTI4 50
+SUBI4
+ASGNI4
+line 994
+;994:  VectorCopy( start, bolt->s.pos.trBase );
+ADDRLP4 0
+INDIRP4
+CNSTI4 24
+ADDP4
+ADDRFP4 4
+INDIRP4
+INDIRB
+ASGNB 12
+line 995
+;995:  VectorScale( dir, LAUNCHER_SPEED, bolt->s.pos.trDelta );
+ADDRLP4 0
+INDIRP4
+CNSTI4 36
+ADDP4
+CNSTF4 1150681088
+ADDRFP4 8
+INDIRP4
+INDIRF4
+MULF4
+ASGNF4
+ADDRLP4 0
+INDIRP4
+CNSTI4 40
+ADDP4
+CNSTF4 1150681088
+ADDRFP4 8
+INDIRP4
+CNSTI4 4
+ADDP4
+INDIRF4
+MULF4
+ASGNF4
+ADDRLP4 0
+INDIRP4
+CNSTI4 44
+ADDP4
+CNSTF4 1150681088
+ADDRFP4 8
+INDIRP4
+CNSTI4 8
+ADDP4
+INDIRF4
+MULF4
+ASGNF4
+line 996
+;996:  SnapVector( bolt->s.pos.trDelta ); // save net bandwidth
+ADDRLP4 28
+ADDRLP4 0
+INDIRP4
+CNSTI4 36
+ADDP4
+ASGNP4
+ADDRLP4 28
+INDIRP4
+ADDRLP4 28
+INDIRP4
+INDIRF4
+CVFI4 4
+CVIF4 4
+ASGNF4
+ADDRLP4 32
+ADDRLP4 0
+INDIRP4
+CNSTI4 40
+ADDP4
+ASGNP4
+ADDRLP4 32
+INDIRP4
+ADDRLP4 32
+INDIRP4
+INDIRF4
+CVFI4 4
+CVIF4 4
+ASGNF4
+ADDRLP4 36
+ADDRLP4 0
+INDIRP4
+CNSTI4 44
+ADDP4
+ASGNP4
+ADDRLP4 36
+INDIRP4
+ADDRLP4 36
+INDIRP4
+INDIRF4
+CVFI4 4
+CVIF4 4
+ASGNF4
+line 998
+;997:
+;998:  VectorCopy( start, bolt->r.currentOrigin );
+ADDRLP4 0
+INDIRP4
+CNSTI4 488
+ADDP4
+ADDRFP4 4
+INDIRP4
+INDIRB
+ASGNB 12
+line 1000
+;999:
+;1000:  return bolt;
+ADDRLP4 0
+INDIRP4
+RETP4
+LABELV $278
+endproc launch_grenade_primary 40 4
+export launch_grenade_secondary
+proc launch_grenade_secondary 40 4
+line 1005
+;1001:}
+;1002:
+;1003:gentity_t *
+;1004:launch_grenade_secondary(gentity_t *self, vec3_t start, vec3_t dir)
+;1005:{
+line 1008
+;1006:  gentity_t *bolt;
+;1007:
+;1008:  VectorNormalize(dir);
+ADDRFP4 8
+INDIRP4
+ARGP4
+ADDRGP4 VectorNormalize
+CALLF4
+pop
+line 1010
+;1009:
+;1010:  bolt = G_Spawn();
+ADDRLP4 4
+ADDRGP4 G_Spawn
+CALLP4
+ASGNP4
+ADDRLP4 0
+ADDRLP4 4
+INDIRP4
+ASGNP4
+line 1011
+;1011:  bolt->classname = "grenade2";
+ADDRLP4 0
+INDIRP4
+CNSTI4 524
+ADDP4
+ADDRGP4 $279
+ASGNP4
+line 1012
+;1012:  bolt->nextthink = level.time + 5000;
+ADDRLP4 0
+INDIRP4
+CNSTI4 768
+ADDP4
+ADDRGP4 level+28
+INDIRI4
+CNSTI4 5000
+ADDI4
+ASGNI4
+line 1013
+;1013:  bolt->think = G_ExplodeMissile;
+ADDRLP4 0
+INDIRP4
+CNSTI4 772
+ADDP4
+ADDRGP4 G_ExplodeMissile
+ASGNP4
+line 1014
+;1014:  bolt->s.eType = ET_MISSILE;
+ADDRLP4 8
+CNSTI4 4
+ASGNI4
+ADDRLP4 0
+INDIRP4
+ADDRLP4 8
+INDIRI4
+ADDP4
+ADDRLP4 8
+INDIRI4
+ASGNI4
+line 1015
+;1015:  bolt->r.svFlags = SVF_USE_CURRENT_ORIGIN;
+ADDRLP4 0
+INDIRP4
+CNSTI4 424
+ADDP4
+CNSTI4 128
+ASGNI4
+line 1016
+;1016:  bolt->s.weapon = WP_GRENADE;
+ADDRLP4 0
+INDIRP4
+CNSTI4 192
+ADDP4
+CNSTI4 10
+ASGNI4
+line 1018
+;1017:  //bolt->s.eFlags = EF_BOUNCE_HALF;
+;1018:  bolt->s.generic1 = WPM_SECONDARY; //weaponMode
+ADDRLP4 0
+INDIRP4
+CNSTI4 204
+ADDP4
+CNSTI4 2
+ASGNI4
+line 1019
+;1019:  bolt->r.ownerNum = self->s.number;
+ADDRLP4 0
+INDIRP4
+CNSTI4 512
+ADDP4
+ADDRFP4 0
+INDIRP4
+INDIRI4
+ASGNI4
+line 1020
+;1020:  bolt->parent = self;
+ADDRLP4 0
+INDIRP4
+CNSTI4 600
+ADDP4
+ADDRFP4 0
+INDIRP4
+ASGNP4
+line 1021
+;1021:  bolt->damage = ONFIRE_EXPLOSION_DAMAGE;
+ADDRLP4 0
+INDIRP4
+CNSTI4 844
+ADDP4
+CNSTI4 1
+ASGNI4
+line 1022
+;1022:  bolt->splashDamage = ONFIRE_EXPLOSION_DAMAGE;
+ADDRLP4 0
+INDIRP4
+CNSTI4 848
+ADDP4
+CNSTI4 1
+ASGNI4
+line 1023
+;1023:  bolt->splashRadius = INCENDIARY_GRENADE_RANGE;
+ADDRLP4 0
+INDIRP4
+CNSTI4 852
+ADDP4
+CNSTI4 500
+ASGNI4
+line 1024
+;1024:  bolt->methodOfDeath = MOD_GRENADE_LAUNCHER_INCENDIARY;
+ADDRLP4 0
+INDIRP4
+CNSTI4 856
+ADDP4
+CNSTI4 9
+ASGNI4
+line 1025
+;1025:  bolt->splashMethodOfDeath = MOD_GRENADE_LAUNCHER_INCENDIARY;
+ADDRLP4 0
+INDIRP4
+CNSTI4 860
+ADDP4
+CNSTI4 9
+ASGNI4
+line 1026
+;1026:  bolt->clipmask = MASK_SHOT;
+ADDRLP4 0
+INDIRP4
+CNSTI4 572
+ADDP4
+CNSTI4 33554433
+ASGNI4
+line 1027
+;1027:  bolt->target_ent = NULL;
+ADDRLP4 0
+INDIRP4
+CNSTI4 676
+ADDP4
+CNSTP4 0
+ASGNP4
+line 1028
+;1028:  bolt->r.mins[0] = bolt->r.mins[1] = bolt->r.mins[2] = -3.0f;
+ADDRLP4 16
+CNSTF4 3225419776
+ASGNF4
+ADDRLP4 0
+INDIRP4
+CNSTI4 444
+ADDP4
+ADDRLP4 16
+INDIRF4
+ASGNF4
+ADDRLP4 0
+INDIRP4
+CNSTI4 440
+ADDP4
+ADDRLP4 16
+INDIRF4
+ASGNF4
+ADDRLP4 0
+INDIRP4
+CNSTI4 436
+ADDP4
+ADDRLP4 16
+INDIRF4
+ASGNF4
+line 1029
+;1029:  bolt->r.maxs[0] = bolt->r.maxs[1] = bolt->r.maxs[2] = 3.0f;
+ADDRLP4 24
+CNSTF4 1077936128
+ASGNF4
+ADDRLP4 0
+INDIRP4
+CNSTI4 456
+ADDP4
+ADDRLP4 24
+INDIRF4
+ASGNF4
+ADDRLP4 0
+INDIRP4
+CNSTI4 452
+ADDP4
+ADDRLP4 24
+INDIRF4
+ASGNF4
+ADDRLP4 0
+INDIRP4
+CNSTI4 448
+ADDP4
+ADDRLP4 24
+INDIRF4
+ASGNF4
+line 1030
+;1030:  bolt->s.time = level.time;
+ADDRLP4 0
+INDIRP4
+CNSTI4 84
+ADDP4
+ADDRGP4 level+28
+INDIRI4
+ASGNI4
+line 1032
+;1031:
+;1032:  bolt->s.pos.trType = TR_GRAVITY;
+ADDRLP4 0
+INDIRP4
+CNSTI4 12
+ADDP4
+CNSTI4 5
+ASGNI4
+line 1033
+;1033:  bolt->s.pos.trTime = level.time - MISSILE_PRESTEP_TIME; // move a bit on the very first frame
+ADDRLP4 0
+INDIRP4
+CNSTI4 16
+ADDP4
+ADDRGP4 level+28
+INDIRI4
+CNSTI4 50
+SUBI4
+ASGNI4
+line 1034
+;1034:  VectorCopy( start, bolt->s.pos.trBase );
+ADDRLP4 0
+INDIRP4
+CNSTI4 24
+ADDP4
+ADDRFP4 4
+INDIRP4
+INDIRB
+ASGNB 12
+line 1035
+;1035:  VectorScale( dir, LAUNCHER_SPEED, bolt->s.pos.trDelta );
+ADDRLP4 0
+INDIRP4
+CNSTI4 36
+ADDP4
+CNSTF4 1150681088
+ADDRFP4 8
+INDIRP4
+INDIRF4
+MULF4
+ASGNF4
+ADDRLP4 0
+INDIRP4
+CNSTI4 40
+ADDP4
+CNSTF4 1150681088
+ADDRFP4 8
+INDIRP4
+CNSTI4 4
+ADDP4
+INDIRF4
+MULF4
+ASGNF4
+ADDRLP4 0
+INDIRP4
+CNSTI4 44
+ADDP4
+CNSTF4 1150681088
+ADDRFP4 8
+INDIRP4
+CNSTI4 8
+ADDP4
+INDIRF4
+MULF4
+ASGNF4
+line 1036
+;1036:  SnapVector( bolt->s.pos.trDelta ); // save net bandwidth
+ADDRLP4 28
+ADDRLP4 0
+INDIRP4
+CNSTI4 36
+ADDP4
+ASGNP4
+ADDRLP4 28
+INDIRP4
+ADDRLP4 28
+INDIRP4
+INDIRF4
+CVFI4 4
+CVIF4 4
+ASGNF4
+ADDRLP4 32
+ADDRLP4 0
+INDIRP4
+CNSTI4 40
+ADDP4
+ASGNP4
+ADDRLP4 32
+INDIRP4
+ADDRLP4 32
+INDIRP4
+INDIRF4
+CVFI4 4
+CVIF4 4
+ASGNF4
+ADDRLP4 36
+ADDRLP4 0
+INDIRP4
+CNSTI4 44
+ADDP4
+ASGNP4
+ADDRLP4 36
+INDIRP4
+ADDRLP4 36
+INDIRP4
+INDIRF4
+CVFI4 4
+CVIF4 4
+ASGNF4
+line 1038
+;1037:
+;1038:  VectorCopy( start, bolt->r.currentOrigin );
+ADDRLP4 0
+INDIRP4
+CNSTI4 488
+ADDP4
+ADDRFP4 4
+INDIRP4
+INDIRB
+ASGNB 12
+line 1040
+;1039:
+;1040:  return bolt;
+ADDRLP4 0
+INDIRP4
+RETP4
+LABELV $283
+endproc launch_grenade_secondary 40 4
+export fire_axe
+proc fire_axe 40 4
+line 1045
+;1041:}
+;1042:
+;1043:gentity_t *
+;1044:fire_axe(gentity_t *self, vec3_t start, vec3_t dir)
+;1045:{
+line 1048
+;1046:  gentity_t *bolt;
+;1047:
+;1048:  VectorNormalize(dir);
+ADDRFP4 8
+INDIRP4
+ARGP4
+ADDRGP4 VectorNormalize
+CALLF4
+pop
+line 1050
+;1049:
+;1050:  bolt = G_Spawn();
+ADDRLP4 4
+ADDRGP4 G_Spawn
+CALLP4
+ASGNP4
+ADDRLP4 0
+ADDRLP4 4
+INDIRP4
+ASGNP4
+line 1051
+;1051:  bolt->classname = "axe";
+ADDRLP4 0
+INDIRP4
+CNSTI4 524
+ADDP4
+ADDRGP4 $288
+ASGNP4
+line 1052
+;1052:  bolt->nextthink = level.time + 50000;
+ADDRLP4 0
+INDIRP4
+CNSTI4 768
+ADDP4
+ADDRGP4 level+28
+INDIRI4
+CNSTI4 50000
+ADDI4
+ASGNI4
+line 1053
+;1053:  bolt->think = G_ExplodeMissile;
+ADDRLP4 0
+INDIRP4
+CNSTI4 772
+ADDP4
+ADDRGP4 G_ExplodeMissile
+ASGNP4
+line 1054
+;1054:  bolt->s.eType = ET_MISSILE;
+ADDRLP4 8
+CNSTI4 4
+ASGNI4
+ADDRLP4 0
+INDIRP4
+ADDRLP4 8
+INDIRI4
+ADDP4
+ADDRLP4 8
+INDIRI4
+ASGNI4
+line 1055
+;1055:  bolt->r.svFlags = SVF_USE_CURRENT_ORIGIN;
+ADDRLP4 0
+INDIRP4
+CNSTI4 424
+ADDP4
+CNSTI4 128
+ASGNI4
+line 1056
+;1056:  bolt->s.weapon = WP_AXE;
+ADDRLP4 0
+INDIRP4
+CNSTI4 192
+ADDP4
+CNSTI4 2
+ASGNI4
+line 1058
+;1057:  //bolt->s.eFlags = EF_BOUNCE_HALF;
+;1058:  bolt->s.generic1 = WPM_SECONDARY; //weaponMode
+ADDRLP4 0
+INDIRP4
+CNSTI4 204
+ADDP4
+CNSTI4 2
+ASGNI4
+line 1059
+;1059:  bolt->r.ownerNum = self->s.number;
+ADDRLP4 0
+INDIRP4
+CNSTI4 512
+ADDP4
+ADDRFP4 0
+INDIRP4
+INDIRI4
+ASGNI4
+line 1060
+;1060:  bolt->parent = self;
+ADDRLP4 0
+INDIRP4
+CNSTI4 600
+ADDP4
+ADDRFP4 0
+INDIRP4
+ASGNP4
+line 1061
+;1061:  bolt->damage = AXE_DAMAGE;
+ADDRLP4 0
+INDIRP4
+CNSTI4 844
+ADDP4
+CNSTI4 200
+ASGNI4
+line 1062
+;1062:  bolt->splashDamage = 0;
+ADDRLP4 0
+INDIRP4
+CNSTI4 848
+ADDP4
+CNSTI4 0
+ASGNI4
+line 1063
+;1063:  bolt->splashRadius = 0;
+ADDRLP4 0
+INDIRP4
+CNSTI4 852
+ADDP4
+CNSTI4 0
+ASGNI4
+line 1064
+;1064:	bolt->methodOfDeath = MOD_AXE;
+ADDRLP4 0
+INDIRP4
+CNSTI4 856
+ADDP4
+CNSTI4 2
+ASGNI4
+line 1065
+;1065:	bolt->splashMethodOfDeath = MOD_AXE;
+ADDRLP4 0
+INDIRP4
+CNSTI4 860
+ADDP4
+CNSTI4 2
+ASGNI4
+line 1066
+;1066:  bolt->clipmask = MASK_SHOT;
+ADDRLP4 0
+INDIRP4
+CNSTI4 572
+ADDP4
+CNSTI4 33554433
+ASGNI4
+line 1067
+;1067:  bolt->target_ent = NULL;
+ADDRLP4 0
+INDIRP4
+CNSTI4 676
+ADDP4
+CNSTP4 0
+ASGNP4
+line 1068
+;1068:  bolt->r.mins[0] = bolt->r.mins[1] = bolt->r.mins[2] = -10.0f;
+ADDRLP4 16
+CNSTF4 3240099840
+ASGNF4
+ADDRLP4 0
+INDIRP4
+CNSTI4 444
+ADDP4
+ADDRLP4 16
+INDIRF4
+ASGNF4
+ADDRLP4 0
+INDIRP4
+CNSTI4 440
+ADDP4
+ADDRLP4 16
+INDIRF4
+ASGNF4
+ADDRLP4 0
+INDIRP4
+CNSTI4 436
+ADDP4
+ADDRLP4 16
+INDIRF4
+ASGNF4
+line 1069
+;1069:  bolt->r.maxs[0] = bolt->r.maxs[1] = bolt->r.maxs[2] = 10.0f;
+ADDRLP4 24
+CNSTF4 1092616192
+ASGNF4
+ADDRLP4 0
+INDIRP4
+CNSTI4 456
+ADDP4
+ADDRLP4 24
+INDIRF4
+ASGNF4
+ADDRLP4 0
+INDIRP4
+CNSTI4 452
+ADDP4
+ADDRLP4 24
+INDIRF4
+ASGNF4
+ADDRLP4 0
+INDIRP4
+CNSTI4 448
+ADDP4
+ADDRLP4 24
+INDIRF4
+ASGNF4
+line 1070
+;1070:  bolt->s.time = level.time;
+ADDRLP4 0
+INDIRP4
+CNSTI4 84
+ADDP4
+ADDRGP4 level+28
+INDIRI4
+ASGNI4
+line 1072
+;1071:
+;1072:  bolt->s.pos.trType = TR_LINEAR;
+ADDRLP4 0
+INDIRP4
+CNSTI4 12
+ADDP4
+CNSTI4 2
+ASGNI4
+line 1073
+;1073:  bolt->s.pos.trTime = level.time - MISSILE_PRESTEP_TIME; // move a bit on the very first frame
+ADDRLP4 0
+INDIRP4
+CNSTI4 16
+ADDP4
+ADDRGP4 level+28
+INDIRI4
+CNSTI4 50
+SUBI4
+ASGNI4
+line 1074
+;1074:  VectorCopy( start, bolt->s.pos.trBase );
+ADDRLP4 0
+INDIRP4
+CNSTI4 24
+ADDP4
+ADDRFP4 4
+INDIRP4
+INDIRB
+ASGNB 12
+line 1075
+;1075:  VectorScale( dir, AXE_SPEED, bolt->s.pos.trDelta );
+ADDRLP4 0
+INDIRP4
+CNSTI4 36
+ADDP4
+CNSTF4 1137836032
+ADDRFP4 8
+INDIRP4
+INDIRF4
+MULF4
+ASGNF4
+ADDRLP4 0
+INDIRP4
+CNSTI4 40
+ADDP4
+CNSTF4 1137836032
+ADDRFP4 8
+INDIRP4
+CNSTI4 4
+ADDP4
+INDIRF4
+MULF4
+ASGNF4
+ADDRLP4 0
+INDIRP4
+CNSTI4 44
+ADDP4
+CNSTF4 1137836032
+ADDRFP4 8
+INDIRP4
+CNSTI4 8
+ADDP4
+INDIRF4
+MULF4
+ASGNF4
+line 1076
+;1076:  SnapVector( bolt->s.pos.trDelta ); // save net bandwidth
+ADDRLP4 28
+ADDRLP4 0
+INDIRP4
+CNSTI4 36
+ADDP4
+ASGNP4
+ADDRLP4 28
+INDIRP4
+ADDRLP4 28
+INDIRP4
+INDIRF4
+CVFI4 4
+CVIF4 4
+ASGNF4
+ADDRLP4 32
+ADDRLP4 0
+INDIRP4
+CNSTI4 40
+ADDP4
+ASGNP4
+ADDRLP4 32
+INDIRP4
+ADDRLP4 32
+INDIRP4
+INDIRF4
+CVFI4 4
+CVIF4 4
+ASGNF4
+ADDRLP4 36
+ADDRLP4 0
+INDIRP4
+CNSTI4 44
+ADDP4
+ASGNP4
+ADDRLP4 36
+INDIRP4
+ADDRLP4 36
+INDIRP4
+INDIRF4
+CVFI4 4
+CVIF4 4
+ASGNF4
+line 1078
+;1077:
+;1078:  VectorCopy( start, bolt->r.currentOrigin );
+ADDRLP4 0
+INDIRP4
+CNSTI4 488
+ADDP4
+ADDRFP4 4
+INDIRP4
+INDIRB
+ASGNB 12
+line 1080
+;1079:
+;1080:  return bolt;
+ADDRLP4 0
+INDIRP4
+RETP4
+LABELV $287
+endproc fire_axe 40 4
+export G_domethink
+proc G_domethink 4204 16
+line 1086
+;1081:}
+;1082:
+;1083:
+;1084:void
+;1085:G_domethink(gentity_t *ent)
+;1086:{
+line 1095
+;1087:  vec3_t origin, mins ,maxs;
+;1088:  gentity_t *otherEnt;
+;1089:  int radius, numListedEntities;
+;1090:  int entityList[MAX_GENTITIES];
+;1091:  int e,i;
+;1092:  float dist;
+;1093:  vec3_t v;
+;1094:
+;1095:  ent->nextthink = level.time + 1000;
+ADDRFP4 0
+INDIRP4
+CNSTI4 768
+ADDP4
+ADDRGP4 level+28
+INDIRI4
+CNSTI4 1000
+ADDI4
+ASGNI4
+line 1097
+;1096:
+;1097:  if(level.time > ent->dieTime)
+ADDRGP4 level+28
+INDIRI4
+ADDRFP4 0
+INDIRP4
+CNSTI4 2456
+ADDP4
+INDIRI4
+LEI4 $294
+line 1098
+;1098:  {
+line 1099
+;1099:    ent->freeAfterEvent = qtrue;
+ADDRFP4 0
+INDIRP4
+CNSTI4 556
+ADDP4
+CNSTI4 1
+ASGNI4
+line 1100
+;1100:    ent->parent->numDomes -= 1;
+ADDRLP4 4168
+ADDRFP4 0
+INDIRP4
+CNSTI4 600
+ADDP4
+INDIRP4
+CNSTI4 2460
+ADDP4
+ASGNP4
+ADDRLP4 4168
+INDIRP4
+ADDRLP4 4168
+INDIRP4
+INDIRI4
+CNSTI4 1
+SUBI4
+ASGNI4
+line 1101
+;1101:    return;
+ADDRGP4 $292
+JUMPV
+LABELV $294
+line 1104
+;1102:  }
+;1103:
+;1104:  VectorCopy(ent->s.origin, origin);
+ADDRLP4 4
+ADDRFP4 0
+INDIRP4
+CNSTI4 92
+ADDP4
+INDIRB
+ASGNB 12
+line 1105
+;1105:  radius = DOME_RANGE;
+ADDRLP4 32
+CNSTI4 89
+ASGNI4
+line 1107
+;1106:
+;1107:  for(i = 0;i < 3;i++)
+ADDRLP4 0
+CNSTI4 0
+ASGNI4
+LABELV $297
+line 1108
+;1108:  {
+line 1109
+;1109:    mins[i] = origin[i] - radius;
+ADDRLP4 4168
+ADDRLP4 0
+INDIRI4
+CNSTI4 2
+LSHI4
+ASGNI4
+ADDRLP4 4168
+INDIRI4
+ADDRLP4 44
+ADDP4
+ADDRLP4 4168
+INDIRI4
+ADDRLP4 4
+ADDP4
+INDIRF4
+ADDRLP4 32
+INDIRI4
+CVIF4 4
+SUBF4
+ASGNF4
+line 1110
+;1110:    maxs[i] = origin[i] + radius;
+ADDRLP4 4172
+ADDRLP4 0
+INDIRI4
+CNSTI4 2
+LSHI4
+ASGNI4
+ADDRLP4 4172
+INDIRI4
+ADDRLP4 56
+ADDP4
+ADDRLP4 4172
+INDIRI4
+ADDRLP4 4
+ADDP4
+INDIRF4
+ADDRLP4 32
+INDIRI4
+CVIF4 4
+ADDF4
+ASGNF4
+line 1111
+;1111:  }
+LABELV $298
+line 1107
+ADDRLP4 0
+ADDRLP4 0
+INDIRI4
+CNSTI4 1
+ADDI4
+ASGNI4
+ADDRLP4 0
+INDIRI4
+CNSTI4 3
+LTI4 $297
+line 1113
+;1112:
+;1113:  numListedEntities = trap_EntitiesInBox(mins, maxs, entityList, MAX_GENTITIES);
+ADDRLP4 44
+ARGP4
+ADDRLP4 56
+ARGP4
+ADDRLP4 72
+ARGP4
+CNSTI4 1024
+ARGI4
+ADDRLP4 4168
+ADDRGP4 trap_EntitiesInBox
+CALLI4
+ASGNI4
+ADDRLP4 68
+ADDRLP4 4168
+INDIRI4
+ASGNI4
+line 1115
+;1114:
+;1115:  for(e = 0;e < numListedEntities;e++)
+ADDRLP4 36
+CNSTI4 0
+ASGNI4
+ADDRGP4 $304
+JUMPV
+LABELV $301
+line 1116
+;1116:  {
+line 1117
+;1117:    otherEnt = &g_entities[entityList[e]];
+ADDRLP4 16
+CNSTI4 2476
+ADDRLP4 36
+INDIRI4
+CNSTI4 2
+LSHI4
+ADDRLP4 72
+ADDP4
+INDIRI4
+MULI4
+ADDRGP4 g_entities
+ADDP4
+ASGNP4
+line 1119
+;1118:
+;1119:    if(!otherEnt)
+ADDRLP4 16
+INDIRP4
+CVPU4 4
+CNSTU4 0
+NEU4 $305
+line 1120
+;1120:      continue;
+ADDRGP4 $302
+JUMPV
+LABELV $305
+line 1121
+;1121:    if(!otherEnt->client)
+ADDRLP4 16
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+CVPU4 4
+CNSTU4 0
+NEU4 $307
+line 1122
+;1122:      continue;
+ADDRGP4 $302
+JUMPV
+LABELV $307
+line 1123
+;1123:    if (otherEnt->client->sess.sessionTeam == TEAM_SPECTATOR)
+ADDRLP4 16
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+CNSTI4 1120
+ADDP4
+INDIRI4
+CNSTI4 1
+NEI4 $309
+line 1124
+;1124:      continue;
+ADDRGP4 $302
+JUMPV
+LABELV $309
+line 1125
+;1125:    if(otherEnt->health <= 0)
+ADDRLP4 16
+INDIRP4
+CNSTI4 812
+ADDP4
+INDIRI4
+CNSTI4 0
+GTI4 $311
+line 1126
+;1126:      continue;
+ADDRGP4 $302
+JUMPV
+LABELV $311
+line 1129
+;1127:
+;1128:    // find the distance from the edge of the bounding box
+;1129:    for(i = 0;i < 3;i++)
+ADDRLP4 0
+CNSTI4 0
+ASGNI4
+LABELV $313
+line 1130
+;1130:    {
+line 1131
+;1131:      if (origin[i] < ent->r.absmin[i])
+ADDRLP4 4172
+ADDRLP4 0
+INDIRI4
+CNSTI4 2
+LSHI4
+ASGNI4
+ADDRLP4 4172
+INDIRI4
+ADDRLP4 4
+ADDP4
+INDIRF4
+ADDRLP4 4172
+INDIRI4
+ADDRFP4 0
+INDIRP4
+CNSTI4 464
+ADDP4
+ADDP4
+INDIRF4
+GEF4 $317
+line 1132
+;1132:        v[i] = ent->r.absmin[i] - origin[i];
+ADDRLP4 4176
+ADDRLP4 0
+INDIRI4
+CNSTI4 2
+LSHI4
+ASGNI4
+ADDRLP4 4176
+INDIRI4
+ADDRLP4 20
+ADDP4
+ADDRLP4 4176
+INDIRI4
+ADDRFP4 0
+INDIRP4
+CNSTI4 464
+ADDP4
+ADDP4
+INDIRF4
+ADDRLP4 4176
+INDIRI4
+ADDRLP4 4
+ADDP4
+INDIRF4
+SUBF4
+ASGNF4
+ADDRGP4 $318
+JUMPV
+LABELV $317
+line 1133
+;1133:      else if (origin[i] > ent->r.absmax[i])
+ADDRLP4 4180
+ADDRLP4 0
+INDIRI4
+CNSTI4 2
+LSHI4
+ASGNI4
+ADDRLP4 4180
+INDIRI4
+ADDRLP4 4
+ADDP4
+INDIRF4
+ADDRLP4 4180
+INDIRI4
+ADDRFP4 0
+INDIRP4
+CNSTI4 476
+ADDP4
+ADDP4
+INDIRF4
+LEF4 $319
+line 1134
+;1134:        v[i] = origin[i] - ent->r.absmax[i];
+ADDRLP4 4184
+ADDRLP4 0
+INDIRI4
+CNSTI4 2
+LSHI4
+ASGNI4
+ADDRLP4 4184
+INDIRI4
+ADDRLP4 20
+ADDP4
+ADDRLP4 4184
+INDIRI4
+ADDRLP4 4
+ADDP4
+INDIRF4
+ADDRLP4 4184
+INDIRI4
+ADDRFP4 0
+INDIRP4
+CNSTI4 476
+ADDP4
+ADDP4
+INDIRF4
+SUBF4
+ASGNF4
+ADDRGP4 $320
+JUMPV
+LABELV $319
+line 1136
+;1135:      else
+;1136:        v[i] = 0;
+ADDRLP4 0
+INDIRI4
+CNSTI4 2
+LSHI4
+ADDRLP4 20
+ADDP4
+CNSTF4 0
+ASGNF4
+LABELV $320
+LABELV $318
+line 1137
+;1137:    }
+LABELV $314
+line 1129
+ADDRLP4 0
+ADDRLP4 0
+INDIRI4
+CNSTI4 1
+ADDI4
+ASGNI4
+ADDRLP4 0
+INDIRI4
+CNSTI4 3
+LTI4 $313
+line 1139
+;1138:
+;1139:    dist = VectorLength(v);
+ADDRLP4 20
+ARGP4
+ADDRLP4 4172
+ADDRGP4 VectorLength
+CALLF4
+ASGNF4
+ADDRLP4 40
+ADDRLP4 4172
+INDIRF4
+ASGNF4
+line 1140
+;1140:    if (dist >= radius)
+ADDRLP4 40
+INDIRF4
+ADDRLP4 32
+INDIRI4
+CVIF4 4
+LTF4 $321
+line 1141
+;1141:      continue;
+ADDRGP4 $302
+JUMPV
+LABELV $321
+line 1144
+;1142:
+;1143:
+;1144:    if(otherEnt->client->ps.stats[STAT_PTEAM] != PTE_HUMANS)
+ADDRLP4 16
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+CNSTI4 216
+ADDP4
+INDIRI4
+CNSTI4 2
+EQI4 $323
+line 1145
+;1145:    {
+line 1146
+;1146:      otherEnt->client->ps.stats[STAT_STATE] |= SS_CREEPSLOWED;
+ADDRLP4 4176
+ADDRLP4 16
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+CNSTI4 224
+ADDP4
+ASGNP4
+ADDRLP4 4176
+INDIRP4
+ADDRLP4 4176
+INDIRP4
+INDIRI4
+CNSTI4 4
+BORI4
+ASGNI4
+line 1147
+;1147:      continue;
+ADDRGP4 $302
+JUMPV
+LABELV $323
+line 1150
+;1148:    }
+;1149:
+;1150:    if (otherEnt->health < 100)
+ADDRLP4 16
+INDIRP4
+CNSTI4 812
+ADDP4
+INDIRI4
+CNSTI4 100
+GEI4 $325
+line 1151
+;1151:    {
+line 1152
+;1152:      otherEnt->health = otherEnt->client->ps.stats[STAT_HEALTH]
+ADDRLP4 4180
+ADDRLP4 16
+INDIRP4
+CNSTI4 812
+ADDP4
+ASGNP4
+ADDRLP4 4184
+ADDRLP4 4180
+INDIRP4
+INDIRI4
+CNSTI4 3
+ADDI4
+ASGNI4
+ADDRLP4 16
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+CNSTI4 184
+ADDP4
+ADDRLP4 4184
+INDIRI4
+ASGNI4
+ADDRLP4 4180
+INDIRP4
+ADDRLP4 4184
+INDIRI4
+ASGNI4
+line 1154
+;1153:          = otherEnt->health + 3;
+;1154:		if ( (otherEnt->client->pers.badges[ 18 ] != 1) && (otherEnt->health >= 75) && otherEnt->client->pers.onehp)
+ADDRLP4 4192
+ADDRLP4 16
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+ASGNP4
+ADDRLP4 4192
+INDIRP4
+CNSTI4 790
+ADDP4
+INDIRI1
+CVII4 1
+CNSTI4 1
+EQI4 $327
+ADDRLP4 16
+INDIRP4
+CNSTI4 812
+ADDP4
+INDIRI4
+CNSTI4 75
+LTI4 $327
+ADDRLP4 4192
+INDIRP4
+CNSTI4 892
+ADDP4
+INDIRI4
+CNSTI4 0
+EQI4 $327
+line 1155
+;1155:		{
+line 1156
+;1156:			G_WinBadge( otherEnt, 18 );
+ADDRLP4 16
+INDIRP4
+ARGP4
+CNSTI4 18
+ARGI4
+ADDRGP4 G_WinBadge
+CALLV
+pop
+line 1157
+;1157:			otherEnt->client->pers.badgeupdate[18] = 1;
+ADDRLP4 16
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+CNSTI4 840
+ADDP4
+CNSTI1 1
+ASGNI1
+line 1158
+;1158:			otherEnt->client->pers.badges[18] = 1;
+ADDRLP4 16
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+CNSTI4 790
+ADDP4
+CNSTI1 1
+ASGNI1
+line 1159
+;1159:		}
+LABELV $327
+line 1160
+;1160:      if(otherEnt->health >=100)
+ADDRLP4 16
+INDIRP4
+CNSTI4 812
+ADDP4
+INDIRI4
+CNSTI4 100
+LTI4 $329
+line 1161
+;1161:      {
+line 1162
+;1162:        otherEnt->health = otherEnt->client->ps.stats[STAT_HEALTH] = 100;
+ADDRLP4 4200
+CNSTI4 100
+ASGNI4
+ADDRLP4 16
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+CNSTI4 184
+ADDP4
+ADDRLP4 4200
+INDIRI4
+ASGNI4
+ADDRLP4 16
+INDIRP4
+CNSTI4 812
+ADDP4
+ADDRLP4 4200
+INDIRI4
+ASGNI4
+line 1164
+;1163:        //G_AddEvent(otherEnt, EV_MEDKIT_USED, 0);
+;1164:      }
+LABELV $329
+line 1165
+;1165:    }
+LABELV $325
+line 1166
+;1166:  }
+LABELV $302
+line 1115
+ADDRLP4 36
+ADDRLP4 36
+INDIRI4
+CNSTI4 1
+ADDI4
+ASGNI4
+LABELV $304
+ADDRLP4 36
+INDIRI4
+ADDRLP4 68
+INDIRI4
+LTI4 $301
+line 1167
+;1167:}
+LABELV $292
+endproc G_domethink 4204 16
+export G_minethink
+proc G_minethink 132 28
+line 1171
+;1168:
+;1169:void
+;1170:G_minethink(gentity_t *ent)
+;1171:{
+line 1176
+;1172:  trace_t tr;
+;1173:  vec3_t end, origin, dir;
+;1174:  gentity_t *traceEnt;
+;1175:
+;1176:  ent->nextthink = level.time + 100;
+ADDRFP4 0
+INDIRP4
+CNSTI4 768
+ADDP4
+ADDRGP4 level+28
+INDIRI4
+CNSTI4 100
+ADDI4
+ASGNI4
+line 1178
+;1177:
+;1178:  BG_EvaluateTrajectory(&ent->s.pos, level.time, origin);
+ADDRFP4 0
+INDIRP4
+CNSTI4 12
+ADDP4
+ARGP4
+ADDRGP4 level+28
+INDIRI4
+ARGI4
+ADDRLP4 0
+ARGP4
+ADDRGP4 BG_EvaluateTrajectory
+CALLV
+pop
+line 1179
+;1179:  SnapVector(origin);
+ADDRLP4 0
+ADDRLP4 0
+INDIRF4
+CVFI4 4
+CVIF4 4
+ASGNF4
+ADDRLP4 0+4
+ADDRLP4 0+4
+INDIRF4
+CVFI4 4
+CVIF4 4
+ASGNF4
+ADDRLP4 0+8
+ADDRLP4 0+8
+INDIRF4
+CVFI4 4
+CVIF4 4
+ASGNF4
+line 1180
+;1180:  G_SetOrigin(ent, origin);
+ADDRFP4 0
+INDIRP4
+ARGP4
+ADDRLP4 0
+ARGP4
+ADDRGP4 G_SetOrigin
+CALLV
+pop
+line 1183
+;1181:
+;1182:  // set aiming directions
+;1183:  VectorCopy(origin,end);
+ADDRLP4 88
+ADDRLP4 0
+INDIRB
+ASGNB 12
+line 1184
+;1184:  end[2] += 10;//aim up
+ADDRLP4 88+8
+ADDRLP4 88+8
+INDIRF4
+CNSTF4 1092616192
+ADDF4
+ASGNF4
+line 1186
+;1185:
+;1186:  trap_Trace(&tr, origin, NULL, NULL, end, ent->s.number, MASK_SHOT);
+ADDRLP4 28
+ARGP4
+ADDRLP4 0
+ARGP4
+ADDRLP4 100
+CNSTP4 0
+ASGNP4
+ADDRLP4 100
+INDIRP4
+ARGP4
+ADDRLP4 100
+INDIRP4
+ARGP4
+ADDRLP4 88
+ARGP4
+ADDRFP4 0
+INDIRP4
+INDIRI4
+ARGI4
+CNSTI4 33554433
+ARGI4
+ADDRGP4 trap_Trace
+CALLV
+pop
+line 1187
+;1187:  if (tr.surfaceFlags & SURF_NOIMPACT)
+ADDRLP4 28+44
+INDIRI4
+CNSTI4 16
+BANDI4
+CNSTI4 0
+EQI4 $339
+line 1188
+;1188:    return;
+ADDRGP4 $331
+JUMPV
+LABELV $339
+line 1190
+;1189:
+;1190:  traceEnt = &g_entities[tr.entityNum];
+ADDRLP4 12
+CNSTI4 2476
+ADDRLP4 28+52
+INDIRI4
+MULI4
+ADDRGP4 g_entities
+ADDP4
+ASGNP4
+line 1192
+;1191:
+;1192:  dir[0] = dir[1] = 0;
+ADDRLP4 104
+CNSTF4 0
+ASGNF4
+ADDRLP4 16+4
+ADDRLP4 104
+INDIRF4
+ASGNF4
+ADDRLP4 16
+ADDRLP4 104
+INDIRF4
+ASGNF4
+line 1193
+;1193:  dir[2] = 1;
+ADDRLP4 16+8
+CNSTF4 1065353216
+ASGNF4
+line 1195
+;1194:
+;1195:  if (traceEnt->client && (traceEnt->r.svFlags & SVF_BOT)
+ADDRLP4 112
+ADDRLP4 12
+INDIRP4
+CNSTI4 516
+ADDP4
+INDIRP4
+ASGNP4
+ADDRLP4 112
+INDIRP4
+CVPU4 4
+CNSTU4 0
+EQU4 $345
+ADDRLP4 116
+CNSTI4 0
+ASGNI4
+ADDRLP4 12
+INDIRP4
+CNSTI4 424
+ADDP4
+INDIRI4
+CNSTI4 8
+BANDI4
+ADDRLP4 116
+INDIRI4
+EQI4 $345
+ADDRLP4 12
+INDIRP4
+CNSTI4 812
+ADDP4
+INDIRI4
+ADDRLP4 116
+INDIRI4
+LEI4 $345
+ADDRLP4 112
+INDIRP4
+CNSTI4 216
+ADDP4
+INDIRI4
+CNSTI4 1
+NEI4 $345
+line 1197
+;1196:      && traceEnt->health > 0 && traceEnt->client->ps.stats[STAT_PTEAM] == PTE_ALIENS)//FIRE IN ZE HOLE!
+;1197:  {//Might want to check team too
+line 1198
+;1198:    ent->s.eType = ET_GENERAL;
+ADDRFP4 0
+INDIRP4
+CNSTI4 4
+ADDP4
+CNSTI4 0
+ASGNI4
+line 1199
+;1199:    G_AddEvent(ent, EV_MISSILE_MISS, DirToByte(dir));
+ADDRLP4 16
+ARGP4
+ADDRLP4 120
+ADDRGP4 DirToByte
+CALLI4
+ASGNI4
+ADDRFP4 0
+INDIRP4
+ARGP4
+CNSTI4 40
+ARGI4
+ADDRLP4 120
+INDIRI4
+ARGI4
+ADDRGP4 G_AddEvent
+CALLV
+pop
+line 1200
+;1200:    ent->freeAfterEvent = qtrue;
+ADDRFP4 0
+INDIRP4
+CNSTI4 556
+ADDP4
+CNSTI4 1
+ASGNI4
+line 1201
+;1201:    G_RadiusDamage(ent->r.currentOrigin, ent->parent, ent->splashDamage, ent->splashRadius, ent, ent->splashMethodOfDeath);
+ADDRLP4 124
+ADDRFP4 0
+INDIRP4
+ASGNP4
+ADDRLP4 124
+INDIRP4
+CNSTI4 488
+ADDP4
+ARGP4
+ADDRLP4 124
+INDIRP4
+CNSTI4 600
+ADDP4
+INDIRP4
+ARGP4
+ADDRLP4 124
+INDIRP4
+CNSTI4 848
+ADDP4
+INDIRI4
+CVIF4 4
+ARGF4
+ADDRLP4 124
+INDIRP4
+CNSTI4 852
+ADDP4
+INDIRI4
+CVIF4 4
+ARGF4
+ADDRLP4 124
+INDIRP4
+ARGP4
+ADDRLP4 124
+INDIRP4
+CNSTI4 860
+ADDP4
+INDIRI4
+ARGI4
+ADDRGP4 G_RadiusDamage
+CALLI4
+pop
+line 1202
+;1202:    ent->parent->numMines -= 1;
+ADDRLP4 128
+ADDRFP4 0
+INDIRP4
+CNSTI4 600
+ADDP4
+INDIRP4
+CNSTI4 2320
+ADDP4
+ASGNP4
+ADDRLP4 128
+INDIRP4
+ADDRLP4 128
+INDIRP4
+INDIRI4
+CNSTI4 1
+SUBI4
+ASGNI4
+line 1203
+;1203:    trap_LinkEntity(ent);
+ADDRFP4 0
+INDIRP4
+ARGP4
+ADDRGP4 trap_LinkEntity
+CALLV
+pop
+line 1204
+;1204:  }
+LABELV $345
+line 1205
+;1205:}
+LABELV $331
+endproc G_minethink 132 28
+export plant_mine
+proc plant_mine 48 4
+line 1209
+;1206:
+;1207:gentity_t *
+;1208:plant_mine(gentity_t *self, vec3_t start, vec3_t dir)
+;1209:{
+line 1212
+;1210:  gentity_t *bolt;
+;1211:
+;1212:  VectorNormalize(dir);
+ADDRFP4 8
+INDIRP4
+ARGP4
+ADDRGP4 VectorNormalize
+CALLF4
+pop
+line 1214
+;1213:
+;1214:  bolt = G_Spawn();
+ADDRLP4 4
+ADDRGP4 G_Spawn
+CALLP4
+ASGNP4
+ADDRLP4 0
+ADDRLP4 4
+INDIRP4
+ASGNP4
+line 1215
+;1215:  bolt->classname = "mine";
+ADDRLP4 0
+INDIRP4
+CNSTI4 524
+ADDP4
+ADDRGP4 $348
+ASGNP4
+line 1216
+;1216:  bolt->nextthink = level.time + 2000;
+ADDRLP4 0
+INDIRP4
+CNSTI4 768
+ADDP4
+ADDRGP4 level+28
+INDIRI4
+CNSTI4 2000
+ADDI4
+ASGNI4
+line 1217
+;1217:  bolt->think = G_minethink;
+ADDRLP4 0
+INDIRP4
+CNSTI4 772
+ADDP4
+ADDRGP4 G_minethink
+ASGNP4
+line 1218
+;1218:  bolt->s.eType = ET_MISSILE;
+ADDRLP4 8
+CNSTI4 4
+ASGNI4
+ADDRLP4 0
+INDIRP4
+ADDRLP4 8
+INDIRI4
+ADDP4
+ADDRLP4 8
+INDIRI4
+ASGNI4
+line 1219
+;1219:  bolt->r.svFlags = SVF_USE_CURRENT_ORIGIN;
+ADDRLP4 0
+INDIRP4
+CNSTI4 424
+ADDP4
+CNSTI4 128
+ASGNI4
+line 1220
+;1220:  bolt->s.weapon = WP_MINE;
+ADDRLP4 0
+INDIRP4
+CNSTI4 192
+ADDP4
+CNSTI4 11
+ASGNI4
+line 1221
+;1221:  bolt->s.eFlags = EF_BOUNCE_HALF;
+ADDRLP4 0
+INDIRP4
+CNSTI4 8
+ADDP4
+CNSTI4 16
+ASGNI4
+line 1222
+;1222:  bolt->s.generic1 = WPM_PRIMARY; //weaponMode
+ADDRLP4 0
+INDIRP4
+CNSTI4 204
+ADDP4
+CNSTI4 1
+ASGNI4
+line 1223
+;1223:  bolt->r.ownerNum = self->s.number;
+ADDRLP4 0
+INDIRP4
+CNSTI4 512
+ADDP4
+ADDRFP4 0
+INDIRP4
+INDIRI4
+ASGNI4
+line 1224
+;1224:  bolt->parent = self;
+ADDRLP4 0
+INDIRP4
+CNSTI4 600
+ADDP4
+ADDRFP4 0
+INDIRP4
+ASGNP4
+line 1225
+;1225: if(g_survival.integer)
+ADDRGP4 g_survival+12
+INDIRI4
+CNSTI4 0
+EQI4 $350
+line 1226
+;1226: {
+line 1227
+;1227:	 bolt->damage = MINE_DAMAGE;
+ADDRLP4 0
+INDIRP4
+CNSTI4 844
+ADDP4
+CNSTI4 240
+ASGNI4
+line 1228
+;1228:	 bolt->splashDamage = MINE_DAMAGE;
+ADDRLP4 0
+INDIRP4
+CNSTI4 848
+ADDP4
+CNSTI4 240
+ASGNI4
+line 1229
+;1229: } else {
+ADDRGP4 $351
+JUMPV
+LABELV $350
+line 1230
+;1230:	 bolt->damage = (1.25 * MINE_DAMAGE);
+ADDRLP4 0
+INDIRP4
+CNSTI4 844
+ADDP4
+CNSTI4 300
+ASGNI4
+line 1231
+;1231:	 bolt->splashDamage = (1.25 * MINE_DAMAGE);
+ADDRLP4 0
+INDIRP4
+CNSTI4 848
+ADDP4
+CNSTI4 300
+ASGNI4
+line 1232
+;1232: }
+LABELV $351
+line 1233
+;1233:  bolt->splashRadius = MINE_RANGE;
+ADDRLP4 0
+INDIRP4
+CNSTI4 852
+ADDP4
+CNSTI4 350
+ASGNI4
+line 1234
+;1234:  bolt->methodOfDeath = MOD_MINE;
+ADDRLP4 0
+INDIRP4
+CNSTI4 856
+ADDP4
+CNSTI4 12
+ASGNI4
+line 1235
+;1235:  bolt->splashMethodOfDeath = MOD_MINE;
+ADDRLP4 0
+INDIRP4
+CNSTI4 860
+ADDP4
+CNSTI4 12
+ASGNI4
+line 1236
+;1236:  bolt->clipmask = MASK_DEADSOLID;
+ADDRLP4 0
+INDIRP4
+CNSTI4 572
+ADDP4
+CNSTI4 65537
+ASGNI4
+line 1237
+;1237:  bolt->target_ent = NULL;
+ADDRLP4 0
+INDIRP4
+CNSTI4 676
+ADDP4
+CNSTP4 0
+ASGNP4
+line 1238
+;1238:  bolt->r.mins[0] = bolt->r.mins[1] = -5.0f;
+ADDRLP4 16
+CNSTF4 3231711232
+ASGNF4
+ADDRLP4 0
+INDIRP4
+CNSTI4 440
+ADDP4
+ADDRLP4 16
+INDIRF4
+ASGNF4
+ADDRLP4 0
+INDIRP4
+CNSTI4 436
+ADDP4
+ADDRLP4 16
+INDIRF4
+ASGNF4
+line 1239
+;1239:  bolt->r.mins[2] = 0.0f;
+ADDRLP4 0
+INDIRP4
+CNSTI4 444
+ADDP4
+CNSTF4 0
+ASGNF4
+line 1240
+;1240:  bolt->r.maxs[0] = bolt->r.maxs[1] = 5.0f;
+ADDRLP4 24
+CNSTF4 1084227584
+ASGNF4
+ADDRLP4 0
+INDIRP4
+CNSTI4 452
+ADDP4
+ADDRLP4 24
+INDIRF4
+ASGNF4
+ADDRLP4 0
+INDIRP4
+CNSTI4 448
+ADDP4
+ADDRLP4 24
+INDIRF4
+ASGNF4
+line 1241
+;1241:  bolt->r.maxs[2] = 2.0f;
+ADDRLP4 0
+INDIRP4
+CNSTI4 456
+ADDP4
+CNSTF4 1073741824
+ASGNF4
+line 1242
+;1242:  bolt->s.time = level.time;
+ADDRLP4 0
+INDIRP4
+CNSTI4 84
+ADDP4
+ADDRGP4 level+28
+INDIRI4
+ASGNI4
+line 1244
+;1243:
+;1244:  bolt->biteam = bolt->s.modelindex2 = BIT_HUMANS;
+ADDRLP4 32
+CNSTI4 2
+ASGNI4
+ADDRLP4 0
+INDIRP4
+CNSTI4 164
+ADDP4
+ADDRLP4 32
+INDIRI4
+ASGNI4
+ADDRLP4 0
+INDIRP4
+CNSTI4 956
+ADDP4
+ADDRLP4 32
+INDIRI4
+ASGNI4
+line 1245
+;1245:  bolt->use = G_itemUse;
+ADDRLP4 0
+INDIRP4
+CNSTI4 788
+ADDP4
+ADDRGP4 G_itemUse
+ASGNP4
+line 1247
+;1246:
+;1247:  bolt->s.pos.trType = TR_GRAVITY;
+ADDRLP4 0
+INDIRP4
+CNSTI4 12
+ADDP4
+CNSTI4 5
+ASGNI4
+line 1248
+;1248:  bolt->s.pos.trTime = level.time - MISSILE_PRESTEP_TIME; // move a bit on the very first frame
+ADDRLP4 0
+INDIRP4
+CNSTI4 16
+ADDP4
+ADDRGP4 level+28
+INDIRI4
+CNSTI4 50
+SUBI4
+ASGNI4
+line 1249
+;1249:  VectorCopy( start, bolt->s.pos.trBase );
+ADDRLP4 0
+INDIRP4
+CNSTI4 24
+ADDP4
+ADDRFP4 4
+INDIRP4
+INDIRB
+ASGNB 12
+line 1250
+;1250:  VectorScale( dir, GRENADE_SPEED/3, bolt->s.pos.trDelta );
+ADDRLP4 0
+INDIRP4
+CNSTI4 36
+ADDP4
+CNSTF4 1124422997
+ADDRFP4 8
+INDIRP4
+INDIRF4
+MULF4
+ASGNF4
+ADDRLP4 0
+INDIRP4
+CNSTI4 40
+ADDP4
+CNSTF4 1124422997
+ADDRFP4 8
+INDIRP4
+CNSTI4 4
+ADDP4
+INDIRF4
+MULF4
+ASGNF4
+ADDRLP4 0
+INDIRP4
+CNSTI4 44
+ADDP4
+CNSTF4 1124422997
+ADDRFP4 8
+INDIRP4
+CNSTI4 8
+ADDP4
+INDIRF4
+MULF4
+ASGNF4
+line 1251
+;1251:  SnapVector( bolt->s.pos.trDelta ); // save net bandwidth
+ADDRLP4 36
+ADDRLP4 0
+INDIRP4
+CNSTI4 36
+ADDP4
+ASGNP4
+ADDRLP4 36
+INDIRP4
+ADDRLP4 36
+INDIRP4
+INDIRF4
+CVFI4 4
+CVIF4 4
+ASGNF4
+ADDRLP4 40
+ADDRLP4 0
+INDIRP4
+CNSTI4 40
+ADDP4
+ASGNP4
+ADDRLP4 40
+INDIRP4
+ADDRLP4 40
+INDIRP4
+INDIRF4
+CVFI4 4
+CVIF4 4
+ASGNF4
+ADDRLP4 44
+ADDRLP4 0
+INDIRP4
+CNSTI4 44
+ADDP4
+ASGNP4
+ADDRLP4 44
+INDIRP4
+ADDRLP4 44
+INDIRP4
+INDIRF4
+CVFI4 4
+CVIF4 4
+ASGNF4
+line 1253
+;1252:
+;1253:  VectorCopy( start, bolt->r.currentOrigin );
+ADDRLP4 0
+INDIRP4
+CNSTI4 488
+ADDP4
+ADDRFP4 4
+INDIRP4
+INDIRB
+ASGNB 12
+line 1254
+;1254:  return bolt;
+ADDRLP4 0
+INDIRP4
+RETP4
+LABELV $347
+endproc plant_mine 48 4
+export fire_rocket
+proc fire_rocket 40 4
+line 1262
+;1255:}
+;1256:/*
+;1257:=================
+;1258:fire_rocket
+;1259:=================
+;1260:*/
+;1261:gentity_t      *fire_rocket(gentity_t * self, vec3_t start, vec3_t dir)
+;1262:{
+line 1265
+;1263:  gentity_t *bolt;
+;1264:
+;1265:  VectorNormalize(dir);
+ADDRFP4 8
+INDIRP4
+ARGP4
+ADDRGP4 VectorNormalize
+CALLF4
+pop
+line 1267
+;1266:
+;1267:  bolt = G_Spawn();
+ADDRLP4 4
+ADDRGP4 G_Spawn
+CALLP4
+ASGNP4
+ADDRLP4 0
+ADDRLP4 4
+INDIRP4
+ASGNP4
+line 1268
+;1268:  bolt->classname = "rocket_launcher";
+ADDRLP4 0
+INDIRP4
+CNSTI4 524
+ADDP4
+ADDRGP4 $356
+ASGNP4
+line 1269
+;1269:  bolt->nextthink = level.time + 5000;
+ADDRLP4 0
+INDIRP4
+CNSTI4 768
+ADDP4
+ADDRGP4 level+28
+INDIRI4
+CNSTI4 5000
+ADDI4
+ASGNI4
+line 1270
+;1270:  bolt->think = G_ExplodeMissile;
+ADDRLP4 0
+INDIRP4
+CNSTI4 772
+ADDP4
+ADDRGP4 G_ExplodeMissile
+ASGNP4
+line 1271
+;1271:  bolt->s.eType = ET_MISSILE;
+ADDRLP4 8
+CNSTI4 4
+ASGNI4
+ADDRLP4 0
+INDIRP4
+ADDRLP4 8
+INDIRI4
+ADDP4
+ADDRLP4 8
+INDIRI4
+ASGNI4
+line 1272
+;1272:  bolt->r.svFlags = SVF_USE_CURRENT_ORIGIN;
+ADDRLP4 0
+INDIRP4
+CNSTI4 424
+ADDP4
+CNSTI4 128
+ASGNI4
+line 1273
+;1273:  bolt->s.weapon = WP_ROCKET_LAUNCHER;
+ADDRLP4 0
+INDIRP4
+CNSTI4 192
+ADDP4
+CNSTI4 8
+ASGNI4
+line 1274
+;1274:  bolt->s.generic1 = WPM_PRIMARY; //weaponMode
+ADDRLP4 0
+INDIRP4
+CNSTI4 204
+ADDP4
+CNSTI4 1
+ASGNI4
+line 1275
+;1275:  bolt->r.ownerNum = self->s.number;
+ADDRLP4 0
+INDIRP4
+CNSTI4 512
+ADDP4
+ADDRFP4 0
+INDIRP4
+INDIRI4
+ASGNI4
+line 1276
+;1276:  bolt->parent = self;
+ADDRLP4 0
+INDIRP4
+CNSTI4 600
+ADDP4
+ADDRFP4 0
+INDIRP4
+ASGNP4
+line 1277
+;1277:  bolt->damage = ROCKET_LAUNCHER_DAMAGE;
+ADDRLP4 0
+INDIRP4
+CNSTI4 844
+ADDP4
+CNSTI4 300
+ASGNI4
+line 1278
+;1278:  bolt->splashDamage = ROCKET_LAUNCHER_DAMAGE;
+ADDRLP4 0
+INDIRP4
+CNSTI4 848
+ADDP4
+CNSTI4 300
+ASGNI4
+line 1279
+;1279:  bolt->splashRadius = ROCKET_LAUNCHER_RANGE;
+ADDRLP4 0
+INDIRP4
+CNSTI4 852
+ADDP4
+CNSTI4 160
+ASGNI4
+line 1280
+;1280:  bolt->methodOfDeath = MOD_ROCKET_LAUNCHER;
+ADDRLP4 0
+INDIRP4
+CNSTI4 856
+ADDP4
+CNSTI4 10
+ASGNI4
+line 1281
+;1281:  bolt->splashMethodOfDeath = MOD_ROCKET_LAUNCHER;
+ADDRLP4 0
+INDIRP4
+CNSTI4 860
+ADDP4
+CNSTI4 10
+ASGNI4
+line 1282
+;1282:  bolt->clipmask = MASK_SHOT;
+ADDRLP4 0
+INDIRP4
+CNSTI4 572
+ADDP4
+CNSTI4 33554433
+ASGNI4
+line 1283
+;1283:  bolt->target_ent = NULL;
+ADDRLP4 0
+INDIRP4
+CNSTI4 676
+ADDP4
+CNSTP4 0
+ASGNP4
+line 1284
+;1284:  bolt->r.mins[0] = bolt->r.mins[1] = bolt->r.mins[2] = -3.0f;
+ADDRLP4 16
+CNSTF4 3225419776
+ASGNF4
+ADDRLP4 0
+INDIRP4
+CNSTI4 444
+ADDP4
+ADDRLP4 16
+INDIRF4
+ASGNF4
+ADDRLP4 0
+INDIRP4
+CNSTI4 440
+ADDP4
+ADDRLP4 16
+INDIRF4
+ASGNF4
+ADDRLP4 0
+INDIRP4
+CNSTI4 436
+ADDP4
+ADDRLP4 16
+INDIRF4
+ASGNF4
+line 1285
+;1285:  bolt->r.maxs[0] = bolt->r.maxs[1] = bolt->r.maxs[2] = 3.0f;
+ADDRLP4 24
+CNSTF4 1077936128
+ASGNF4
+ADDRLP4 0
+INDIRP4
+CNSTI4 456
+ADDP4
+ADDRLP4 24
+INDIRF4
+ASGNF4
+ADDRLP4 0
+INDIRP4
+CNSTI4 452
+ADDP4
+ADDRLP4 24
+INDIRF4
+ASGNF4
+ADDRLP4 0
+INDIRP4
+CNSTI4 448
+ADDP4
+ADDRLP4 24
+INDIRF4
+ASGNF4
+line 1286
+;1286:  bolt->s.time = level.time;
+ADDRLP4 0
+INDIRP4
+CNSTI4 84
+ADDP4
+ADDRGP4 level+28
+INDIRI4
+ASGNI4
+line 1288
+;1287:
+;1288:  bolt->s.pos.trType = TR_LINEAR;
+ADDRLP4 0
+INDIRP4
+CNSTI4 12
+ADDP4
+CNSTI4 2
+ASGNI4
+line 1289
+;1289:  bolt->s.pos.trTime = level.time - MISSILE_PRESTEP_TIME; // move a bit on the very first frame
+ADDRLP4 0
+INDIRP4
+CNSTI4 16
+ADDP4
+ADDRGP4 level+28
+INDIRI4
+CNSTI4 50
+SUBI4
+ASGNI4
+line 1290
+;1290:  VectorCopy(start, bolt->s.pos.trBase);
+ADDRLP4 0
+INDIRP4
+CNSTI4 24
+ADDP4
+ADDRFP4 4
+INDIRP4
+INDIRB
+ASGNB 12
+line 1291
+;1291:  VectorScale(dir, ROCKET_LAUNCHER_SPEED, bolt->s.pos.trDelta);
+ADDRLP4 0
+INDIRP4
+CNSTI4 36
+ADDP4
+CNSTF4 1147207680
+ADDRFP4 8
+INDIRP4
+INDIRF4
+MULF4
+ASGNF4
+ADDRLP4 0
+INDIRP4
+CNSTI4 40
+ADDP4
+CNSTF4 1147207680
+ADDRFP4 8
+INDIRP4
+CNSTI4 4
+ADDP4
+INDIRF4
+MULF4
+ASGNF4
+ADDRLP4 0
+INDIRP4
+CNSTI4 44
+ADDP4
+CNSTF4 1147207680
+ADDRFP4 8
+INDIRP4
+CNSTI4 8
+ADDP4
+INDIRF4
+MULF4
+ASGNF4
+line 1292
+;1292:  SnapVector(bolt->s.pos.trDelta); // save net bandwidth
+ADDRLP4 28
+ADDRLP4 0
+INDIRP4
+CNSTI4 36
+ADDP4
+ASGNP4
+ADDRLP4 28
+INDIRP4
+ADDRLP4 28
+INDIRP4
+INDIRF4
+CVFI4 4
+CVIF4 4
+ASGNF4
+ADDRLP4 32
+ADDRLP4 0
+INDIRP4
+CNSTI4 40
+ADDP4
+ASGNP4
+ADDRLP4 32
+INDIRP4
+ADDRLP4 32
+INDIRP4
+INDIRF4
+CVFI4 4
+CVIF4 4
+ASGNF4
+ADDRLP4 36
+ADDRLP4 0
+INDIRP4
+CNSTI4 44
+ADDP4
+ASGNP4
+ADDRLP4 36
+INDIRP4
+ADDRLP4 36
+INDIRP4
+INDIRF4
+CVFI4 4
+CVIF4 4
+ASGNF4
+line 1294
+;1293:
+;1294:  VectorCopy(start, bolt->r.currentOrigin);
+ADDRLP4 0
+INDIRP4
+CNSTI4 488
+ADDP4
+ADDRFP4 4
+INDIRP4
+INDIRB
+ASGNB 12
+line 1296
+;1295:
+;1296:  return bolt;
+ADDRLP4 0
+INDIRP4
+RETP4
+LABELV $355
+endproc fire_rocket 40 4
+export fire_dome
+proc fire_dome 48 4
+line 1306
+;1297:
+;1298:}
+;1299:
+;1300:/*
+;1301:=================
+;1302:fire_dome
+;1303:=================
+;1304:*/
+;1305:gentity_t      *fire_dome(gentity_t * self, vec3_t start, vec3_t dir)
+;1306:{
+line 1309
+;1307:    gentity_t *bolt;
+;1308:
+;1309:    VectorNormalize(dir);
+ADDRFP4 8
+INDIRP4
+ARGP4
+ADDRGP4 VectorNormalize
+CALLF4
+pop
+line 1311
+;1310:
+;1311:    bolt = G_Spawn();
+ADDRLP4 4
+ADDRGP4 G_Spawn
+CALLP4
+ASGNP4
+ADDRLP4 0
+ADDRLP4 4
+INDIRP4
+ASGNP4
+line 1312
+;1312:    bolt->classname = "dome";
+ADDRLP4 0
+INDIRP4
+CNSTI4 524
+ADDP4
+ADDRGP4 $361
+ASGNP4
+line 1313
+;1313:    bolt->nextthink = level.time + 1000;
+ADDRLP4 0
+INDIRP4
+CNSTI4 768
+ADDP4
+ADDRGP4 level+28
+INDIRI4
+CNSTI4 1000
+ADDI4
+ASGNI4
+line 1314
+;1314:    bolt->dieTime = level.time + 60000; //60 Second stand.
+ADDRLP4 0
+INDIRP4
+CNSTI4 2456
+ADDP4
+ADDRGP4 level+28
+INDIRI4
+CNSTI4 60000
+ADDI4
+ASGNI4
+line 1315
+;1315:    bolt->think = G_domethink;
+ADDRLP4 0
+INDIRP4
+CNSTI4 772
+ADDP4
+ADDRGP4 G_domethink
+ASGNP4
+line 1316
+;1316:    bolt->s.eType = ET_MISSILE;
+ADDRLP4 8
+CNSTI4 4
+ASGNI4
+ADDRLP4 0
+INDIRP4
+ADDRLP4 8
+INDIRI4
+ADDP4
+ADDRLP4 8
+INDIRI4
+ASGNI4
+line 1317
+;1317:    bolt->r.svFlags = SVF_USE_CURRENT_ORIGIN;
+ADDRLP4 0
+INDIRP4
+CNSTI4 424
+ADDP4
+CNSTI4 128
+ASGNI4
+line 1318
+;1318:    bolt->s.weapon = WP_DOME;
+ADDRLP4 0
+INDIRP4
+CNSTI4 192
+ADDP4
+CNSTI4 12
+ASGNI4
+line 1319
+;1319:    bolt->s.eFlags = EF_BOUNCE_HALF;
+ADDRLP4 0
+INDIRP4
+CNSTI4 8
+ADDP4
+CNSTI4 16
+ASGNI4
+line 1320
+;1320:    bolt->s.generic1 = WPM_PRIMARY; //weaponMode
+ADDRLP4 0
+INDIRP4
+CNSTI4 204
+ADDP4
+CNSTI4 1
+ASGNI4
+line 1321
+;1321:    bolt->r.ownerNum = self->s.number;
+ADDRLP4 0
+INDIRP4
+CNSTI4 512
+ADDP4
+ADDRFP4 0
+INDIRP4
+INDIRI4
+ASGNI4
+line 1322
+;1322:    bolt->parent = self;
+ADDRLP4 0
+INDIRP4
+CNSTI4 600
+ADDP4
+ADDRFP4 0
+INDIRP4
+ASGNP4
+line 1323
+;1323:    bolt->damage = MINE_DAMAGE;
+ADDRLP4 0
+INDIRP4
+CNSTI4 844
+ADDP4
+CNSTI4 240
+ASGNI4
+line 1324
+;1324:    bolt->splashDamage = MINE_DAMAGE;
+ADDRLP4 0
+INDIRP4
+CNSTI4 848
+ADDP4
+CNSTI4 240
+ASGNI4
+line 1325
+;1325:    bolt->splashRadius = MINE_RANGE;
+ADDRLP4 0
+INDIRP4
+CNSTI4 852
+ADDP4
+CNSTI4 350
+ASGNI4
+line 1326
+;1326:    bolt->methodOfDeath = MOD_MINE;
+ADDRLP4 0
+INDIRP4
+CNSTI4 856
+ADDP4
+CNSTI4 12
+ASGNI4
+line 1327
+;1327:    bolt->splashMethodOfDeath = MOD_MINE;
+ADDRLP4 0
+INDIRP4
+CNSTI4 860
+ADDP4
+CNSTI4 12
+ASGNI4
+line 1328
+;1328:    bolt->clipmask = MASK_DEADSOLID;
+ADDRLP4 0
+INDIRP4
+CNSTI4 572
+ADDP4
+CNSTI4 65537
+ASGNI4
+line 1329
+;1329:    bolt->target_ent = NULL;
+ADDRLP4 0
+INDIRP4
+CNSTI4 676
+ADDP4
+CNSTP4 0
+ASGNP4
+line 1330
+;1330:    bolt->r.mins[0] = bolt->r.mins[1] = -3.0f;
+ADDRLP4 16
+CNSTF4 3225419776
+ASGNF4
+ADDRLP4 0
+INDIRP4
+CNSTI4 440
+ADDP4
+ADDRLP4 16
+INDIRF4
+ASGNF4
+ADDRLP4 0
+INDIRP4
+CNSTI4 436
+ADDP4
+ADDRLP4 16
+INDIRF4
+ASGNF4
+line 1331
+;1331:    bolt->r.mins[2] = 0.0f;
+ADDRLP4 0
+INDIRP4
+CNSTI4 444
+ADDP4
+CNSTF4 0
+ASGNF4
+line 1332
+;1332:    bolt->r.maxs[0] = bolt->r.maxs[1] = 3.0f;
+ADDRLP4 24
+CNSTF4 1077936128
+ASGNF4
+ADDRLP4 0
+INDIRP4
+CNSTI4 452
+ADDP4
+ADDRLP4 24
+INDIRF4
+ASGNF4
+ADDRLP4 0
+INDIRP4
+CNSTI4 448
+ADDP4
+ADDRLP4 24
+INDIRF4
+ASGNF4
+line 1333
+;1333:    bolt->r.maxs[2] = 2.0f;
+ADDRLP4 0
+INDIRP4
+CNSTI4 456
+ADDP4
+CNSTF4 1073741824
+ASGNF4
+line 1334
+;1334:    bolt->s.time = level.time;
+ADDRLP4 0
+INDIRP4
+CNSTI4 84
+ADDP4
+ADDRGP4 level+28
+INDIRI4
+ASGNI4
+line 1336
+;1335:
+;1336:    bolt->biteam = bolt->s.modelindex2 = BIT_HUMANS;
+ADDRLP4 32
+CNSTI4 2
+ASGNI4
+ADDRLP4 0
+INDIRP4
+CNSTI4 164
+ADDP4
+ADDRLP4 32
+INDIRI4
+ASGNI4
+ADDRLP4 0
+INDIRP4
+CNSTI4 956
+ADDP4
+ADDRLP4 32
+INDIRI4
+ASGNI4
+line 1339
+;1337:    //bolt->use = G_itemUse;
+;1338:
+;1339:    bolt->s.pos.trType = TR_GRAVITY;
+ADDRLP4 0
+INDIRP4
+CNSTI4 12
+ADDP4
+CNSTI4 5
+ASGNI4
+line 1340
+;1340:    bolt->s.pos.trTime = level.time - MISSILE_PRESTEP_TIME; // move a bit on the very first frame
+ADDRLP4 0
+INDIRP4
+CNSTI4 16
+ADDP4
+ADDRGP4 level+28
+INDIRI4
+CNSTI4 50
+SUBI4
+ASGNI4
+line 1341
+;1341:    VectorCopy( start, bolt->s.pos.trBase );
+ADDRLP4 0
+INDIRP4
+CNSTI4 24
+ADDP4
+ADDRFP4 4
+INDIRP4
+INDIRB
+ASGNB 12
+line 1342
+;1342:    VectorScale( dir, GRENADE_SPEED/3, bolt->s.pos.trDelta );
+ADDRLP4 0
+INDIRP4
+CNSTI4 36
+ADDP4
+CNSTF4 1124422997
+ADDRFP4 8
+INDIRP4
+INDIRF4
+MULF4
+ASGNF4
+ADDRLP4 0
+INDIRP4
+CNSTI4 40
+ADDP4
+CNSTF4 1124422997
+ADDRFP4 8
+INDIRP4
+CNSTI4 4
+ADDP4
+INDIRF4
+MULF4
+ASGNF4
+ADDRLP4 0
+INDIRP4
+CNSTI4 44
+ADDP4
+CNSTF4 1124422997
+ADDRFP4 8
+INDIRP4
+CNSTI4 8
+ADDP4
+INDIRF4
+MULF4
+ASGNF4
+line 1343
+;1343:    SnapVector( bolt->s.pos.trDelta ); // save net bandwidth
+ADDRLP4 36
+ADDRLP4 0
+INDIRP4
+CNSTI4 36
+ADDP4
+ASGNP4
+ADDRLP4 36
+INDIRP4
+ADDRLP4 36
+INDIRP4
+INDIRF4
+CVFI4 4
+CVIF4 4
+ASGNF4
+ADDRLP4 40
+ADDRLP4 0
+INDIRP4
+CNSTI4 40
+ADDP4
+ASGNP4
+ADDRLP4 40
+INDIRP4
+ADDRLP4 40
+INDIRP4
+INDIRF4
+CVFI4 4
+CVIF4 4
+ASGNF4
+ADDRLP4 44
+ADDRLP4 0
+INDIRP4
+CNSTI4 44
+ADDP4
+ASGNP4
+ADDRLP4 44
+INDIRP4
+ADDRLP4 44
+INDIRP4
+INDIRF4
+CVFI4 4
+CVIF4 4
+ASGNF4
+line 1345
+;1344:
+;1345:    VectorCopy( start, bolt->r.currentOrigin );
+ADDRLP4 0
+INDIRP4
+CNSTI4 488
+ADDP4
+ADDRFP4 4
+INDIRP4
+INDIRB
+ASGNB 12
+line 1346
+;1346:    return bolt;
+ADDRLP4 0
+INDIRP4
+RETP4
+LABELV $360
+endproc fire_dome 48 4
+import G_deleteWhite
+import G_adminWhitelistGlobal
+import G_adminGlobal
+import G_whitelistCheck
+import G_globalCheck
+import G_globalBanCheck
+import G_deleteGlobal
+import getGlobalTypeString
+import G_globalInit
+import G_globalAdd
+import G_getLongerWhiteName
+import G_isValidIpAddress
+import G_globalExit
+import G_isPlayerConnected
+import botSelectEnemy
+import botCanSeeEnemy
+import botForgetEnemy
+import G_healFriend
+import G_BotAimAt
+import G_printVector
+import G_doorInRange
+import G_itemInRange
+import G_playerInRange
+import g_comboPrint
+import g_comboClear
+import modString
+import director_debug
+import ace_botsFile
+import ace_spSkill
+import ace_attackEnemies
+import ace_pickShortRangeGoal
+import ace_pickLongRangeGoal
+import ace_showPath
+import ace_showLinks
+import ace_showNodes
+import ace_debug
+import AngleBetweenVectors
+import G_KillStructuresSurvival
+import spawnItem
+import G_itemUse
+import G_itemThink
+import syrinxSpawn
+import selectBetterWay
+import G_FindRadius
+import G_ProjectSource
+import pointBehindWall
+import spawnGridNode
+import convertGridToWorld
+import convertWorldToGrid
+import fillGrid
+import WallInFront
+import trap_mysql_reconnect
+import trap_mysql_fetchfieldbyName
+import trap_mysql_fetchfieldbyID
+import trap_mysql_fetchrow
+import trap_mysql_finishquery
+import trap_mysql_runquery
+import trap_SendGameStat
+import trap_SnapVector
+import trap_GetEntityToken
+import trap_GetUsercmd
+import trap_BotFreeClient
+import trap_BotAllocateClient
+import trap_EntityContact
+import trap_EntitiesInBox
+import trap_UnlinkEntity
+import trap_LinkEntity
+import trap_AreasConnected
+import trap_AdjustAreaPortalState
+import trap_InPVSIgnorePortals
+import trap_InPVS
+import trap_PointContents
+import trap_Trace
+import trap_SetBrushModel
+import trap_GetServerinfo
+import trap_SetUserinfo
+import trap_GetUserinfo
+import trap_GetConfigstring
+import trap_SetConfigstring
+import trap_SendServerCommand
+import trap_DropClient
+import trap_LocateGameData
+import trap_Cvar_VariableStringBuffer
+import trap_Cvar_VariableValue
+import trap_Cvar_VariableIntegerValue
+import trap_Cvar_Set
+import trap_Cvar_Update
+import trap_Cvar_Register
+import trap_SendConsoleCommand
+import trap_FS_Seek
+import trap_FS_GetFileList
+import trap_FS_FCloseFile
+import trap_FS_Write
+import trap_FS_Read
+import trap_FS_FOpenFile
+import trap_Args
+import trap_Argv
+import trap_Argc
+import trap_RealTime
+import trap_Milliseconds
+import trap_Error
+import trap_Printf
+import g_antispawncamp
+import mega_wave
+import ROTACAK_ambush_kills
+import ROTACAK_ambush_stage
+import ROTACAK_ambush_rebuild_time_temp
+import g_bot_lcannon
+import g_bot_flamer
+import g_bot_prifle
+import g_bot_chaingun
+import g_bot_mdriver
+import g_bot_lasgun
+import g_bot_psaw
+import g_bot_shotgun
+import g_bot_mgun
+import g_bot
+import g_ambush_turnangle
+import g_ambush_range
+import g_ambush_att_buildables
+import g_ambush_kill_spawns
+import g_ambush
+import g_ambush_no_egg_ffoff
+import g_ambush_stage_suicide
+import g_ambush_sec_to_start
+import g_ambush_rebuild_time
+import g_ambush_dodge_random
+import g_ambush_dodge
+import g_ambush_tyrants_to_win
+import g_ambush_dragon2_s8
+import g_ambush_dragon_s7
+import g_ambush_marauder2_s6
+import g_ambush_marauder_s5
+import g_ambush_basilisk2_s4
+import g_ambush_basilisk_s3
+import g_ambush_dretch_s2
+import g_ambush_granger_s1
+import g_buildLogMaxLength
+import g_survival
+import g_ctncapturetime
+import g_ctnbuildlimit
+import g_ctn
+import g_msgTime
+import g_msg
+import g_mapvoteMaxTime
+import g_voteMinTime
+import g_devmapNoStructDmg
+import g_devmapNoGod
+import g_dretchPunt
+import g_antiSpawnBlock
+import g_myStats
+import g_publicSayadmins
+import g_decolourLogfiles
+import g_privateMessages
+import g_devmapKillerHP
+import g_banNotice
+import g_minLevelToSpecMM1
+import g_forceAutoSelect
+import g_minLevelToJoinTeam
+import g_adminMapLog
+import g_adminMaxBan
+import g_adminTempBan
+import g_adminNameProtect
+import g_adminSayFilter
+import g_adminParseSay
+import g_adminLog
+import g_admin
+import g_layoutAuto
+import g_layouts
+import g_mapConfigs
+import g_shove
+import g_floodMinTime
+import g_floodMaxDemerits
+import g_actionPrefix
+import g_chatTeamPrefix
+import g_initialMapRotation
+import g_nextMap
+import g_currentMap
+import g_currentMapRotation
+import g_debugMapRotation
+import g_deconDead
+import g_markDeconstruct
+import g_disabledBuildables
+import g_disabledClasses
+import g_disabledEquipment
+import g_unlagged
+import g_teamImbalanceWarnings
+import g_alienStage3Threshold
+import g_alienStage2Threshold
+import g_alienMaxStage
+import g_alienKills
+import g_alienStage
+import g_humanStage3Threshold
+import g_humanStage2Threshold
+import g_humanMaxStage
+import g_humanKills
+import g_humanStage
+import g_alienBuildPoints
+import g_humanBuildPoints
+import g_singlePlayer
+import g_enableBreath
+import g_enableDust
+import g_allowShare
+import g_rankings
+import pmove_msec
+import pmove_fixed
+import g_clientUpgradeNotice
+import g_smoothClients
+import g_filterBan
+import g_banIPs
+import g_teamForceBalance
+import g_teamAutoJoin
+import g_designateVotes
+import g_mapVotesPercent
+import g_suddenDeathVoteDelay
+import g_suddenDeathVotePercent
+import g_voteLimit
+import g_requireVoteReasons
+import g_allowVote
+import g_blood
+import g_doWarmup
+import g_warmupMode
+import g_warmup
+import g_motd
+import g_synchronousClients
+import g_weaponTeamRespawn
+import g_weaponRespawn
+import g_debugDamage
+import g_debugAlloc
+import g_debugMove
+import g_inactivity
+import g_quadfactor
+import g_knockback
+import g_speed
+import g_gravity
+import g_needpass
+import g_password
+import g_friendlyBuildableFire
+import g_friendlyFireMovementAttacks
+import g_retribution
+import g_friendlyFireAliens
+import g_friendlyFireHumans
+import g_friendlyFire
+import g_layoutmaking
+import g_suddenDeathMode
+import g_suddenDeath
+import g_suddenDeathTime
+import g_timelimit
+import g_enterString
+import g_newbieNamePrefix
+import g_newbieNumbering
+import g_maxNameChanges
+import g_minNameChangePeriod
+import g_minCommandPeriod
+import g_lockTeamsAtStart
+import g_restarted
+import g_maxGameClients
+import g_maxclients
+import g_cheats
+import g_dedicated
+import g_entities
+import level
+import G_FindConnectionForCode
+import G_ResetPTRConnections
+import G_GenerateNewConnection
+import G_UpdatePTRConnection
+import G_GetCurrentMap
+import G_MapExists
+import G_InitMapRotations
+import G_MapRotationActive
+import G_StopMapRotation
+import G_StartMapRotation
+import G_AdvanceMapRotation
+import G_PrintRotations
+import G_WinBadge
+import G_WriteSessionData
+import G_InitSessionData
+import G_ReadSessionData
+import Svcmd_GameMem_f
+import G_DefragmentMemory
+import G_Free
+import G_InitMemory
+import G_Alloc
+import CheckTeamStatus
+import TeamplayInfoMessage
+import Team_GetLocationMsg
+import Team_GetLocation
+import OnSameTeam
+import G_RunClient
+import ClientEndFrame
+import ClientThink
+import G_UnlaggedOff
+import G_UnlaggedOn
+import G_UnlaggedCalc
+import G_UnlaggedClear
+import G_UnlaggedStore
+import ClientCommand
+import ClientBegin
+import ClientDisconnect
+import ClientUserinfoChanged
+import ClientConnect
+import G_Flood_Limited
+import CheckMsgTimer
+import G_TimeTilSuddenDeath
+import LogExit
+import CheckTeamVote
+import CheckVote
+import G_Error
+import G_Printf
+import SendScoreboardMessageToAllClients
+import G_AdminsPrintf
+import G_LogOnlyPrintf
+import G_LogPrintfColoured
+import G_LogPrintf
+import G_RunThink
+import FindIntermissionPoint
+import CalculateRanks
+import G_MapConfigs
+import MoveClientToIntermission
+import ScoreboardMessage
+import FireWeapon3
+import FireWeapon2
+import FireWeapon
+import G_FilterPacket
+import G_ProcessIPBans
+import ConsoleCommand
+import G_NextNewbieName
+import SpotWouldTelefrag
+import player_die
+import ClientSpawn
+import BeginIntermission
+import respawn
+import SpawnCorpse
+import G_SelectHumanLockSpawnPoint
+import G_SelectAlienLockSpawnPoint
+import G_SelectSpawnPoint
+import G_SelectTremulousSpawnPoint
+import G_SetClientViewAngle
+import TeamCount
+import G_AddCreditToClient
+import G_UpdateZaps
+import ChargeAttack
+import CheckPounceAttack
+import CheckGrabAttack
+import CheckVenomAttack
+import SnapVectorTowards
+import CalcMuzzlePoint
+import G_GiveClientMaxAmmo
+import G_ForceWeaponChange
+import ShineTorch
+import TeleportPlayer
+import TeleportZombie
+import G_Checktrigger_stages
+import trigger_teleporter_touch
+import manualTriggerSpectator
+import Touch_DoorTrigger
+import G_RunMover
+import massDriverFire2
+import G_InitDamageLocations
+import AddScore
+import body_die
+import G_SelectiveRadiusDamage
+import G_RadiusDamage
+import G_SelectiveDamage
+import G_Damage
+import CanDamage
+import G_ClosestEnt
+import G_Visible
+import Distance2d
+import G_CloseMenus
+import G_TriggerMenu
+import G_ClientIsLagging
+import BuildShaderStateConfig
+import AddRemap
+import G_SetOrigin
+import G_BroadcastEvent
+import G_AddEvent
+import G_AddPredictableEvent
+import vectoyaw
+import vtos
+import tv
+import G_TouchSolids
+import G_TouchTriggers
+import G_EntitiesFree
+import G_FreeEntity
+import G_Sound
+import G_TempEntity
+import G_Spawn
+import G_InitGentity
+import G_SetMovedir
+import G_UseTargets
+import G_PickTarget
+import G_Find
+import G_KillBox
+import G_TeamCommand
+import G_SoundIndex
+import G_ModelIndex
+import G_ShaderIndex
+import G_ParticleSystemIndex
+import G_FindBuildLogName
+import G_CountBuildLog
+import G_LogBuild
+import G_RevertCanFit
+import G_CommitRevertedBuildable
+import G_SpawnRevertedBuildable
+import G_InstantBuild
+import G_BaseSelfDestruct
+import G_LayoutLoad
+import G_LayoutSelect
+import G_LayoutList
+import G_LayoutSave
+import G_CheckDBProtection
+import FinishSpawningBuildable
+import G_SpawnBuildable
+import G_SetIdleBuildableAnim
+import G_SetBuildableAnim
+import G_BuildIfValid
+import G_BuildingExists
+import G_CanBuild
+import G_ArmoryRange
+import G_BuildableRange
+import G_BuildableThink
+import G_IsOvermindBuilt
+import G_IsDCCBuilt
+import G_IsPowered
+import G_CheckSpawnPoint
+import AHovel_Blocked
+import G_Physics
+import G_CP
+import G_WordWrap
+import Cmd_Builder_f
+import Cmd_TeamVote_f
+import Cmd_Donate_f
+import Cmd_Share_f
+import G_statsString
+import G_PrivateMessage
+import G_SanitiseString
+import G_ChangeTeam
+import G_LeaveTeam
+import G_ParseEscapedString
+import G_DecolorString
+import G_SayConcatArgs
+import G_SayArgv
+import G_SayArgc
+import G_Say
+import G_ClientNumbersFromString
+import G_MatchOnePlayer
+import G_ToggleFollow
+import G_FollowNewClient
+import G_StopFollowing
+import G_StopFromFollowing
+import Cmd_Score_f
+import botJump
+import botCrouch
+import botWalk
+import botShootIfTargetInRange
+import botGetDistanceBetweenPlayer
+import botTargetInRange
+import botFindClosestEnemy
+import botAimAtTarget
+import G_BotSpectatorThink
+import G_BotThink
+import G_BotCmd
+import G_BotDel
+import G_BotAdd
+import G_NewString
+import G_SpawnEntitiesFromString
+import G_SpawnVector
+import G_SpawnInt
+import G_SpawnFloat
+import G_SpawnString
+import G_GetPosInSpawnQueue
+import G_RemoveFromSpawnQueue
+import G_PushSpawnQueue
+import G_SearchSpawnQueue
+import G_PeekSpawnQueue
+import G_PopSpawnQueue
+import G_GetSpawnQueueLength
+import G_InitSpawnQueue
+import G_admin_namelog_cleanup
+import G_admin_cleanup
+import G_admin_duration
+import G_admin_buffer_end
+import G_admin_buffer_begin
+import G_admin_buffer_print
+import G_admin_print
+import G_admin_mystats
+import G_admin_message
+import G_badgelist
+import G_badges
+import G_adminWhiteAdd
+import G_adminWhiteDelete
+import G_adminWhiteList
+import G_adminGlobalSync
+import G_adminGlobalBan
+import G_adminGlobalHandicap
+import G_adminGlobalDenyBuild
+import G_adminGlobalForcespec
+import G_adminGlobalMute
+import G_adminListGlobals
+import G_adminDeleteGlobal
+import G_setnextnode
+import G_drawnodes
+import G_reconnectdb
+import G_switchnodes
+import G_admin_botcmd
+import G_admin_bot
+import G_set_survival_stage
+import G_admin_findpath
+import G_admin_printpath
+import G_admin_printgrid
+import G_admin_switch
+import G_admin_cp
+import G_admin_designate
+import G_admin_warn
+import G_admin_putmespec
+import G_admin_L1
+import G_admin_L0
+import G_admin_pause
+import G_admin_revert
+import G_admin_buildlog
+import G_admin_info
+import G_admin_unlock
+import G_admin_lock
+import G_admin_namelog
+import G_admin_nextmap
+import G_admin_restart
+import G_admin_rename
+import G_admin_register
+import G_admin_spec999
+import G_admin_passvote
+import G_admin_cancelvote
+import G_admin_allready
+import G_admin_admintest
+import G_admin_help
+import G_admin_showbans
+import G_admin_denybuild
+import G_admin_mute
+import G_admin_layoutsave
+import G_admin_maplog
+import G_admin_maplog_update
+import G_admin_devmap
+import G_admin_map
+import G_admin_listrotation
+import G_admin_listmaps
+import G_admin_listplayers
+import G_admin_listlayouts
+import G_admin_listadmins
+import G_admin_putteam
+import G_admin_unban
+import G_admin_ban
+import G_admin_subnetban
+import G_admin_adjustban
+import G_admin_kick
+import G_admin_setlevel
+import G_admin_time
+import G_admin_adminPrintName
+import G_admin_set_adminname
+import G_admin_level
+import G_admin_maplog_result
+import G_admin_namelog_update
+import G_admin_name_check
+import G_admin_permission
+import G_admin_readconfig
+import G_admin_cmd_check
+import G_admin_ban_check
+import BG_ClientListParse
+import BG_ClientListString
+import BG_ClientListRemove
+import BG_ClientListAdd
+import BG_ClientListTest
+import BG_UpgradeClassAvailable
+import BG_BuildableIsAllowed
+import BG_ClassIsAllowed
+import BG_UpgradeIsAllowed
+import BG_WeaponIsAllowed
+import BG_InitAllowedGameElements
+import BG_ParseCSVBuildableList
+import BG_ParseCSVClassList
+import BG_ParseCSVEquipmentList
+import atoi_neg
+import atof_neg
+import BG_PlayerTouchesItem
+import BG_PlayerStateToEntityStateExtraPolate
+import BG_PlayerStateToEntityState
+import BG_AddPredictableEventToPlayerstate
+import BG_EvaluateTrajectoryDelta
+import BG_EvaluateTrajectory
+import BG_FindTeamForUpgrade
+import BG_FindUsableForUpgrade
+import BG_FindPurchasableForUpgrade
+import BG_FindIconForUpgrade
+import BG_FindHumanNameForUpgrade
+import BG_FindUpgradeNumForName
+import BG_FindNameForUpgrade
+import BG_FindSlotsForUpgrade
+import BG_FindStagesForUpgrade
+import BG_FindPriceForUpgrade
+import BG_FindTeamForWeapon
+import BG_FindBuildDelayForWeapon
+import BG_FindLongRangedForWeapon
+import BG_FindPurchasableForWeapon
+import BG_FindZoomFovForWeapon
+import BG_WeaponCanZoom
+import BG_WeaponHasThirdMode
+import BG_WeaponHasAltMode
+import BG_FindKnockbackScaleForWeapon
+import BG_FindReloadTimeForWeapon
+import BG_FindRepeatRate3ForWeapon
+import BG_FindRepeatRate2ForWeapon
+import BG_FindRepeatRate1ForWeapon
+import BG_FindUsesEnergyForWeapon
+import BG_FindInfinteAmmoForWeapon
+import BG_FindAmmoForWeapon
+import BG_FindCrosshairSizeForWeapon
+import BG_FindCrosshairForWeapon
+import BG_FindIconForWeapon
+import BG_FindModelsForWeapon
+import BG_FindHumanNameForWeapon
+import BG_FindWeaponNumForName
+import BG_FindNameForWeapon
+import BG_FindSlotsForWeapon
+import BG_FindStagesForWeapon
+import BG_FindPriceForWeapon
+import BG_InitClassOverrides
+import BG_FindValueOfClass
+import BG_FindCostOfClass
+import BG_ClassCanEvolveFromTo
+import BG_FindBuildDistForClass
+import BG_FindStartWeaponForClass
+import BG_ClassHasAbility
+import BG_FindSteptimeForClass
+import BG_FindKnockbackScaleForClass
+import BG_FindJumpMagnitudeForClass
+import BG_FindStopSpeedForClass
+import BG_FindFrictionForClass
+import BG_FindAirAccelerationForClass
+import BG_FindAccelerationForClass
+import BG_FindSpeedForClass
+import BG_FindBobCycleForClass
+import BG_FindBobForClass
+import BG_FindFovForClass
+import BG_FindRegenRateForClass
+import BG_FindFallDamageForClass
+import BG_FindHealthForClass
+import BG_FindViewheightForClass
+import BG_FindZOffsetForClass
+import BG_FindBBoxForClass
+import BG_FindSpriteHeightForClass
+import BG_FindStagesForClass
+import BG_FindHudNameForClass
+import BG_FindShadowScaleForClass
+import BG_FindSkinNameForClass
+import BG_FindModelScaleForClass
+import BG_FindModelNameForClass
+import BG_FindHumanNameForClassNum
+import BG_FindNameForClassNum
+import BG_FindClassNumForName
+import BG_InitBuildableOverrides
+import BG_FindTransparentTestForBuildable
+import BG_FindReplaceableTestForBuildable
+import BG_FindUniqueTestForBuildable
+import BG_FindDCCTestForBuildable
+import BG_FindCreepSizeForBuildable
+import BG_FindCreepTestForBuildable
+import BG_FindInvertNormalForBuildable
+import BG_FindMinNormalForBuildable
+import BG_FindProjTypeForBuildable
+import BG_FindFireSpeedForBuildable
+import BG_FindRangeForBuildable
+import BG_FindUsableForBuildable
+import BG_FindBuildTimeForBuildable
+import BG_FindNextThinkForBuildable
+import BG_FindAnimForBuildable
+import BG_FindBuildWeaponForBuildable
+import BG_FindTeamForBuildable
+import BG_FindMODForBuildable
+import BG_FindSplashRadiusForBuildable
+import BG_FindSplashDamageForBuildable
+import BG_FindStagesForBuildable
+import BG_FindBuildPointsForBuildable
+import BG_FindBounceForBuildable
+import BG_FindTrajectoryForBuildable
+import BG_FindRegenRateForBuildable
+import BG_FindHealthForBuildable
+import BG_FindZOffsetForBuildable
+import BG_FindBBoxForBuildable
+import BG_FindModelScaleForBuildable
+import BG_FindModelsForBuildable
+import BG_FindEntityNameForBuildable
+import BG_FindHumanNameForBuildable
+import BG_FindNameForBuildable
+import BG_FindBuildNumForEntityName
+import BG_FindBuildNumForName
+import BG_GetValueOfEquipment
+import BG_GetValueOfHuman
+import BG_PositionBuildableRelativeToPlayer
+import BG_RotateAxis
+import BG_UpgradeIsActive
+import BG_DeactivateUpgrade
+import BG_ActivateUpgrade
+import BG_InventoryContainsUpgrade
+import BG_RemoveUpgradeFromInventory
+import BG_AddUpgradeToInventory
+import BG_InventoryContainsWeapon
+import BG_RemoveWeaponFromInventory
+import BG_AddWeaponToInventory
+import BG_WeaponIsFull
+import BG_PackAmmoArray
+import BG_UnpackAmmoArray
+import Pmove
+import PM_UpdateViewAngles
+import Com_Printf
+import Com_Error
+import Info_NextPair
+import Info_Validate
+import Info_SetValueForKey_Big
+import Info_SetValueForKey
+import Info_RemoveKey_big
+import Info_RemoveKey
+import Info_ValueForKey
+import Com_TruncateLongString
+import va
+import Q_CountChar
+import Q_CleanStr
+import Q_PrintStrlen
+import Q_strcat
+import Q_strncpyz
+import Q_stristr
+import Q_strrchr
+import Q_strupr
+import Q_strlwr
+import Q_stricmpn
+import Q_strncmp
+import Q_stricmp
+import Q_isintegral
+import Q_isanumber
+import Q_isdigit
+import Q_isalpha
+import Q_isupper
+import Q_islower
+import Q_isprint
+import Com_RandomBytes
+import Com_SkipCharset
+import Com_SkipTokens
+import Com_sprintf
+import Com_HexStrToInt
+import Parse3DMatrix
+import Parse2DMatrix
+import Parse1DMatrix
+import SkipRestOfLine
+import SkipBracedSection
+import COM_MatchToken
+import COM_ParseWarning
+import COM_ParseError
+import COM_Compress
+import COM_ParseExt
+import COM_Parse
+import COM_GetCurrentParseLine
+import COM_BeginParseSession
+import COM_DefaultExtension
+import COM_StripExtension
+import COM_GetExtension
+import COM_SkipPath
+import Com_Clamp
+import DistanceBetweenLineSegments
+import DistanceBetweenLineSegmentsSquared
+import VectorMaxComponent
+import VectorMinComponent
+import pointToLineDistance
+import VectorDistance
+import ProjectPointOntoVector
+import GetPerpendicularViewVector
+import Q_isnan
+import PerpendicularVector
+import AngleVectors
+import VectorMatrixMultiply
+import MatrixMultiply
+import MakeNormalVectors
+import RotateAroundAxe
+import RotateAroundDirection
+import RotatePointAroundVector
+import ProjectPointOnPlane
+import PlaneFromPoints
+import AngleDelta
+import AngleNormalize180
+import AngleNormalize360
+import AnglesSubtract
+import AngleSubtract
+import LerpAngle
+import AngleMod
+import BoundsIntersectPoint
+import BoundsIntersectSphere
+import BoundsIntersect
+import BoxOnPlaneSide
+import SetPlaneSignbits
+import AxisCopy
+import AxisClear
+import AxisToAngles
+import AnglesToAxis
+import vectoangles
+import Q_crandom
+import Q_random
+import Q_rand
+import Q_acos
+import Q_log2
+import VectorRotate
+import Vector4Scale
+import VectorNormalize2
+import VectorNormalize
+import CrossProduct
+import VectorInverse
+import VectorNormalizeFast
+import DistanceSquared
+import Distance
+import VectorLengthSquared
+import VectorLength
+import VectorCompare
+import AddPointToBounds
+import ClearBounds
+import RadiusFromBounds
+import NormalizeColor
+import ColorBytes4
+import ColorBytes3
+import _VectorMA
+import _VectorScale
+import _VectorCopy
+import _VectorAdd
+import _VectorSubtract
+import _DotProduct
+import ByteToDir
+import DirToByte
+import ClampShort
+import ClampChar
+import Q_rsqrt
+import Q_fabs
+import axisDefault
+import vec3_origin
+import g_color_table
+import colorDkGrey
+import colorMdGrey
+import colorLtGrey
+import colorWhite
+import colorCyan
+import colorMagenta
+import colorYellow
+import colorBlue
+import colorGreen
+import colorRed
+import colorBlack
+import bytedirs
+import Hunk_Alloc
+import FloatSwap
+import LongSwap
+import ShortSwap
+import rint
+import pow
+import acos
+import fabs
+import abs
+import tan
+import atan2
+import cos
+import sin
+import sqrt
+import floor
+import ceil
+import memcpy
+import memset
+import memmove
+import sscanf
+import vsprintf
+import _atoi
+import atoi
+import _atof
+import atof
+import toupper
+import tolower
+import strncpy
+import strstr
+import strrchr
+import strchr
+import strcmp
+import strcpy
+import strcat
+import strlen
+import rand
+import srand
+import qsort
+lit
+align 1
+LABELV $361
+byte 1 100
+byte 1 111
+byte 1 109
+byte 1 101
+byte 1 0
+align 1
+LABELV $356
+byte 1 114
+byte 1 111
+byte 1 99
+byte 1 107
+byte 1 101
+byte 1 116
+byte 1 95
+byte 1 108
+byte 1 97
+byte 1 117
+byte 1 110
+byte 1 99
+byte 1 104
+byte 1 101
+byte 1 114
+byte 1 0
+align 1
+LABELV $348
+byte 1 109
+byte 1 105
+byte 1 110
+byte 1 101
+byte 1 0
+align 1
+LABELV $288
+byte 1 97
+byte 1 120
+byte 1 101
+byte 1 0
+align 1
+LABELV $279
+byte 1 103
+byte 1 114
+byte 1 101
+byte 1 110
+byte 1 97
+byte 1 100
+byte 1 101
+byte 1 50
+byte 1 0
+align 1
+LABELV $268
+byte 1 98
+byte 1 111
+byte 1 117
+byte 1 110
+byte 1 99
+byte 1 101
+byte 1 98
+byte 1 97
+byte 1 108
+byte 1 108
+byte 1 0
+align 1
+LABELV $229
+byte 1 94
+byte 1 51
+byte 1 87
+byte 1 65
+byte 1 82
+byte 1 78
+byte 1 73
+byte 1 78
+byte 1 71
+byte 1 58
+byte 1 32
+byte 1 65
+byte 1 72
+byte 1 105
+byte 1 118
+byte 1 101
+byte 1 95
+byte 1 82
+byte 1 101
+byte 1 116
+byte 1 117
+byte 1 114
+byte 1 110
+byte 1 84
+byte 1 111
+byte 1 72
+byte 1 105
+byte 1 118
+byte 1 101
+byte 1 32
+byte 1 99
+byte 1 97
+byte 1 108
+byte 1 108
+byte 1 101
+byte 1 100
+byte 1 32
+byte 1 119
+byte 1 105
+byte 1 116
+byte 1 104
+byte 1 32
+byte 1 110
+byte 1 111
+byte 1 32
+byte 1 115
+byte 1 101
+byte 1 108
+byte 1 102
+byte 1 45
+byte 1 62
+byte 1 112
+byte 1 97
+byte 1 114
+byte 1 101
+byte 1 110
+byte 1 116
+byte 1 10
+byte 1 0
+align 1
+LABELV $215
+byte 1 108
+byte 1 99
+byte 1 97
+byte 1 110
+byte 1 110
+byte 1 111
+byte 1 110
+byte 1 0
+align 1
+LABELV $211
+byte 1 112
+byte 1 117
+byte 1 108
+byte 1 115
+byte 1 101
+byte 1 0
+align 1
+LABELV $203
+byte 1 102
+byte 1 108
+byte 1 97
+byte 1 109
+byte 1 101
+byte 1 0
+align 1
+LABELV $164
+byte 1 94
+byte 1 51
+byte 1 87
+byte 1 65
+byte 1 82
+byte 1 78
+byte 1 73
+byte 1 78
+byte 1 71
+byte 1 58
+byte 1 32
+byte 1 104
+byte 1 105
+byte 1 118
+byte 1 101
+byte 1 32
+byte 1 101
+byte 1 110
+byte 1 116
+byte 1 105
+byte 1 116
+byte 1 121
+byte 1 32
+byte 1 104
+byte 1 97
+byte 1 115
+byte 1 32
+byte 1 110
+byte 1 111
+byte 1 32
+byte 1 112
+byte 1 97
+byte 1 114
+byte 1 101
+byte 1 110
+byte 1 116
+byte 1 32
+byte 1 105
+byte 1 110
+byte 1 32
+byte 1 71
+byte 1 95
+byte 1 77
+byte 1 105
+byte 1 115
+byte 1 115
+byte 1 105
+byte 1 108
+byte 1 101
+byte 1 73
+byte 1 109
+byte 1 112
+byte 1 97
+byte 1 99
+byte 1 116
+byte 1 10
+byte 1 0
+align 1
+LABELV $159
+byte 1 104
+byte 1 105
+byte 1 118
+byte 1 101
+byte 1 0
+align 1
+LABELV $153
+byte 1 115
+byte 1 108
+byte 1 111
+byte 1 119
+byte 1 98
+byte 1 108
+byte 1 111
+byte 1 98
+byte 1 0
+align 1
+LABELV $147
+byte 1 108
+byte 1 111
+byte 1 99
+byte 1 107
+byte 1 98
+byte 1 108
+byte 1 111
+byte 1 98
+byte 1 0
+align 1
+LABELV $142
+byte 1 103
+byte 1 114
+byte 1 101
+byte 1 110
+byte 1 97
+byte 1 100
+byte 1 101
+byte 1 0
+align 1
+LABELV $98
+byte 1 112
+byte 1 105
+byte 1 115
+byte 1 116
+byte 1 111
+byte 1 108
+byte 1 0
