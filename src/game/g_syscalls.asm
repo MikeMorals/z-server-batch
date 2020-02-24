@@ -73,24 +73,3 @@ equ ceil                            -112
 equ testPrintInt                    -113
 equ testPrintFloat                  -114
 equ ex                  			-115
-
-equ vsprintf                  		-116
-equ atoi           		       		-117
-equ srand                  			-118
-equ rand                  			-119
-equ qsort                  			-120
-equ strlen                  		-121
-equ strcpy                  		-122
-equ abs                  			-123
-equ atof                  			-124
-equ acos                  			-125
-equ sscanf                  		-126
-equ fabs                  			-127
-equ strstr                  		-128
-equ tolower                  		-129
-equ strchr                  		-130
-equ strcat                  		-131
-equ memmove                  		-132
-equ Q_vsnprintf                  	-133
-equ toupper                  		-134
-equ strcmp                  		-135

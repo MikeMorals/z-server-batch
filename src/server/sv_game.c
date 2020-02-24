@@ -490,30 +490,6 @@ intptr_t SV_GameSystemCalls( intptr_t *args ) {
 	case TRAP_CEIL:
 		return FloatAsInt( ceil( VMF(1) ) );
 
-         case G_SQL_RUNQUERY:
-         return sv_mysql_runquery( VMA(1) );
-
-     case G_SQL_FINISHQUERY:
-         sv_mysql_finishquery();
-         return 0;
-
-     case G_SQL_FETCHROW:
-         return sv_mysql_fetchrow();
-
-     case G_SQL_FETCHFIELDBYID:
-         sv_mysql_fetchfieldbyID( args[1], VMA(2), args[3] );
-         return 0;
-
-     case G_SQL_FETCHFIELDBYNAME:
-         sv_mysql_fetchfieldbyName( VMA(1), VMA(2), args[3] );
-         return 0;
-            case G_SQL_RECONNECT:
-         sv_mysql_reconnect();
-         return 0;
-	case G_XGLOBAL_LOAD_C:
-		return xglobal_load_c(VMA(1));
-	case G_XGLOBAL_FLAGS:
-		return xglobal_flags(VMA(1));
 
 	default:
 		Com_Error( ERR_DROP, "Bad game system trap: %ld", (long int) args[0] );
@@ -580,7 +556,7 @@ void SV_RestartGameProgs( void ) {
 
 	// do a restart instead of a free
 	gvm = VM_Restart( gvm );
-	if ( !gvm ) {
+	if ( !gvm ) { // bk001212 - as done below
 		Com_Error( ERR_FATAL, "VM_Restart on game failed" );
 	}
 

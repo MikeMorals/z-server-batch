@@ -104,7 +104,7 @@ equ atof                  			-113
 equ acos                  			-114
 equ sscanf                  		-115
 equ fabs                  			-116
-equ strstr                  		-117
+equ strstr                  		-600
 equ tolower                  		-118
 equ strchr                  		-119
 equ strcat                  		-120
