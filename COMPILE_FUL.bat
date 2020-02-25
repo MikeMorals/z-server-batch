@@ -60,4 +60,6 @@ for /f %%G in ('dir /b ..\..\..\..\src\ui\*.c*') do (
 
 cd ..\..\..\..\
 call compile_game.bat
+call compile_cgame.bat
+call compile_ui.bat
 call archive_vm.bat

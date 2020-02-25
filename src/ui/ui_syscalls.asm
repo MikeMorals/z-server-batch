@@ -97,24 +97,3 @@ equ atan2                             -106
 equ sqrt                              -107
 equ floor                             -108
 equ ceil                              -109
-equ strlen  	                  	-110
-equ strcpy                  		-111
-equ abs                  			-112
-equ atof                  			-113
-equ acos                  			-114
-equ sscanf                  		-115
-equ fabs                  			-116
-equ strstr                  		-600
-equ tolower                  		-118
-equ strchr                  		-119
-equ strcat                  		-120
-equ memmove                  		-121
-equ Q_vsnprintf                  	-122
-equ toupper                  		-123
-equ atoi                  			-124
-equ qsort                  			-125
-equ rand                  			-126
-equ vsprintf       					-127
-equ strcmp       					-128
-equ tan       						-129
-

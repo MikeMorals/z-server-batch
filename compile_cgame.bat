@@ -1,7 +1,7 @@
 @echo off
 setlocal enableDelayedExpansion
 
-set compiler_flags=-DQ3_VM -S -Wf-target=bytecode -Wf-g -Isrc\cgame -Isrc\game -Isrc\ui 
+set compiler_flags=-DQ3_VM -O3 -S -Wf-target=bytecode -Wf-g -Isrc\cgame -Isrc\game -Isrc\ui 
 set compiler="..\..\tools\q3asm.exe"
 
 set build_cgame_dir=build/release-batch-mingw/base/cgame
@@ -50,4 +50,3 @@ cg_tutorial ^
 echo Q3ASM cgame.qvm
 
 cd ..\..\..\..\
-call compile_ui.bat

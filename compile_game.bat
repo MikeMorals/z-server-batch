@@ -52,6 +52,3 @@ echo.
 echo Q3ASM game.qvm
 
 cd ..\..\..\..\
-call compile_cgame.bat
-
-pause
